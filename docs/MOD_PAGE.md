@@ -10,8 +10,9 @@ the repository.
 - **Categories:** Adventure, Mobs, Technology (Modrinth: adventure, mobs, game-mechanics)
 - **License:** MIT
 - **Source:** https://github.com/Mica-Technologies/LDTD
+- **Wiki:** https://mica-technologies.github.io/LDTD/ (Modrinth "Wiki" link, CurseForge "Wiki" link)
 - **Loader / version:** Forge, Minecraft 1.12.2. Client and server (it's needed on both).
-- **Logo:** `docs/images/logo.png`. **Gallery:** `docs/images/*.png`.
+- **Logo:** `docs/images/logo.png`. **Gallery:** `docs/images/*.png`, and the wiki's screenshots in `docs/assets/images/`.
 
 ## Description
 
@@ -39,6 +40,6 @@ Features:
 - Villages with unclaimed Hearths to take up
 - Territory protection, with trust for friends
 - Everything tunable in JSON, reloadable in game
-- An in-game guide book
+- An in-game guide book, and a full wiki: https://mica-technologies.github.io/LDTD/
 
 Not an official Minecraft product. Not approved by or associated with Mojang or Microsoft.

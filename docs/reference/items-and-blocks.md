@@ -39,7 +39,7 @@ Violet-black glass with a cyan glint: what's left when a Gloam's shadow hardens.
 
 ### The Hearthkeeper's Guide
 
-A nine-page book with the essentials, given to every player the first time they join (turn off
+A ten-page book with the essentials, given to every player the first time they join (turn off
 with `hearth.giveGuide`). `/hearth guide` gives another copy.
 
 <div class="grid" markdown>
@@ -51,7 +51,7 @@ with `hearth.giveGuide`). `/hearth guide` gives another copy.
 </div>
 
 Pages: The Hearthkeeper's Guide · Your Hearth · Stockpile & Sprites · Blueprints · Towers · Raids ·
-Duskglass · Dusk Spires · Neighbours.
+Duskglass · Dusk Spires · Neighbours · Learn More (a link that opens this wiki).
 
 ## Creatures
 

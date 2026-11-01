@@ -27,7 +27,10 @@ public final class Guide {
      * {@code ldtd.guide.<n>.<1..k>}. Paragraphs are joined with a blank line, except the tower list
      * (page 5), one line each. Lang files can't hold line breaks, so the book adds them.
      */
-    private static final int[] PARAGRAPHS = {2, 2, 2, 2, 5, 2, 2, 2, 2};
+    private static final int[] PARAGRAPHS = {2, 2, 2, 2, 5, 2, 2, 2, 2, 2};
+
+    /** The last page's last paragraph is a link to the wiki, opened in the browser when clicked. */
+    private static final String WIKI_URL = "https://mica-technologies.github.io/LDTD/";
 
     private static final String GIVEN = LdtdConstants.MOD_NAMESPACE + ":guide_given";
 
@@ -49,7 +52,12 @@ public final class Guide {
             StringBuilder page = new StringBuilder("[{\"translate\":\"ldtd.guide.").append(i).append(".title\",\"bold\":true}");
             for (int k = 1; k <= PARAGRAPHS[i - 1]; k++) {
                 page.append(",{\"text\":\"").append(k == 1 ? "\\n\\n" : gap).append("\",\"bold\":false}")
-                    .append(",{\"translate\":\"ldtd.guide.").append(i).append('.').append(k).append("\",\"bold\":false}");
+                    .append(",{\"translate\":\"ldtd.guide.").append(i).append('.').append(k).append("\",\"bold\":false");
+                if (i == PARAGRAPHS.length && k == PARAGRAPHS[i - 1]) {
+                    page.append(",\"underlined\":true,\"color\":\"dark_blue\",\"clickEvent\":{\"action\":\"open_url\",")
+                        .append("\"value\":\"").append(WIKI_URL).append("\"}");
+                }
+                page.append('}');
             }
             pages.appendTag(new NBTTagString(page.append(']').toString()));
         }

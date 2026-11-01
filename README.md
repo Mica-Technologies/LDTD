@@ -64,6 +64,10 @@ Gloam unit, raids, commands, configuration and the data files.
 
 ## Commands
 
+The [wiki's command reference](https://mica-technologies.github.io/LDTD/reference/commands/) has every
+option in full.
+
+
 - `/hearth guide`: a copy of *The Hearthkeeper's Guide*.
 - `/hearth trust <player>`, `/hearth untrust <player>`, `/hearth trusted`: who may build in your
   territory and use your stockpile. Run them while standing in your territory.
@@ -77,6 +81,9 @@ Gloam unit, raids, commands, configuration and the data files.
 
 ## Configuration
 
+See the wiki's [configuration](https://mica-technologies.github.io/LDTD/reference/configuration/)
+and [data file](https://mica-technologies.github.io/LDTD/reference/data-files/) pages for every option.
+
 `config/ldtd.cfg` holds the switches: raids, griefing, protection rules, random spawn, Dusk
 Spires, village buildings, the guide, and the client's borders and health bars. The JSON files in
 `config/ldtd/` hold the balance numbers.
@@ -84,6 +91,9 @@ Spires, village buildings, the guide, and the client's borders and health bars. 
 ![A Dusk Spire](docs/images/natural_spire.png)
 
 ## Building
+
+See also [Building from source](https://mica-technologies.github.io/LDTD/contributing/building/) on the wiki.
+
 
 Needs a JDK 17-22 for Gradle (21 recommended). The mod itself targets Java 8.
 
