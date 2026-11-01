@@ -175,3 +175,6 @@ commands.ldtd.spire.list.usage=/ldtd spire list
 commands.ldtd.spire.placed=Raised a tier %1$s Dusk Spire. Its core is at %2$s, %3$s, %4$s.
 commands.ldtd.spire.none=There are no standing Dusk Spires in this dimension.
 commands.ldtd.spire.entry=Tier %1$s spire, core at %2$s, %3$s, %4$s
+
+entity.ldtd.gloam_eclipse.name=The Eclipse
+ldtd.eclipse.defeated=The Eclipse is destroyed. Light returns to the land.

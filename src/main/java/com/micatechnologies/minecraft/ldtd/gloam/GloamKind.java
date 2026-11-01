@@ -13,7 +13,9 @@ public enum GloamKind {
     SMOTHER("smother"),
     FLICKER("flicker"),
     MOTH_WRAITH("moth_wraith"),
-    DIMCASTER("dimcaster");
+    DIMCASTER("dimcaster"),
+    /** The boss (Phase 9). Never bought by a raid budget: it comes when spires fall. */
+    ECLIPSE("eclipse");
 
     private final String id;
 

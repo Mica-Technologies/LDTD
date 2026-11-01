@@ -91,6 +91,7 @@ public class Ldtd {
         SiegeDamage.clearAll();
         RouteEvents.clearAll();
         RaidDirector.clearAll();
+        com.micatechnologies.minecraft.ldtd.gloam.EntityEclipse.clearAll();
         TerritoryProtection.clearAll();
     }
 }

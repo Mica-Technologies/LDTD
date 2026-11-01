@@ -50,6 +50,16 @@
       "budgetCost": 3,
       "duskglassChance": 0.5,
       "duskglassCount": 1
+    },
+    "eclipse": {
+      "health": 400,
+      "speed": 0.2,
+      "attack": 10,
+      "armor": 10,
+      "digPower": 8.0,
+      "budgetCost": 1,
+      "duskglassChance": 1.0,
+      "duskglassCount": 30
     }
   }
 }

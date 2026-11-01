@@ -1,5 +1,5 @@
 {
-  "_comment": "LDTD raid rules. A raid's budget = base + perNight x (raids survived) + perLevel x (Hearth level - 1), capped at max, and +callEarlyBonus when called at the Hearth. Units are bought by weight from those allowed tonight (fromNight) until the budget runs out, each capped at maxShare of the budget. drain = Flame lost per second for each unit standing at the Hearth. Edit, then run /ldtd reload. payout: Duskglass paid into the stockpile for a raid survived (base + perRaid x raid number, x calledMultiplier if called early; nothing if the Hearth falls).",
+  "_comment": "LDTD raid rules. A raid's budget = base + perNight x (raids survived) + perLevel x (Hearth level - 1), capped at max, and +callEarlyBonus when called at the Hearth. Units are bought by weight from those allowed tonight (fromNight) until the budget runs out, each capped at maxShare of the budget. drain = Flame lost per second for each unit standing at the Hearth. Edit, then run /ldtd reload. payout: Duskglass paid into the stockpile for a raid survived (base + perRaid x raid number, x calledMultiplier if called early; nothing if the Hearth falls). The eclipse is never bought by the budget (weight 0); it joins raids once enough nearby Dusk Spires have fallen.",
   "countdownSeconds": 30,
   "waves": 3,
   "waveIntervalSeconds": 40,
@@ -44,6 +44,12 @@
       "weight": 3,
       "drain": 2,
       "maxShare": 0.3
+    },
+    "eclipse": {
+      "fromNight": 1,
+      "weight": 0,
+      "drain": 6,
+      "maxShare": 0.0
     }
   },
   "payout": {

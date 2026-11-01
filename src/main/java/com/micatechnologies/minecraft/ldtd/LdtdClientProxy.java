@@ -46,6 +46,9 @@ public class LdtdClientProxy extends LdtdCommonProxy {
             m -> new RenderGloam<>(m, new ModelMothWraith(), 0.3F, 1.0F, GloamKind.MOTH_WRAITH.registryPath()));
         RenderingRegistry.registerEntityRenderingHandler(EntityDimcaster.class,
             m -> new RenderGloam<>(m, new ModelDimcaster(), 0.4F, 1.0F, GloamKind.DIMCASTER.registryPath()));
+        RenderingRegistry.registerEntityRenderingHandler(com.micatechnologies.minecraft.ldtd.gloam.EntityEclipse.class,
+            m -> new RenderGloam<>(m, new com.micatechnologies.minecraft.ldtd.client.model.ModelEclipse(), 1.0F, 2.0F,
+                GloamKind.ECLIPSE.registryPath()));
         RenderingRegistry.registerEntityRenderingHandler(EntityDarkBolt.class,
             m -> new RenderBillboard<>(m, "dark_bolt", 0.5F));
         RenderingRegistry.registerEntityRenderingHandler(EntityCannonShell.class,

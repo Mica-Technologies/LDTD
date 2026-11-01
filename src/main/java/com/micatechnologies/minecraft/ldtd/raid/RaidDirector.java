@@ -196,6 +196,11 @@ public final class RaidDirector {
             : (float) (random.nextDouble() * Math.PI * 2.0D);
         float[] directions = night < 5 ? new float[] {first}
             : new float[] {first, (float) (first + Math.PI * (0.5D + random.nextDouble()))};
+        // The Eclipse joins every raid once enough spires near this Hearth have fallen (Phase 9).
+        boolean eclipse = hearth.spiresCleared() >= LdtdConfig.eclipseAfterSpires && !hearth.isEclipseDefeated();
+        if (eclipse) {
+            waves.get(waves.size() - 1).add(GloamKind.ECLIPSE);
+        }
         hearth.setLastRaidDay(nightIndex(world));
         Raid raid = new Raid(world, hearth.getPos(), night, called, waves, directions);
         raids(world).put(hearth.getPos(), raid);

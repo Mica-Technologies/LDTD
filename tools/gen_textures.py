@@ -596,6 +596,27 @@ def spire_core(rng):
     return px
 
 
+def eclipse_atlas(rng, eyes=False):
+    """The Shade's layout in deeper dark, plus the halo bars at (0, 40) 14x2x1 and (32, 40) 2x10x1."""
+    img = blank(64, 64)
+    eye_cols, eye_row = (1, 2, 5, 6), 3
+    def halo(face, x, y, fw, fh):
+        if eyes:
+            return rgba(EYE) if (x + y) % 3 == 0 else rgba(shade(EYE, -8))
+        return rgba(BONE) if (x + y) % 4 else rgba(shade(BONE, -3))
+    if eyes:
+        paint_box(img, 0, 0, 8, 8, 8, eyes_only(eye_cols, eye_row))
+    else:
+        dark = cloth(rng, base=shade(INK, -1), fold=INK, edge=VIOLET)
+        paint_box(img, 0, 0, 8, 8, 8, mask_face(rng, eye_cols, eye_row, dark))
+        paint_box(img, 16, 16, 8, 12, 4, ragged(rng, dark, rows=4))
+        paint_box(img, 40, 16, 3, 14, 3, ragged(rng, dark, rows=3))
+        paint_box(img, 0, 16, 4, 12, 4, dark)
+    paint_box(img, 0, 40, 14, 2, 1, halo)
+    paint_box(img, 32, 40, 2, 12, 1, halo)
+    return img
+
+
 TEXTURES = {
     "blocks/hearth_side.png": hearth_side,
     "blocks/hearth_top.png": hearth_top,
@@ -625,6 +646,8 @@ TEXTURES = {
     "items/duskglass.png": duskglass,
     "items/command_brand.png": command_brand,
     "blocks/dusk_stone.png": dusk_stone,
+    "entity/gloam_eclipse.png": eclipse_atlas,
+    "entity/gloam_eclipse_eyes.png": lambda rng: eclipse_atlas(rng, eyes=True),
     "blocks/spire_core.png": spire_core,
     "entity/ember_guard.png": ember_guard_atlas,
     "blocks/tower_core_guardpost_side.png": guardpost_side,

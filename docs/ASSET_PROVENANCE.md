@@ -49,3 +49,4 @@ parent) is fine and does not need a row: nothing of Mojang's is redistributed in
 | `models/block/tower_core_guardpost*.json`, `models/item/command_brand.json`, `recipes/blueprint_guard_post.json` | original | Mica Technologies | Original (parents `block/cube_bottom_top`, `item/handheld`, referenced) | MIT | |
 | `textures/blocks/dusk_stone.png`, `textures/blocks/spire_core.png` | script-generated | Mica Technologies | `tools/gen_textures.py` | MIT | |
 | `blockstates/{dusk_stone,spire_core}.json`, `models/{block,item}/{dusk_stone,spire_core}.json` | original | Mica Technologies | Original (parent `block/cube_all`, referenced) | MIT | |
+| `textures/entity/gloam_eclipse.png`, `textures/entity/gloam_eclipse_eyes.png` | script-generated | Mica Technologies | `tools/gen_textures.py` | MIT | Atlas matches `client/model/ModelEclipse.java` |

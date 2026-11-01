@@ -165,7 +165,9 @@ public abstract class EntityGloam extends EntityMob {
 
     private void updateLight() {
         BlockPos eyes = new BlockPos(posX, posY + getEyeHeight(), posZ);
-        boolean lit = world.getLightFor(EnumSkyBlock.BLOCK, eyes) >= LdtdConfig.gloamLightThreshold;
+        // While the Eclipse lives, light weakens none of the Gloam marching on its Hearth (Phase 9).
+        boolean lit = world.getLightFor(EnumSkyBlock.BLOCK, eyes) >= LdtdConfig.gloamLightThreshold
+            && (marchTarget == null || !EntityEclipse.dims(world, marchTarget));
         if (lit != isLit()) {
             dataManager.set(LIT, lit);
         }

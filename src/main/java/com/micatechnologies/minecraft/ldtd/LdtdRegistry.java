@@ -118,6 +118,8 @@ public final class LdtdRegistry {
             .name(LdtdConstants.MOD_NAMESPACE + ".ember_guard")
             .tracker(80, 3, true)
             .build());
+        event.getRegistry().register(gloam(com.micatechnologies.minecraft.ldtd.gloam.EntityEclipse.class,
+            GloamKind.ECLIPSE, id++, 0x141019, 0x4B2E6F));
     }
 
     private static EntityEntry gloam(Class<? extends EntityGloam> type, GloamKind kind, int id, int egg, int spots) {
