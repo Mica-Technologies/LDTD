@@ -10,7 +10,12 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import com.micatechnologies.minecraft.ldtd.raid.RaidDirector;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -66,13 +71,65 @@ public class BlockHearth extends Block {
             return true;
         }
         TileEntityHearth hearth = (TileEntityHearth) te;
-        if (player.isSneaking()) {
-            player.sendStatusMessage(new TextComponentTranslation("ldtd.hearth.info",
-                hearth.ownerName().isEmpty() ? "-" : hearth.ownerName(), hearth.level(), hearth.radius()), true);
+        ItemStack held = player.getHeldItem(hand);
+        if (hearth.isDormant() && isFuel(held)) {
+            relight(world, pos, player, hearth, held);
+        } else if (player.isSneaking() && held.isEmpty()) {
+            sneakUse(world, player, hearth);
         } else {
+            if (hearth.isDormant()) {
+                player.sendStatusMessage(new TextComponentTranslation("ldtd.hearth.cold", LdtdConfig.relightFuelCount,
+                    fuelName()), true);
+            }
             player.displayGUIChest(hearth.stockpile());
         }
         return true;
+    }
+
+    /** How long a first sneak-use waits for the second that calls the raid. */
+    private static final long CALL_CONFIRM_TICKS = 100L;
+
+    /**
+     * Sneak-use with an empty hand: shows the Hearth's state. Doing it again within five seconds
+     * calls the next raid early (design decision D7), so a raid is never called by accident.
+     */
+    private static void sneakUse(World world, EntityPlayer player, TileEntityHearth hearth) {
+        long now = world.getTotalWorldTime();
+        if (hearth.isOwner(player) && hearth.confirmCall(player.getUniqueID(), now, CALL_CONFIRM_TICKS)) {
+            String refusal = RaidDirector.call(world, hearth);
+            if (refusal != null) {
+                player.sendStatusMessage(new TextComponentTranslation(refusal), true);
+            }
+            return;
+        }
+        player.sendStatusMessage(new TextComponentTranslation(hearth.isOwner(player) ? "ldtd.hearth.info_call"
+                : "ldtd.hearth.info", hearth.ownerName().isEmpty() ? "-" : hearth.ownerName(), hearth.level(),
+            hearth.radius(), Math.round(hearth.flameFraction() * 100.0F), hearth.raidsSurvived()), true);
+    }
+
+    private static boolean isFuel(ItemStack stack) {
+        Item fuel = Item.getByNameOrId(LdtdConfig.relightFuel);
+        return fuel != null && !stack.isEmpty() && stack.getItem() == fuel;
+    }
+
+    private static String fuelName() {
+        Item fuel = Item.getByNameOrId(LdtdConfig.relightFuel);
+        return fuel == null ? LdtdConfig.relightFuel : new ItemStack(fuel).getDisplayName();
+    }
+
+    private static void relight(World world, BlockPos pos, EntityPlayer player, TileEntityHearth hearth,
+                                ItemStack held) {
+        int need = LdtdConfig.relightFuelCount;
+        if (!player.capabilities.isCreativeMode) {
+            if (held.getCount() < need) {
+                player.sendStatusMessage(new TextComponentTranslation("ldtd.hearth.cold", need, fuelName()), true);
+                return;
+            }
+            held.shrink(need);
+        }
+        hearth.relight();
+        world.playSound(null, pos, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 1.0F, 0.8F);
+        player.sendStatusMessage(new TextComponentTranslation("ldtd.hearth.relit"), true);
     }
 
     /** Whether {@code player} may break the Hearth at {@code pos} under the owner-only rule. */

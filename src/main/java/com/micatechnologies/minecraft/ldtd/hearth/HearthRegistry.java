@@ -73,11 +73,14 @@ public final class HearthRegistry extends WorldSavedData {
         }
     }
 
-    /** The Hearth whose territory contains block column {@code (x, z)}, or null. */
+    /**
+     * The Hearth whose territory contains block column {@code (x, z)}, or null. A dormant Hearth
+     * claims no territory (design decision D17).
+     */
     @Nullable
     public HearthRecord territoryAt(int x, int z) {
         for (HearthRecord r : hearths.values()) {
-            if (TerritoryMath.contains(r.pos.getX(), r.pos.getZ(), r.radius(), x, z)) {
+            if (!r.dormant && TerritoryMath.contains(r.pos.getX(), r.pos.getZ(), r.radius(), x, z)) {
                 return r;
             }
         }
@@ -144,12 +147,15 @@ public final class HearthRegistry extends WorldSavedData {
         public final UUID owner;
         public final String ownerName;
         public final int level;
+        /** A fallen Hearth that hasn't been relit: no territory, no raids (design decision D17). */
+        public final boolean dormant;
 
-        public HearthRecord(BlockPos pos, @Nullable UUID owner, String ownerName, int level) {
+        public HearthRecord(BlockPos pos, @Nullable UUID owner, String ownerName, int level, boolean dormant) {
             this.pos = pos.toImmutable();
             this.owner = owner;
             this.ownerName = ownerName == null ? "" : ownerName;
             this.level = level;
+            this.dormant = dormant;
         }
 
         /** The territory radius for this Hearth's level, from the current level table. */
@@ -164,13 +170,14 @@ public final class HearthRegistry extends WorldSavedData {
             }
             nbt.setString("ownerName", ownerName);
             nbt.setInteger("level", level);
+            nbt.setBoolean("dormant", dormant);
             return nbt;
         }
 
         static HearthRecord read(NBTTagCompound nbt) {
             UUID owner = nbt.hasUniqueId("owner") ? nbt.getUniqueId("owner") : null;
             return new HearthRecord(BlockPos.fromLong(nbt.getLong("pos")), owner,
-                nbt.getString("ownerName"), Math.max(1, nbt.getInteger("level")));
+                nbt.getString("ownerName"), Math.max(1, nbt.getInteger("level")), nbt.getBoolean("dormant"));
         }
     }
 }

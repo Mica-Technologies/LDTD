@@ -5,11 +5,11 @@ itemGroup.ldtd=LDTD: Tower Defense
 tile.ldtd.hearth.name=Hearth
 container.ldtd.stockpile=Hearth Stockpile
 
-ldtd.hearth.info=Hearth of %1$s - level %2$s, territory radius %3$s
+ldtd.hearth.info=Hearth of %1$s - level %2$s, territory radius %3$s, Flame %4$s%%, %5$s raids survived
 ldtd.hearth.not_owner=Only this Hearth's owner can put it out.
 ldtd.hearth.too_close=Too close to the Hearth of %1$s at %2$s, %3$s, %4$s. Territories need room to grow.
 
-commands.ldtd.usage=/ldtd <reload|hearth|spawn|route|debug>
+commands.ldtd.usage=/ldtd <reload|hearth|spawn|route|raid|debug>
 commands.ldtd.reload.usage=/ldtd reload
 commands.ldtd.reload.ok=LDTD data reloaded.
 commands.ldtd.reload.problems=LDTD data reloaded with %s problem(s). The previous values were kept for those files:
@@ -44,3 +44,36 @@ commands.ldtd.route.none=No route from here to the nearest Hearth, not even thro
 commands.ldtd.route.show.ok=Route: %1$s steps, %2$s blocks to break, cost %3$s. Showing it for 10 seconds.
 commands.ldtd.debug.usage=/ldtd debug keepticking <true|false>
 commands.ldtd.debug.keepticking=Keep entities ticking with nobody online: %s
+
+ldtd.hearth.info_call=Hearth of %1$s - level %2$s, radius %3$s, Flame %4$s%%, %5$s raids survived. Sneak-use again within 5 seconds to call the next raid early.
+ldtd.hearth.cold=This Hearth has fallen and gone cold. Relight it with %1$s %2$s.
+ldtd.hearth.relit=The Hearth burns again.
+
+ldtd.raid.announce=The Gloam gather to the %1$s. Raid %2$s: %3$s. They come in %4$s seconds.
+ldtd.raid.wave=Wave %1$s of %2$s is coming.
+ldtd.raid.held=The Hearth holds. Raid %1$s is over.
+ldtd.raid.dawn=Dawn breaks and the Gloam fade. Raid %1$s survived.
+ldtd.raid.fell=The Hearth of %1$s has fallen. Its fire is out.
+ldtd.raid.stopped=The raid is over.
+ldtd.raid.and= and the
+ldtd.raid.bar.countdown=Raid %1$s - the Gloam gather to the %2$s - %3$ss
+ldtd.raid.bar.active=Raid %1$s - %2$s Gloam remain - Flame
+ldtd.raid.call.disabled=Calling raids is turned off on this server.
+ldtd.raid.call.dormant=A cold Hearth can't call anyone.
+ldtd.raid.call.already=A raid is already on.
+ldtd.raid.call.day=The Gloam only come in the dark.
+
+ldtd.direction.north=north
+ldtd.direction.north_east=north-east
+ldtd.direction.east=east
+ldtd.direction.south_east=south-east
+ldtd.direction.south=south
+ldtd.direction.south_west=south-west
+ldtd.direction.west=west
+ldtd.direction.north_west=north-west
+
+commands.ldtd.raid.usage=/ldtd raid <start [called]|stop>
+commands.ldtd.raid.start.usage=/ldtd raid start [called]
+commands.ldtd.raid.stop.usage=/ldtd raid stop
+commands.ldtd.raid.start.refused=That Hearth is cold or already raided.
+commands.ldtd.raid.stop.none=No raid is on here.

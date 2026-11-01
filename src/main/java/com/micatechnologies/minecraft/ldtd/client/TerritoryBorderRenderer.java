@@ -58,7 +58,7 @@ public final class TerritoryBorderRenderer {
         GlStateManager.glLineWidth(2.0F);
 
         for (TileEntityHearth hearth : hearths) {
-            if (hearth.isInvalid() || hearth.getWorld() != mc.world || hearth.radius() <= 0) {
+            if (hearth.isInvalid() || hearth.getWorld() != mc.world || hearth.radius() <= 0 || hearth.isDormant()) {
                 continue;
             }
             double cx = hearth.getPos().getX() + 0.5D - camX;

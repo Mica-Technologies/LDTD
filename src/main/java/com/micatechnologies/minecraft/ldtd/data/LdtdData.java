@@ -7,6 +7,7 @@ import com.micatechnologies.minecraft.ldtd.gloam.GloamKind;
 import com.micatechnologies.minecraft.ldtd.sim.GloamStats;
 import com.micatechnologies.minecraft.ldtd.sim.HearthLevel;
 import com.micatechnologies.minecraft.ldtd.sim.HearthLevelTable;
+import com.micatechnologies.minecraft.ldtd.sim.raid.RaidRules;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,10 +38,12 @@ public final class LdtdData {
     private static final String DEFAULTS_ROOT = "/ldtd/defaults/";
     private static final String HEARTH_LEVELS = "hearth_levels.json";
     private static final String GLOAM = "gloam.json";
+    private static final String RAID = "raid.json";
 
     private static File dataDir;
     private static volatile HearthLevelTable hearthLevels;
     private static volatile Map<String, GloamStats> gloam;
+    private static volatile RaidRules raid;
 
     private LdtdData() {
         throw new AssertionError("No instances.");
@@ -54,8 +57,10 @@ public final class LdtdData {
         }
         copyDefaultIfMissing(HEARTH_LEVELS);
         copyDefaultIfMissing(GLOAM);
+        copyDefaultIfMissing(RAID);
         hearthLevels = HearthLevelTable.validate(readDefault(HEARTH_LEVELS, HearthLevelsFile.class).levels);
         gloam = GloamStats.validate(readDefault(GLOAM, GloamFile.class).units, GloamKind.ids());
+        raid = readDefault(RAID, RaidRules.class).validate(GloamKind.ids());
         reload();
     }
 
@@ -90,6 +95,11 @@ public final class LdtdData {
         } catch (IOException | JsonParseException | IllegalArgumentException | IllegalStateException e) {
             problems.add(report(GLOAM, e));
         }
+        try {
+            raid = readUser(RAID, RaidRules.class).validate(GloamKind.ids());
+        } catch (IOException | JsonParseException | IllegalArgumentException | IllegalStateException e) {
+            problems.add(report(RAID, e));
+        }
         return problems;
     }
 
@@ -100,6 +110,11 @@ public final class LdtdData {
     /** Stats for one Gloam unit. Always present: validation guarantees every {@link GloamKind}. */
     public static GloamStats gloam(GloamKind kind) {
         return gloam.get(kind.id());
+    }
+
+    /** How raids are built, and the Hearth's Flame rules. */
+    public static RaidRules raid() {
+        return raid;
     }
 
     private static String report(String file, Exception e) {

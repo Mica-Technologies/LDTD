@@ -120,7 +120,14 @@ public abstract class EntityGloam extends EntityMob {
         if (marchTarget == null || world.isRemote) {
             return null;
         }
-        return HearthRegistry.get(world).at(marchTarget);
+        HearthRecord r = HearthRegistry.get(world).at(marchTarget);
+        // A fallen Hearth is no target: the march is over (design decision D17).
+        return r == null || r.dormant ? null : r;
+    }
+
+    /** Whether this Gloam was sent against the Hearth at {@code hearth}. */
+    public boolean isMarchingOn(BlockPos hearth) {
+        return hearth.equals(marchTarget);
     }
 
     // ----------------------------------------------------------------------------------------

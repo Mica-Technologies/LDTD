@@ -34,6 +34,18 @@ public final class LdtdConfig {
     /** Most Gloam alive at once per Hearth during a raid. The rest trickle in as others die. */
     public static int maxAlivePerHearth = 120;
 
+    /** How close the owner must be for a night raid to start (design decision D18). */
+    public static int defenderRange = 96;
+
+    /** Share of each stockpile stack lost when a Hearth falls (design decision D17). */
+    public static double fallStockpileLoss = 0.25D;
+
+    /** Item that relights a fallen Hearth, by registry name. */
+    public static String relightFuel = "minecraft:coal";
+
+    /** How many of {@link #relightFuel} it takes. */
+    public static int relightFuelCount = 8;
+
     /**
      * Whether the Gloam may damage blocks at all. Even when on, they only ever damage blocks
      * inside a Hearth's territory (design decision D4). Off makes walls indestructible to them.
@@ -86,6 +98,15 @@ public final class LdtdConfig {
             "Whether players may ring the Hearth to call a raid early, for a bonus.");
         maxAlivePerHearth = c.getInt("maxAlivePerHearth", CATEGORY_RAIDS, maxAlivePerHearth, 10, 500,
             "Most Gloam alive at once per Hearth during a raid. The rest trickle in as others die.");
+        defenderRange = c.getInt("defenderRange", CATEGORY_RAIDS, defenderRange, 16, 1024,
+            "How close (blocks) a Hearth's owner must be, online, for a night raid to start.");
+
+        fallStockpileLoss = c.getFloat("fallStockpileLoss", CATEGORY_HEARTH, (float) fallStockpileLoss, 0.0F, 1.0F,
+            "Share of each stockpile stack lost when a Hearth falls.");
+        relightFuel = c.getString("relightFuel", CATEGORY_HEARTH, relightFuel,
+            "Item (registry name) that relights a fallen Hearth. Right-click the Hearth holding it.");
+        relightFuelCount = c.getInt("relightFuelCount", CATEGORY_HEARTH, relightFuelCount, 1, 64,
+            "How many of relightFuel it takes to relight a fallen Hearth.");
 
         gloamDamageBlocks = c.getBoolean("gloamDamageBlocks", CATEGORY_GRIEFING, gloamDamageBlocks,
             "Whether the Gloam may damage blocks. Even when true, they only damage blocks inside a"

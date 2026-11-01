@@ -7,6 +7,7 @@ import com.micatechnologies.minecraft.ldtd.gloam.GloamKind;
 import com.micatechnologies.minecraft.ldtd.hearth.HearthRegistry;
 import com.micatechnologies.minecraft.ldtd.hearth.HearthRegistry.HearthRecord;
 import com.micatechnologies.minecraft.ldtd.hearth.TileEntityHearth;
+import com.micatechnologies.minecraft.ldtd.raid.RaidDirector;
 import com.micatechnologies.minecraft.ldtd.route.RouteEvents;
 import com.micatechnologies.minecraft.ldtd.route.RouteService;
 import com.micatechnologies.minecraft.ldtd.sim.route.Route;
@@ -38,6 +39,7 @@ import net.minecraftforge.server.command.CommandTreeBase;
  *   <li>{@code /ldtd hearth setlevel <level>}: set the level of the Hearth whose territory you're in.</li>
  *   <li>{@code /ldtd spawn <unit> [count]}: spawn Gloam marching on the nearest Hearth.</li>
  *   <li>{@code /ldtd route show}: draw the raid route from where you stand to the nearest Hearth.</li>
+ *   <li>{@code /ldtd raid start [called]|stop}: start or stop a raid on the territory you're in, any time.</li>
  * </ul>
  */
 public final class CommandLdtd extends CommandTreeBase {
@@ -48,6 +50,96 @@ public final class CommandLdtd extends CommandTreeBase {
         addSubcommand(new Spawn());
         addSubcommand(new RouteTree());
         addSubcommand(new Debug());
+        addSubcommand(new RaidTree());
+    }
+
+    /** {@code /ldtd raid start [called]|stop}: run raids on the territory you stand in, any time. */
+    private static final class RaidTree extends CommandTreeBase {
+
+        RaidTree() {
+            addSubcommand(new RaidStart());
+            addSubcommand(new RaidStop());
+        }
+
+        @Override
+        public String getName() {
+            return "raid";
+        }
+
+        @Override
+        public String getUsage(ICommandSender sender) {
+            return "commands.ldtd.raid.usage";
+        }
+
+        @Override
+        public int getRequiredPermissionLevel() {
+            return 2;
+        }
+    }
+
+    private static TileEntityHearth hearthHere(ICommandSender sender) throws CommandException {
+        World world = sender.getEntityWorld();
+        BlockPos at = sender.getPosition();
+        HearthRecord inside = HearthRegistry.get(world).territoryAt(at.getX(), at.getZ());
+        if (inside == null) {
+            throw new CommandException("commands.ldtd.hearth.not_inside");
+        }
+        TileEntity te = world.getTileEntity(inside.pos);
+        if (!(te instanceof TileEntityHearth)) {
+            throw new CommandException("commands.ldtd.hearth.not_loaded");
+        }
+        return (TileEntityHearth) te;
+    }
+
+    private static final class RaidStart extends CommandBase {
+
+        @Override
+        public String getName() {
+            return "start";
+        }
+
+        @Override
+        public String getUsage(ICommandSender sender) {
+            return "commands.ldtd.raid.start.usage";
+        }
+
+        @Override
+        public int getRequiredPermissionLevel() {
+            return 2;
+        }
+
+        @Override
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+            boolean called = args.length > 0 && "called".equals(args[0]);
+            if (!RaidDirector.force(sender.getEntityWorld(), hearthHere(sender), called)) {
+                throw new CommandException("commands.ldtd.raid.start.refused");
+            }
+        }
+    }
+
+    private static final class RaidStop extends CommandBase {
+
+        @Override
+        public String getName() {
+            return "stop";
+        }
+
+        @Override
+        public String getUsage(ICommandSender sender) {
+            return "commands.ldtd.raid.stop.usage";
+        }
+
+        @Override
+        public int getRequiredPermissionLevel() {
+            return 2;
+        }
+
+        @Override
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+            if (!RaidDirector.stop(sender.getEntityWorld(), hearthHere(sender).getPos())) {
+                throw new CommandException("commands.ldtd.raid.stop.none");
+            }
+        }
     }
 
     /**

@@ -35,6 +35,15 @@ public class TileEntityHearth extends TileEntity {
     private String ownerName = "";
     private int level = 1;
 
+    /** The Hearth's Flame (design decision D16). Gloam at the Hearth drain it; 0 and it falls. */
+    private double flame = -1.0D;
+    /** Fallen and not yet relit (design decision D17). Synced, so the client can show it cold. */
+    private boolean dormant;
+    /** Raids this Hearth has seen off. Drives raid size. */
+    private int raidsSurvived;
+    /** The world day of the last raid, so there is at most one night raid per night. */
+    private long lastRaidDay = -1L;
+
     /** Client only: the territory radius the server sent. */
     private int syncedRadius;
 
@@ -61,6 +70,92 @@ public class TileEntityHearth extends TileEntity {
             return syncedRadius;
         }
         return LdtdData.hearthLevels().get(level).radius;
+    }
+
+    public double flame() {
+        double max = LdtdData.raid().flame.max;
+        if (flame < 0.0D || flame > max) {
+            flame = max;
+        }
+        return flame;
+    }
+
+    /** Flame as a fraction of full, 0-1. */
+    public float flameFraction() {
+        return (float) (flame() / LdtdData.raid().flame.max);
+    }
+
+    /**
+     * Drains Flame. Server only.
+     *
+     * @return true if this put the Flame out
+     */
+    public boolean drainFlame(double amount) {
+        double before = flame();
+        flame = Math.max(0.0D, before - amount);
+        markDirty();
+        return before > 0.0D && flame <= 0.0D;
+    }
+
+    /** Regains Flame between raids. Server only. */
+    public void regenFlame(double amount) {
+        flame = Math.min(LdtdData.raid().flame.max, flame() + amount);
+        markDirty();
+    }
+
+    public boolean isDormant() {
+        return dormant;
+    }
+
+    /** The Hearth falls (design decision D17). Server only. */
+    public void fall() {
+        dormant = true;
+        flame = 0.0D;
+        markDirtyAndSync();
+    }
+
+    /** The Hearth is relit, at half Flame. Server only. */
+    public void relight() {
+        dormant = false;
+        flame = LdtdData.raid().flame.max * 0.5D;
+        markDirtyAndSync();
+    }
+
+    public int raidsSurvived() {
+        return raidsSurvived;
+    }
+
+    public void addRaidSurvived() {
+        raidsSurvived++;
+        markDirty();
+    }
+
+    public long lastRaidDay() {
+        return lastRaidDay;
+    }
+
+    public void setLastRaidDay(long day) {
+        lastRaidDay = day;
+        markDirty();
+    }
+
+    /** Not saved: who asked to call a raid, and when. */
+    @Nullable
+    private UUID callRequester;
+    private long callRequestTick;
+
+    /**
+     * Records a request to call a raid. Returns true if it confirms an earlier request from the
+     * same player within {@code window} ticks (and clears it), false if it is a first request.
+     */
+    boolean confirmCall(UUID player, long now, long window) {
+        if (player.equals(callRequester) && now - callRequestTick <= window) {
+            callRequester = null;
+            return true;
+        }
+        callRequester = player;
+        callRequestTick = now;
+        return false;
     }
 
     public boolean isOwner(EntityPlayer player) {
@@ -96,7 +191,7 @@ public class TileEntityHearth extends TileEntity {
     }
 
     HearthRecord toRecord() {
-        return new HearthRecord(pos, owner, ownerName, level);
+        return new HearthRecord(pos, owner, ownerName, level, dormant);
     }
 
     @Override
@@ -139,6 +234,10 @@ public class TileEntityHearth extends TileEntity {
         }
         nbt.setString("ownerName", ownerName);
         nbt.setInteger("level", level);
+        nbt.setDouble("flame", flame);
+        nbt.setBoolean("dormant", dormant);
+        nbt.setInteger("raidsSurvived", raidsSurvived);
+        nbt.setLong("lastRaidDay", lastRaidDay);
         nbt.setTag("stockpile", stockpile.write());
         return nbt;
     }
@@ -149,6 +248,10 @@ public class TileEntityHearth extends TileEntity {
         owner = nbt.hasUniqueId("owner") ? nbt.getUniqueId("owner") : null;
         ownerName = nbt.getString("ownerName");
         level = Math.max(1, nbt.getInteger("level"));
+        flame = nbt.hasKey("flame") ? nbt.getDouble("flame") : -1.0D;
+        dormant = nbt.getBoolean("dormant");
+        raidsSurvived = nbt.getInteger("raidsSurvived");
+        lastRaidDay = nbt.hasKey("lastRaidDay") ? nbt.getLong("lastRaidDay") : -1L;
         stockpile.read(nbt.getTagList("stockpile", Constants.NBT.TAG_COMPOUND));
     }
 
@@ -166,6 +269,7 @@ public class TileEntityHearth extends TileEntity {
         nbt.setString("ownerName", ownerName);
         nbt.setInteger("level", level);
         nbt.setInteger("radius", radius());
+        nbt.setBoolean("dormant", dormant);
         return nbt;
     }
 
@@ -175,6 +279,7 @@ public class TileEntityHearth extends TileEntity {
         ownerName = nbt.getString("ownerName");
         level = nbt.getInteger("level");
         syncedRadius = nbt.getInteger("radius");
+        dormant = nbt.getBoolean("dormant");
     }
 
     @Nullable

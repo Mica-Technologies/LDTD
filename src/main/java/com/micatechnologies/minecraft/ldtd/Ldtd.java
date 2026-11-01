@@ -3,6 +3,7 @@ package com.micatechnologies.minecraft.ldtd;
 import com.micatechnologies.minecraft.ldtd.command.CommandLdtd;
 import com.micatechnologies.minecraft.ldtd.data.LdtdData;
 import com.micatechnologies.minecraft.ldtd.network.LdtdNetwork;
+import com.micatechnologies.minecraft.ldtd.raid.RaidDirector;
 import com.micatechnologies.minecraft.ldtd.route.RouteEvents;
 import com.micatechnologies.minecraft.ldtd.route.RouteService;
 import com.micatechnologies.minecraft.ldtd.route.SiegeDamage;
@@ -82,5 +83,6 @@ public class Ldtd {
         RouteService.clearAll();
         SiegeDamage.clearAll();
         RouteEvents.clearAll();
+        RaidDirector.clearAll();
     }
 }
