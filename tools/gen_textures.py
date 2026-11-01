@@ -1,0 +1,149 @@
+#!/usr/bin/env python3
+"""Generate LDTD's block textures as 16x16 PNGs.
+
+All art here is original and drawn from code, so it can be reproduced and reviewed (see
+docs/design/ART_DIRECTION.md for the palettes and docs/ASSET_PROVENANCE.md for the ledger).
+No image library is needed: the PNG writer below uses only the standard library.
+
+Run:  py tools/gen_textures.py            (writes into src/main/resources/assets/ldtd/textures)
+      py tools/gen_textures.py --preview  (also writes 16x-scaled previews to tools/preview/)
+"""
+
+import os
+import random
+import struct
+import sys
+import zlib
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+OUT = os.path.join(ROOT, "src", "main", "resources", "assets", "ldtd", "textures")
+PREVIEW = os.path.join(ROOT, "tools", "preview")
+
+# Hearth-side palette (ART_DIRECTION.md).
+EMBER = (0xFF, 0x9A, 0x3C)
+EMBER_HI = (0xFF, 0xD2, 0x7A)
+SOOT = (0x2B, 0x25, 0x22)
+BRASS = (0xC9, 0xA0, 0x4A)
+MASONRY = (0x7A, 0x72, 0x6B)
+
+
+def write_png(path, pixels, scale=1):
+    """Write a list of rows of (r, g, b, a) tuples as an RGBA PNG."""
+    h = len(pixels) * scale
+    w = len(pixels[0]) * scale
+    raw = bytearray()
+    for row in pixels:
+        line = bytearray([0])
+        for px in row:
+            line.extend(bytes(px) * scale)
+        for _ in range(scale):
+            raw.extend(line)
+
+    def chunk(tag, data):
+        c = struct.pack(">I", len(data)) + tag + data
+        return c + struct.pack(">I", zlib.crc32(tag + data) & 0xFFFFFFFF)
+
+    png = b"\x89PNG\r\n\x1a\n"
+    png += chunk(b"IHDR", struct.pack(">IIBBBBB", w, h, 8, 6, 0, 0, 0))
+    png += chunk(b"IDAT", zlib.compress(bytes(raw), 9))
+    png += chunk(b"IEND", b"")
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "wb") as f:
+        f.write(png)
+
+
+def shade(c, d):
+    """Lighten (d > 0) or darken (d < 0) a colour by d steps of 10."""
+    return tuple(max(0, min(255, v + d * 10)) for v in c)
+
+
+def rgba(c, a=255):
+    return (c[0], c[1], c[2], a)
+
+
+def masonry(rng):
+    """A 16x16 grid of grey stone bricks with darker mortar, offset every other course."""
+    px = [[None] * 16 for _ in range(16)]
+    for y in range(16):
+        course = y // 4
+        offset = 4 if course % 2 else 0
+        for x in range(16):
+            mortar = y % 4 == 3 or (x + offset) % 8 == 7
+            if mortar:
+                px[y][x] = rgba(shade(MASONRY, -4))
+            else:
+                px[y][x] = rgba(shade(MASONRY, rng.choice((-1, 0, 0, 1))))
+    return px
+
+
+def hearth_side(rng):
+    px = masonry(rng)
+    # An arched fire opening, cols 4-11, rows 6-14, with a soot-stained lintel above it.
+    for y in range(5, 15):
+        for x in range(3, 13):
+            inside = 4 <= x <= 11 and y >= 7
+            arch = 5 <= x <= 10 and y == 6
+            if inside or arch:
+                depth = (y - 6) / 8.0
+                if y >= 13:
+                    c = EMBER_HI if rng.random() < 0.6 else EMBER
+                elif y >= 10:
+                    c = EMBER if rng.random() < 0.7 else EMBER_HI
+                else:
+                    c = shade(SOOT, int(depth * 3))
+                    if rng.random() < depth * 0.6:
+                        c = shade(EMBER, -6)
+                px[y][x] = rgba(c)
+            elif y == 5 and 4 <= x <= 11 or (x in (3, 12) and y >= 7):
+                px[y][x] = rgba(shade(SOOT, 2))
+    # A brass sill under the opening.
+    for x in range(3, 13):
+        px[15][x] = rgba(BRASS if x not in (3, 12) else shade(BRASS, -3))
+    return px
+
+
+def hearth_top(rng):
+    px = [[None] * 16 for _ in range(16)]
+    for y in range(16):
+        for x in range(16):
+            edge = x in (0, 15) or y in (0, 15)
+            rim = x in (1, 14) or y in (1, 14)
+            if edge:
+                px[y][x] = rgba(shade(BRASS, -2))
+            elif rim:
+                px[y][x] = rgba(BRASS if (x + y) % 3 else shade(BRASS, 2))
+            elif x % 3 == 0 or y % 3 == 0:
+                # Iron grate bars over the fire.
+                px[y][x] = rgba(shade(SOOT, rng.choice((0, 1))))
+            else:
+                # Embers glowing between the bars, hotter towards the middle.
+                dist = abs(x - 7.5) + abs(y - 7.5)
+                hot = dist < 6 and rng.random() < 0.7
+                px[y][x] = rgba(EMBER_HI if hot else EMBER)
+    return px
+
+
+def hearth_bottom(rng):
+    return masonry(rng)
+
+
+TEXTURES = {
+    "blocks/hearth_side.png": hearth_side,
+    "blocks/hearth_top.png": hearth_top,
+    "blocks/hearth_bottom.png": hearth_bottom,
+}
+
+
+def main():
+    preview = "--preview" in sys.argv
+    for name, fn in TEXTURES.items():
+        # A fixed seed per texture: the same script always produces the same pixels.
+        pixels = fn(random.Random(name))
+        write_png(os.path.join(OUT, name), pixels)
+        if preview:
+            write_png(os.path.join(PREVIEW, name.replace("/", "_")), pixels, scale=16)
+        print("wrote", name)
+
+
+if __name__ == "__main__":
+    main()

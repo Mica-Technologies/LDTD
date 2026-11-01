@@ -1,7 +1,9 @@
 package com.micatechnologies.minecraft.ldtd;
 
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import com.micatechnologies.minecraft.ldtd.client.ClientHearths;
+import com.micatechnologies.minecraft.ldtd.client.TerritoryBorderRenderer;
+import com.micatechnologies.minecraft.ldtd.hearth.TileEntityHearth;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 /**
@@ -13,15 +15,16 @@ public class LdtdClientProxy extends LdtdCommonProxy {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
+        MinecraftForge.EVENT_BUS.register(new TerritoryBorderRenderer());
     }
 
     @Override
-    public void init(FMLInitializationEvent event) {
-        super.init(event);
+    public void onHearthLoaded(TileEntityHearth hearth) {
+        ClientHearths.add(hearth);
     }
 
     @Override
-    public void postInit(FMLPostInitializationEvent event) {
-        super.postInit(event);
+    public void onHearthUnloaded(TileEntityHearth hearth) {
+        ClientHearths.remove(hearth);
     }
 }

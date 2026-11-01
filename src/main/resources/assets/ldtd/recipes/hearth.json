@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " C ",
+    "GFG",
+    "BBB"
+  ],
+  "key": {
+    "C": { "item": "minecraft:fire_charge" },
+    "G": { "item": "minecraft:gold_ingot" },
+    "F": { "item": "minecraft:furnace" },
+    "B": { "item": "minecraft:stonebrick", "data": 0 }
+  },
+  "result": { "item": "ldtd:hearth" }
+}

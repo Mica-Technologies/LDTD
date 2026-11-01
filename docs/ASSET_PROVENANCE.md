@@ -27,3 +27,8 @@ parent) is fine and does not need a row: nothing of Mojang's is redistributed in
 | Path (under `assets/ldtd/`) | Kind (`original` / `script-generated` / `CC0` / `CC-BY` / `AI-generated`) | Author | Source | License | Notes |
 |---|---|---|---|---|---|
 | `lang/en_us.lang` | original | Mica Technologies | Original | MIT | |
+| `textures/blocks/hearth_side.png` | script-generated | Mica Technologies | `tools/gen_textures.py` | MIT | |
+| `textures/blocks/hearth_top.png` | script-generated | Mica Technologies | `tools/gen_textures.py` | MIT | |
+| `textures/blocks/hearth_bottom.png` | script-generated | Mica Technologies | `tools/gen_textures.py` | MIT | |
+| `blockstates/hearth.json`, `models/block/hearth.json`, `models/item/hearth.json` | original | Mica Technologies | Original (parent: vanilla `block/cube_bottom_top`, referenced, not copied) | MIT | |
+| `recipes/hearth.json` | original | Mica Technologies | Original | MIT | |

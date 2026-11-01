@@ -1,27 +1,32 @@
 package com.micatechnologies.minecraft.ldtd;
 
+import com.micatechnologies.minecraft.ldtd.command.CommandLdtd;
+import com.micatechnologies.minecraft.ldtd.data.LdtdData;
+import com.micatechnologies.minecraft.ldtd.network.LdtdNetwork;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
  * Main mod class for LDTD (Limitless Development: Tower Defense).
  *
- * <p>LDTD is a survival tower-defense system: you claim territory with a Hearth, builders put up
- * towers and walls from blueprints, and raids come at night from enemy outposts that you can
- * assault in turn.</p>
+ * <p>LDTD is a survival tower-defense system: you claim territory with a Hearth, Hearth-sprites put
+ * up towers and walls from blueprints, and the Gloam raid at night from Dusk Spires that you can
+ * assault in turn. Names are in docs/GLOSSARY.md.</p>
  *
  * <p>Lifecycle contract for the rest of the mod:</p>
  * <ul>
- *   <li>{@code preInit}: config, network channel, event-bus registrations. Nothing here may touch
- *       a {@code World}.</li>
+ *   <li>{@code preInit}: config, data files, network channel, event-bus registrations. Nothing here
+ *       may touch a {@code World}. Blocks and items register through {@link LdtdRegistry}.</li>
  *   <li>{@code init}: GUI and inter-mod wiring.</li>
  *   <li>{@code postInit}: anything that must observe other mods' completed registries.</li>
+ *   <li>{@code serverStarting}: commands.</li>
  * </ul>
  *
  * <p><b>Side discipline.</b> Everything reachable from this class must load on a dedicated
@@ -45,6 +50,9 @@ public class Ldtd {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        LdtdConfig.init(event.getSuggestedConfigurationFile());
+        LdtdData.init(event.getModConfigurationDirectory());
+        LdtdNetwork.init();
         proxy.preInit(event);
         LOGGER.info("I am {} at version {}", LdtdConstants.MOD_NAME, LdtdConstants.MOD_VERSION);
     }
@@ -57,5 +65,10 @@ public class Ldtd {
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         proxy.postInit(event);
+    }
+
+    @EventHandler
+    public void serverStarting(FMLServerStartingEvent event) {
+        event.registerServerCommand(new CommandLdtd());
     }
 }

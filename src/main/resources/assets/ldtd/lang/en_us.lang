@@ -1,1 +1,27 @@
 # LDTD English (US) lang file. Every string here is original text.
+
+itemGroup.ldtd=LDTD: Tower Defense
+
+tile.ldtd.hearth.name=Hearth
+container.ldtd.stockpile=Hearth Stockpile
+
+ldtd.hearth.info=Hearth of %1$s - level %2$s, territory radius %3$s
+ldtd.hearth.not_owner=Only this Hearth's owner can put it out.
+ldtd.hearth.too_close=Too close to the Hearth of %1$s at %2$s, %3$s, %4$s. Territories need room to grow.
+
+commands.ldtd.usage=/ldtd <reload|hearth>
+commands.ldtd.reload.usage=/ldtd reload
+commands.ldtd.reload.ok=LDTD data reloaded.
+commands.ldtd.reload.problems=LDTD data reloaded with %s problem(s). The previous values were kept for those files:
+commands.ldtd.reload.problem= - %s
+commands.ldtd.hearth.usage=/ldtd hearth <info|list|setlevel>
+commands.ldtd.hearth.info.usage=/ldtd hearth info
+commands.ldtd.hearth.list.usage=/ldtd hearth list
+commands.ldtd.hearth.setlevel.usage=/ldtd hearth setlevel <level>
+commands.ldtd.hearth.info.inside=You are in the territory of the Hearth at %1$s, %2$s, %3$s (owner %4$s, level %5$s, radius %6$s).
+commands.ldtd.hearth.info.nearest=Not in a territory. Nearest Hearth: %1$s, %2$s, %3$s (owner %4$s, level %5$s, radius %6$s).
+commands.ldtd.hearth.list.entry=Hearth at %1$s, %2$s, %3$s - owner %4$s, level %5$s, radius %6$s
+commands.ldtd.hearth.none=There are no Hearths in this dimension.
+commands.ldtd.hearth.not_inside=You are not inside a Hearth's territory.
+commands.ldtd.hearth.not_loaded=That Hearth's chunk is not loaded.
+commands.ldtd.hearth.setlevel.ok=Hearth set to level %1$s (territory radius %2$s).

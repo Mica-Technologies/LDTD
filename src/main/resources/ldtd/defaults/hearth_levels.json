@@ -1,0 +1,10 @@
+{
+  "_comment": "LDTD Hearth levels. radius: territory radius in blocks (8-128, never shrinking). maxSprites: Hearth-sprites the Hearth may keep. Edit, then run /ldtd reload.",
+  "levels": [
+    { "level": 1, "radius": 24, "maxSprites": 2 },
+    { "level": 2, "radius": 32, "maxSprites": 3 },
+    { "level": 3, "radius": 40, "maxSprites": 4 },
+    { "level": 4, "radius": 48, "maxSprites": 6 },
+    { "level": 5, "radius": 64, "maxSprites": 8 }
+  ]
+}

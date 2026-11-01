@@ -57,9 +57,12 @@ two deliberate edits (the RFG 1.4.7 pin and the lwjgl3ify NOTE). **Never run
 2. **The server is authoritative.** Hearth, raid, routing, tower targeting and builder logic run on
    the server. The client only renders.
 3. **Simulation cores stay Minecraft-free** so they are unit-testable on a bare JVM: raid budget
-   generation, routing over an abstract grid, balance maths. Convert at the boundary.
+   generation, routing over an abstract grid, balance maths. They live in `ldtd.sim`, which must
+   never import a `net.minecraft` or `net.minecraftforge` type. Convert at the boundary.
 4. **Content is data-driven** (towers, enemies, waves, upgrades as JSON under `config/ldtd/`, with
-   defaults shipped in the jar). Don't hard-code balance numbers in Java.
+   defaults shipped in the jar under `src/main/resources/ldtd/defaults/`, loaded by `LdtdData`).
+   Don't hard-code balance numbers in Java. A broken file must never take a server down: report
+   it and keep the last good values.
 5. **Enemies only ever damage blocks inside a Hearth territory.** Every block-damage path must go
    through the territory check.
 

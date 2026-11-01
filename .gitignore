@@ -64,3 +64,6 @@ server-smoke.log
 
 # x86_64 LWJGL2 natives for the `runClient -Prosetta` Apple Silicon path (see addon.gradle).
 .rosetta-natives/
+
+# Throwaway upscaled texture previews (the generator tools/gen_textures.py is tracked).
+/tools/preview/
