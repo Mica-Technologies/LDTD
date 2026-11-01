@@ -6,7 +6,7 @@
     "version": "${version}",
     "mcversion": "${mcversion}",
     "credits": "Mica Technologies",
-    "logoFile": "",
+    "logoFile": "ldtd_logo.png",
     "url": "https://github.com/Mica-Technologies/LDTD",
     "updateUrl": "",
     "authorList": ["Mica Technologies"],

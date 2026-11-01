@@ -67,3 +67,6 @@ server-smoke.log
 
 # Throwaway upscaled texture previews (the generator tools/gen_textures.py is tracked).
 /tools/preview/
+
+# Python bytecode from tools/
+__pycache__/

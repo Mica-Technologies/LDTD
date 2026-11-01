@@ -50,3 +50,7 @@ parent) is fine and does not need a row: nothing of Mojang's is redistributed in
 | `textures/blocks/dusk_stone.png`, `textures/blocks/spire_core.png` | script-generated | Mica Technologies | `tools/gen_textures.py` | MIT | |
 | `blockstates/{dusk_stone,spire_core}.json`, `models/{block,item}/{dusk_stone,spire_core}.json` | original | Mica Technologies | Original (parent `block/cube_all`, referenced) | MIT | |
 | `textures/entity/gloam_eclipse.png`, `textures/entity/gloam_eclipse_eyes.png` | script-generated | Mica Technologies | `tools/gen_textures.py` | MIT | Atlas matches `client/model/ModelEclipse.java` |
+| `recipes/command_brand.json` | original | Mica Technologies | Original | MIT | |
+| `mcmod.info`, `pack.mcmeta` | original | Mica Technologies | Original | MIT | Mod metadata |
+| `ldtd_logo.png` (jar root), `docs/images/logo.png` | script-generated | Mica Technologies | `tools/gen_logo.py` | MIT | Original pixel art, no fonts or third-party art |
+| `docs/images/{towers_all,raid_active,roster,village,natural_spire}.png` | original | Mica Technologies | In-game screenshots of LDTD | MIT (LDTD content) | Docs only, not in the jar. They show vanilla Minecraft terrain around LDTD's content, as any screenshot of the game does |

@@ -1,46 +1,84 @@
+<p align="center"><img src="docs/images/logo.png" alt="LDTD" width="512"></p>
+
 # LDTD: Limitless Development: Tower Defense
 
 A survival **tower defense** mod for **Minecraft 1.12.2 (Forge)**.
 
-Claim your base or a village with a **Hearth**. Have builders raise towers and walls from
-blueprints, block by block, with materials from your stockpile. Hold the line when raids come at
-night. Then take the fight to the enemy outposts that send them.
+Claim your base, or a village, with a **Hearth**. Hearth-sprites build towers and walls from your
+blueprints, block by block, with materials from the Hearth's stockpile. When night falls, the
+**Gloam** come for your flame. Hold the line, grow your Hearth, then take the fight to the Dusk
+Spires that send them, and face the Eclipse.
 
-> **Status: early development.** Nothing playable yet. The mod is being built in phases. Expect
-> nothing to be stable until the first full release.
+![Archer, Lantern and Frost towers](docs/images/towers_all.png)
 
-## Planned features
+## How to play
 
-- **Hearth territories:** a core block claims an area and holds its stockpile and raid state.
-- **Builders:** helper mobs carry materials and construct (and repair) your defenses in the world.
-- **Towers with real roles:** single-target, splash and slowing towers to start, plus walls and
-  gates. All of it is real blocks that enemies have to get through.
-- **Raids:** night raids by default, or ring the Hearth to call one early for a bonus. Raids are
-  built from a growing budget, and you get a preview of what is coming.
-- **An original enemy faction** that routes to your Hearth and sieges walls when it is blocked.
-  Enemies can only damage blocks inside a Hearth's territory.
-- **Outposts and a boss:** enemy outposts generate in the world, send the raids and can be
-  assaulted.
-- **Data-driven:** towers, enemies, waves and upgrades are JSON under `config/ldtd/`, so they can
-  be tuned without a rebuild.
+1. **Craft a Hearth** (fire charge, gold ingots, a furnace, stone bricks) and set it down. The
+   land around it is now your territory. Every player gets *The Hearthkeeper's Guide* the first
+   time they join, and `/hearth guide` gives another copy.
+2. **Fill the stockpile.** Use the Hearth to open it.
+3. **Order defenses.** Craft a blueprint, hold it to see a ghost of the build, and use it inside
+   your territory. Hearth-sprites carry materials from the stockpile and build it, then mend
+   whatever the Gloam break.
+4. **Survive the night.** On nights when you are near, a raid gathers at your border, and you're
+   told from which side. Each Gloam that reaches the Hearth drains its Flame. If the Flame goes
+   out, the Hearth falls dark until you relight it with coal.
+5. **Grow.** Every raid survived pays **Duskglass**, and the Gloam drop it too. Feed it to the
+   Hearth for a wider territory, more sprites and a greater hall. Use it on a tower's core to
+   upgrade the tower.
+6. **Strike back.** Dusk Spires stand in the wilds, feeding and aiming the raids on any Hearth
+   near them. Dig to a spire's core and break it. When three have fallen near a Hearth, the
+   Eclipse comes.
+
+![A raid at the Hearth](docs/images/raid_active.png)
+
+## Features
+
+- **Hearths:** they claim a territory, hold a stockpile, keep Hearth-sprites and grow through
+  five levels, raising a bigger hall as they go. Villages may have an unclaimed Hearth in a
+  Hearth Square, ready to be taken up.
+- **Five towers, three tiers each:** Archer (steady shots), Cannon (splash), Frost (slows
+  everything in reach), Lantern (light that weakens the Gloam) and Guard Post (Ember Guards you
+  command with a Command Brand). Walls too. Every tower is real blocks the Gloam have to get
+  through.
+- **The Gloam:** an original night faction of six units, from the common Shade to the
+  light-snuffing Smother, the blinking Flicker, the flying Moth-wraith, the ranged Dimcaster, and
+  the Eclipse.
+- **Raids that route and siege:** the Gloam plan a path to the Hearth around your walls. When
+  walls block the way, they break through, and only ever inside a Hearth's territory.
+- **Raids that scale:** each raid is bought from a budget that grows with every night survived
+  and every level gained, and late raids send tougher Gloam. The balance is checked by an offline
+  simulator in the test suite.
+- **Dusk Spires and the Eclipse:** enemy outposts generate in the world, guarded at night. Raze
+  them to weaken the raids, and to call out the boss.
+- **Territory protection:** players the owner hasn't trusted can't build, break or open the
+  stockpile in a territory.
+- **Data-driven:** towers, Gloam, raids, Hearth levels and blueprints are JSON under
+  `config/ldtd/`. Edit them and run `/ldtd reload`. A broken file never takes the server down,
+  and older files are brought up to date automatically when LDTD updates.
+
+![The Gloam](docs/images/roster.png)
 
 ## Commands
 
-- `/randomspawn` (or `/rs`): teleports you to a random safe spot, for finding fresh ground for a
-  Hearth. On a world that is already explored, it only picks chunks that have been generated. On a
-  new world, smaller than 1000 blocks from spawn, it may pick anywhere within that radius. Open to all
-  players with a 5-minute cooldown. Operators skip the cooldown and can send others
-  (`/rs <player>`). All of it is configurable under `randomSpawn` in `config/ldtd.cfg`.
+- `/hearth guide`: a copy of *The Hearthkeeper's Guide*.
 - `/hearth trust <player>`, `/hearth untrust <player>`, `/hearth trusted`: who may build in your
   territory and use your stockpile. Run them while standing in your territory.
-- `/ldtd ...`: operator tools for Hearths, raids and testing.
+- `/randomspawn` (or `/rs`): teleports you to a random safe spot, for finding fresh ground for a
+  Hearth. On a world that is already explored, it only picks chunks that have been generated. On a
+  new world, smaller than 1000 blocks from spawn, it may pick anywhere within that radius. Open to
+  all players with a 5-minute cooldown. Operators skip the cooldown and can send others
+  (`/rs <player>`).
+- `/ldtd ...`: operator tools: `reload`, `hearth`, `raid start|stop`, `spire place|list`, `spawn`,
+  `route show` and `debug`.
 
-## Territory protection
+## Configuration
 
-Inside a claimed territory, players the owner hasn't trusted can't break or place blocks, empty
-buckets, light fires or open the stockpile, and explosions break no blocks. Doors, chests,
-levers, PvP and animals work as normal. Each rule can be switched off under `protection` in
-`config/ldtd.cfg`. None of this stops the Gloam: their siege is the point.
+`config/ldtd.cfg` holds the switches: raids, griefing, protection rules, random spawn, Dusk
+Spires, village buildings, the guide, and the client's borders and health bars. The JSON files in
+`config/ldtd/` hold the balance numbers.
+
+![A Dusk Spire](docs/images/natural_spire.png)
 
 ## Building
 
@@ -54,10 +92,12 @@ Needs a JDK 17-22 for Gradle (21 recommended). The mod itself targets Java 8.
 
 ## License
 
-[MIT](LICENSE). Third-party notices are in [CREDITS.md](CREDITS.md).
+[MIT](LICENSE). Third-party notices are in [CREDITS.md](CREDITS.md). Changes are listed in
+[CHANGELOG.md](CHANGELOG.md).
 
-All of LDTD's textures, models, sounds and text are original, or are used under a compatible
-license and recorded in [docs/ASSET_PROVENANCE.md](docs/ASSET_PROVENANCE.md).
+All of LDTD's textures, models and text are original, and are recorded in
+[docs/ASSET_PROVENANCE.md](docs/ASSET_PROVENANCE.md). Its sounds are Minecraft's own, played at
+runtime. None are redistributed.
 
 ---
 

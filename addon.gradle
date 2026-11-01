@@ -76,3 +76,10 @@ if (project.hasProperty('rosetta')) {
         it.javaLauncher.set(rosettaLauncher)
     }
 }
+
+// MIT asks that the license notice travel with every copy, so the jar carries it, along with
+// the third-party credits.
+tasks.named('jar').configure {
+    from(rootProject.file('LICENSE')) { rename { 'LICENSE-LDTD.txt' } }
+    from(rootProject.file('CREDITS.md')) { rename { 'CREDITS-LDTD.md' } }
+}
