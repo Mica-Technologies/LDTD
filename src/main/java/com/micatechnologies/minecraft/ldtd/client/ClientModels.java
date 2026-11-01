@@ -25,6 +25,8 @@ public final class ClientModels {
         bind(LdtdRegistry.ITEM_BLUEPRINT);
         bind(LdtdRegistry.ITEM_DUSKGLASS);
         bind(LdtdRegistry.ITEM_COMMAND_BRAND);
+        bind(net.minecraft.item.Item.getItemFromBlock(LdtdRegistry.BLOCK_DUSK_STONE));
+        bind(net.minecraft.item.Item.getItemFromBlock(LdtdRegistry.BLOCK_SPIRE_CORE));
     }
 
     private static void bind(Item item) {

@@ -170,6 +170,12 @@ public final class RaidDirector {
         }
         Random random = new Random(world.rand.nextLong());
         int budget = rules.budgetFor(night, hearth.level(), called);
+        // Dusk Spires nearby feed the raid (Phase 9).
+        com.micatechnologies.minecraft.ldtd.spire.SpireRegistry spires =
+            com.micatechnologies.minecraft.ldtd.spire.SpireRegistry.get(world);
+        BlockPos hp = hearth.getPos();
+        budget = Math.min(rules.budget.max, budget + LdtdConfig.spireBudgetPerTier
+            * spires.tierSumWithin(hp.getX(), hp.getZ(), LdtdConfig.spireInfluence));
         List<List<GloamKind>> waves = new ArrayList<>();
         for (List<String> wave : RaidComposer.compose(rules, costs, budget, night, random)) {
             List<GloamKind> kinds = new ArrayList<>();
@@ -183,7 +189,11 @@ public final class RaidDirector {
             waves.add(kinds);
         }
         // One direction for the first few raids, then two (design decision D19).
-        float first = (float) (random.nextDouble() * Math.PI * 2.0D);
+        // The raid comes from the nearest spire's side, if one is within reach (D19, Phase 9).
+        BlockPos source = spires.nearest(hp.getX(), hp.getZ(), LdtdConfig.spireInfluence);
+        float first = source != null
+            ? (float) Math.atan2(source.getZ() - hp.getZ(), source.getX() - hp.getX())
+            : (float) (random.nextDouble() * Math.PI * 2.0D);
         float[] directions = night < 5 ? new float[] {first}
             : new float[] {first, (float) (first + Math.PI * (0.5D + random.nextDouble()))};
         hearth.setLastRaidDay(nightIndex(world));
@@ -199,8 +209,12 @@ public final class RaidDirector {
      */
     private static boolean defenderNear(World world, HearthRecord record) {
         double range = LdtdConfig.defenderRange;
+        if (record.owner == null) {
+            // Unclaimed Hearths (villages' Hearth Squares, Phase 9) aren't raided until claimed.
+            return false;
+        }
         for (EntityPlayer p : world.playerEntities) {
-            if ((record.owner == null || record.owner.equals(p.getUniqueID()))
+            if (record.owner.equals(p.getUniqueID())
                 && !p.isSpectator() && p.getDistanceSq(record.pos) <= range * range) {
                 return true;
             }

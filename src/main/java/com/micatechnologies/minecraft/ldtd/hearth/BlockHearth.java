@@ -108,6 +108,12 @@ public class BlockHearth extends Block {
      * calls the next raid early (design decision D7), so a raid is never called by accident.
      */
     private static void sneakUse(World world, EntityPlayer player, TileEntityHearth hearth) {
+        if (hearth.owner() == null && !hearth.isDormant()) {
+            // An unclaimed Hearth (a village's): sneak-use takes it up (D21).
+            hearth.claimFor(player);
+            player.sendStatusMessage(new TextComponentTranslation("ldtd.hearth.claimed"), true);
+            return;
+        }
         long now = world.getTotalWorldTime();
         if (hearth.isOwner(player) && hearth.confirmCall(player.getUniqueID(), now, CALL_CONFIRM_TICKS)) {
             String refusal = RaidDirector.call(world, hearth);

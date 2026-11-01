@@ -9,7 +9,7 @@ ldtd.hearth.info=Hearth of %1$s - level %2$s, territory radius %3$s, Flame %4$s%
 ldtd.hearth.not_owner=Only this Hearth's owner can put it out.
 ldtd.hearth.too_close=Too close to the Hearth of %1$s at %2$s, %3$s, %4$s. Territories need room to grow.
 
-commands.ldtd.usage=/ldtd <reload|hearth|spawn|route|raid|debug>
+commands.ldtd.usage=/ldtd <reload|hearth|spawn|route|raid|spire|debug>
 commands.ldtd.reload.usage=/ldtd reload
 commands.ldtd.reload.ok=LDTD data reloaded.
 commands.ldtd.reload.problems=LDTD data reloaded with %s problem(s). The previous values were kept for those files:
@@ -164,3 +164,14 @@ ldtd.brand.hold=%s Ember Guards will hold that spot.
 ldtd.brand.follow=%s Ember Guards will follow you.
 ldtd.brand.return=%s Ember Guards are going back to their posts.
 ldtd.brand.attack=%s Ember Guards are going for it.
+
+tile.ldtd.dusk_stone.name=Dusk Stone
+tile.ldtd.spire_core.name=Spire Core
+ldtd.spire.fallen=A tier %1$s Dusk Spire has fallen. (Counted for the Hearth of %2$s.)
+ldtd.hearth.claimed=You take up this Hearth. It is yours to keep lit.
+commands.ldtd.spire.usage=/ldtd spire <place [tier]|list>
+commands.ldtd.spire.place.usage=/ldtd spire place [tier]
+commands.ldtd.spire.list.usage=/ldtd spire list
+commands.ldtd.spire.placed=Raised a tier %1$s Dusk Spire. Its core is at %2$s, %3$s, %4$s.
+commands.ldtd.spire.none=There are no standing Dusk Spires in this dimension.
+commands.ldtd.spire.entry=Tier %1$s spire, core at %2$s, %3$s, %4$s

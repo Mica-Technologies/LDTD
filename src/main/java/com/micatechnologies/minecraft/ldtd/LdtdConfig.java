@@ -23,6 +23,7 @@ public final class LdtdConfig {
     public static final String CATEGORY_CLIENT = "client";
     public static final String CATEGORY_RANDOM_SPAWN = "randomSpawn";
     public static final String CATEGORY_PROTECTION = "protection";
+    public static final String CATEGORY_SPIRES = "spires";
 
     /** Master switch for raids. Off turns LDTD into a building-only mod. */
     public static boolean raidsEnabled = true;
@@ -80,6 +81,21 @@ public final class LdtdConfig {
 
     /** Extra gap, in blocks, required between the edges of two territories. */
     public static int territorySpacing = 4;
+
+    /** Whether Dusk Spires generate in new chunks (Phase 9). */
+    public static boolean spiresEnabled = true;
+    /** One chunk in this many gets a spire (before spacing and distance rules). */
+    public static int spireRarity = 300;
+    /** No spire within this many blocks of the world spawn. */
+    public static int spireMinSpawnDistance = 256;
+    /** No two spires closer than this. */
+    public static int spireSpacing = 384;
+    /** Spires within this many blocks of a Hearth feed its raids. */
+    public static int spireInfluence = 384;
+    /** Extra raid budget per spire tier within reach. */
+    public static int spireBudgetPerTier = 3;
+    /** Spires a Hearth's region must lose before the Eclipse comes for it. */
+    public static int eclipseAfterSpires = 3;
 
     /** Master switch for territory protection (Phase 4b). The Gloam's siege is never affected. */
     public static boolean protectionEnabled = true;
@@ -174,6 +190,21 @@ public final class LdtdConfig {
             "Whether only a Hearth's owner (and operators) may break it.");
         territorySpacing = c.getInt("territorySpacing", CATEGORY_HEARTH, territorySpacing, 0, 256,
             "Extra gap, in blocks, required between the edges of two territories.");
+
+        spiresEnabled = c.getBoolean("enabled", CATEGORY_SPIRES, spiresEnabled,
+            "Whether Dusk Spires generate in new chunks. They send raids and can be destroyed.");
+        spireRarity = c.getInt("rarity", CATEGORY_SPIRES, spireRarity, 10, 100000,
+            "One chunk in this many gets a spire (before the spacing and distance rules).");
+        spireMinSpawnDistance = c.getInt("minSpawnDistance", CATEGORY_SPIRES, spireMinSpawnDistance, 0, 100000,
+            "No spire within this many blocks of the world spawn.");
+        spireSpacing = c.getInt("spacing", CATEGORY_SPIRES, spireSpacing, 32, 100000,
+            "No two spires closer than this many blocks.");
+        spireInfluence = c.getInt("influence", CATEGORY_SPIRES, spireInfluence, 0, 100000,
+            "Spires within this many blocks of a Hearth make its raids bigger and send them from their side.");
+        spireBudgetPerTier = c.getInt("budgetPerTier", CATEGORY_SPIRES, spireBudgetPerTier, 0, 1000,
+            "Extra raid budget per spire tier within reach of a Hearth.");
+        eclipseAfterSpires = c.getInt("eclipseAfterSpires", CATEGORY_SPIRES, eclipseAfterSpires, 1, 1000,
+            "Spires destroyed near a Hearth before the Eclipse comes for it in every raid until defeated.");
 
         protectionEnabled = c.getBoolean("enabled", CATEGORY_PROTECTION, protectionEnabled,
             "Master switch for territory protection. The Gloam's siege is never affected by it.");

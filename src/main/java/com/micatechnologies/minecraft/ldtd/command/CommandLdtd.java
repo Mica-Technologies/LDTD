@@ -51,6 +51,86 @@ public final class CommandLdtd extends CommandTreeBase {
         addSubcommand(new RouteTree());
         addSubcommand(new Debug());
         addSubcommand(new RaidTree());
+        addSubcommand(new SpireTree());
+    }
+
+    /** {@code /ldtd spire place [tier]|list}: Dusk Spires, for testing and administration. */
+    private static final class SpireTree extends CommandTreeBase {
+
+        SpireTree() {
+            addSubcommand(new CommandBase() {
+                @Override
+                public String getName() {
+                    return "place";
+                }
+
+                @Override
+                public String getUsage(ICommandSender sender) {
+                    return "commands.ldtd.spire.place.usage";
+                }
+
+                @Override
+                public int getRequiredPermissionLevel() {
+                    return 2;
+                }
+
+                @Override
+                public void execute(MinecraftServer server, ICommandSender sender, String[] args)
+                    throws CommandException {
+                    World world = sender.getEntityWorld();
+                    BlockPos ground = world.getHeight(sender.getPosition());
+                    int tier = args.length > 0 ? parseInt(args[0], 1, 3)
+                        : com.micatechnologies.minecraft.ldtd.spire.SpireBuilder.tierAt(world, ground);
+                    BlockPos core = com.micatechnologies.minecraft.ldtd.spire.SpireBuilder.build(world, ground, tier);
+                    sender.sendMessage(new TextComponentTranslation("commands.ldtd.spire.placed", tier,
+                        core.getX(), core.getY(), core.getZ()));
+                }
+            });
+            addSubcommand(new CommandBase() {
+                @Override
+                public String getName() {
+                    return "list";
+                }
+
+                @Override
+                public String getUsage(ICommandSender sender) {
+                    return "commands.ldtd.spire.list.usage";
+                }
+
+                @Override
+                public int getRequiredPermissionLevel() {
+                    return 2;
+                }
+
+                @Override
+                public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
+                    java.util.Map<BlockPos, Integer> all =
+                        com.micatechnologies.minecraft.ldtd.spire.SpireRegistry.get(sender.getEntityWorld()).all();
+                    if (all.isEmpty()) {
+                        sender.sendMessage(new TextComponentTranslation("commands.ldtd.spire.none"));
+                    }
+                    for (java.util.Map.Entry<BlockPos, Integer> e : all.entrySet()) {
+                        sender.sendMessage(new TextComponentTranslation("commands.ldtd.spire.entry", e.getValue(),
+                            e.getKey().getX(), e.getKey().getY(), e.getKey().getZ()));
+                    }
+                }
+            });
+        }
+
+        @Override
+        public String getName() {
+            return "spire";
+        }
+
+        @Override
+        public String getUsage(ICommandSender sender) {
+            return "commands.ldtd.spire.usage";
+        }
+
+        @Override
+        public int getRequiredPermissionLevel() {
+            return 2;
+        }
     }
 
     /** {@code /ldtd raid start [called]|stop}: run raids on the territory you stand in, any time. */

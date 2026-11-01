@@ -40,6 +40,9 @@ public final class LdtdRegistry {
     public static final BlockHearth BLOCK_HEARTH = new BlockHearth();
     public static final ItemBlockHearth ITEM_HEARTH = new ItemBlockHearth(BLOCK_HEARTH);
     public static final BlockTowerCore BLOCK_TOWER_CORE = new BlockTowerCore();
+    public static final Block BLOCK_DUSK_STONE = com.micatechnologies.minecraft.ldtd.spire.SpireEvents.duskStone();
+    public static final com.micatechnologies.minecraft.ldtd.spire.BlockSpireCore BLOCK_SPIRE_CORE =
+        new com.micatechnologies.minecraft.ldtd.spire.BlockSpireCore();
     public static final ItemBlueprint ITEM_BLUEPRINT = new ItemBlueprint();
     /** The raid currency (design decision D5, Phase 7). */
     public static final ItemDuskglass ITEM_DUSKGLASS = new ItemDuskglass();
@@ -53,6 +56,8 @@ public final class LdtdRegistry {
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         event.getRegistry().register(BLOCK_HEARTH);
         event.getRegistry().register(BLOCK_TOWER_CORE);
+        event.getRegistry().register(BLOCK_DUSK_STONE);
+        event.getRegistry().register(BLOCK_SPIRE_CORE);
         GameRegistry.registerTileEntity(TileEntityTower.class,
             new ResourceLocation(LdtdConstants.MOD_NAMESPACE, "tower"));
         GameRegistry.registerTileEntity(TileEntityHearth.class,
@@ -65,6 +70,10 @@ public final class LdtdRegistry {
         event.getRegistry().register(ITEM_BLUEPRINT);
         event.getRegistry().register(ITEM_DUSKGLASS);
         event.getRegistry().register(ITEM_COMMAND_BRAND);
+        event.getRegistry().register(new net.minecraft.item.ItemBlock(BLOCK_DUSK_STONE)
+            .setRegistryName(BLOCK_DUSK_STONE.getRegistryName()));
+        event.getRegistry().register(new net.minecraft.item.ItemBlock(BLOCK_SPIRE_CORE)
+            .setRegistryName(BLOCK_SPIRE_CORE.getRegistryName()));
     }
 
     /**

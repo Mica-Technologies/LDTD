@@ -53,6 +53,10 @@ public class TileEntityHearth extends TileEntity {
     private int raidsSurvived;
     /** The world day of the last raid, so there is at most one night raid per night. */
     private long lastRaidDay = -1L;
+    /** Dusk Spires destroyed near this Hearth (Phase 9). Enough calls out the Eclipse. */
+    private int spiresCleared;
+    /** Whether this Hearth's defenders have destroyed the Eclipse. */
+    private boolean eclipseDefeated;
 
     /** Trusted players (id to last known name), mirrored into the registry record. */
     private final Map<UUID, String> trusted = new LinkedHashMap<>();
@@ -148,6 +152,24 @@ public class TileEntityHearth extends TileEntity {
         markDirty();
     }
 
+    public int spiresCleared() {
+        return spiresCleared;
+    }
+
+    public void addSpireCleared() {
+        spiresCleared++;
+        markDirty();
+    }
+
+    public boolean isEclipseDefeated() {
+        return eclipseDefeated;
+    }
+
+    public void setEclipseDefeated() {
+        eclipseDefeated = true;
+        markDirty();
+    }
+
     public long lastRaidDay() {
         return lastRaidDay;
     }
@@ -215,6 +237,14 @@ public class TileEntityHearth extends TileEntity {
         ownerName = player.getName();
         level = 1;
         queueGrowth(0, 1);
+        markDirtyAndSync();
+    }
+
+    /** Takes up an unclaimed Hearth (a village's Hearth Square). It keeps its level and works. */
+    public void claimFor(EntityPlayer player) {
+        owner = player.getUniqueID();
+        ownerName = player.getName();
+        queueGrowth(0, level);
         markDirtyAndSync();
     }
 
@@ -356,7 +386,8 @@ public class TileEntityHearth extends TileEntity {
      * every ten seconds while the Hearth has fewer than its level allows.
      */
     public void tickSprites() {
-        if (world == null || world.isRemote || dormant) {
+        if (world == null || world.isRemote || dormant || owner == null) {
+            // An unclaimed Hearth (a village's, Phase 9) has no sprites until someone takes it up.
             return;
         }
         for (UUID id : new ArrayList<>(sprites)) {
@@ -439,6 +470,8 @@ public class TileEntityHearth extends TileEntity {
         nbt.setBoolean("dormant", dormant);
         nbt.setInteger("raidsSurvived", raidsSurvived);
         nbt.setLong("lastRaidDay", lastRaidDay);
+        nbt.setInteger("spiresCleared", spiresCleared);
+        nbt.setBoolean("eclipseDefeated", eclipseDefeated);
         NBTTagList trust = new NBTTagList();
         for (Map.Entry<UUID, String> e : trusted.entrySet()) {
             NBTTagCompound t = new NBTTagCompound();
@@ -469,6 +502,8 @@ public class TileEntityHearth extends TileEntity {
         dormant = nbt.getBoolean("dormant");
         raidsSurvived = nbt.getInteger("raidsSurvived");
         lastRaidDay = nbt.hasKey("lastRaidDay") ? nbt.getLong("lastRaidDay") : -1L;
+        spiresCleared = nbt.getInteger("spiresCleared");
+        eclipseDefeated = nbt.getBoolean("eclipseDefeated");
         trusted.clear();
         NBTTagList trust = nbt.getTagList("trusted", Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < trust.tagCount(); i++) {

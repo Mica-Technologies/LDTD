@@ -571,6 +571,31 @@ def command_brand(rng):
     return px
 
 
+def dusk_stone(rng):
+    """The spires' masonry: ink-violet stone in long courses with faint violet seams."""
+    px = [[rgba(shade(INK, rng.choice((0, 1, 1, 2)))) for x in range(16)] for y in range(16)]
+    for y in range(16):
+        for x in range(16):
+            if y % 8 == 7 or (x + (8 if (y // 8) % 2 else 0)) % 16 == 15:
+                px[y][x] = rgba(shade(VIOLET, -3))
+    return px
+
+
+def spire_core(rng):
+    """A knot of hardened dark with a cold light at its heart."""
+    px = [[rgba(shade(INK, rng.choice((0, 1)))) for x in range(16)] for y in range(16)]
+    for y in range(16):
+        for x in range(16):
+            d = ((x - 7.5) ** 2 + (y - 7.5) ** 2) ** 0.5
+            if d < 2.0:
+                px[y][x] = rgba(EYE)
+            elif d < 4.0:
+                px[y][x] = rgba(VIOLET if (x + y) % 2 else shade(VIOLET, 2))
+            elif d < 6.5 and (x + y) % 3 == 0:
+                px[y][x] = rgba(SMOKE)
+    return px
+
+
 TEXTURES = {
     "blocks/hearth_side.png": hearth_side,
     "blocks/hearth_top.png": hearth_top,
@@ -599,6 +624,8 @@ TEXTURES = {
     "entity/hearth_sprite.png": sprite_atlas,
     "items/duskglass.png": duskglass,
     "items/command_brand.png": command_brand,
+    "blocks/dusk_stone.png": dusk_stone,
+    "blocks/spire_core.png": spire_core,
     "entity/ember_guard.png": ember_guard_atlas,
     "blocks/tower_core_guardpost_side.png": guardpost_side,
     "blocks/tower_core_guardpost_top.png": guardpost_top,
