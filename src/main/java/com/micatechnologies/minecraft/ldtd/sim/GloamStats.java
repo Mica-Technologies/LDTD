@@ -31,6 +31,12 @@ public final class GloamStats {
     /** Raid budget points this unit costs (used by the raid director, Phase 4). */
     public int budgetCost = 1;
 
+    /** Chance (0-1) that it drops Duskglass when killed (not when it fades in daylight). */
+    public double duskglassChance = 0.3D;
+
+    /** How many Duskglass it drops when it does. */
+    public int duskglassCount = 1;
+
     /**
      * Validates a whole {@code gloam.json} map. Every unit the mod defines must be present and sane.
      *
@@ -52,6 +58,8 @@ public final class GloamStats {
             check(id, "armor", s.armor, 0.0D, 30.0D);
             check(id, "digPower", s.digPower, 0.0D, 100.0D);
             check(id, "budgetCost", s.budgetCost, 1.0D, 1000.0D);
+            check(id, "duskglassChance", s.duskglassChance, 0.0D, 1.0D);
+            check(id, "duskglassCount", s.duskglassCount, 0.0D, 64.0D);
             out.put(id, s);
         }
         return Collections.unmodifiableMap(out);

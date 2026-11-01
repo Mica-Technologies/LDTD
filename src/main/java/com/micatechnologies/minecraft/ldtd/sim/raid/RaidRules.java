@@ -26,6 +26,9 @@ public final class RaidRules {
 
     public Flame flame = new Flame();
 
+    /** Duskglass paid into the stockpile for surviving a raid (Phase 7). */
+    public Payout payout = new Payout();
+
     /** Per-unit raid rules, keyed by the unit id in {@code gloam.json}. */
     public Map<String, Unit> units = new LinkedHashMap<>();
 
@@ -45,6 +48,21 @@ public final class RaidRules {
         public double max = 100.0D;
         /** Flame regained per minute while no raid is on. */
         public double regenPerMinute = 5.0D;
+    }
+
+    public static final class Payout {
+        /** Paid for every raid survived. */
+        public int base = 2;
+        /** Extra per raid number (raid 5 pays base + 5 x perRaid). */
+        public int perRaid = 1;
+        /** Multiplier for a raid called early. */
+        public double calledMultiplier = 1.25D;
+    }
+
+    /** Duskglass for surviving raid {@code night} (counting from 1). */
+    public int payoutFor(int night, boolean calledEarly) {
+        double p = payout.base + (double) payout.perRaid * night;
+        return (int) Math.round(calledEarly ? p * payout.calledMultiplier : p);
     }
 
     public static final class Unit {
@@ -70,6 +88,12 @@ public final class RaidRules {
         if (budget == null || flame == null || units == null) {
             throw new IllegalArgumentException("budget, flame and units are all required");
         }
+        if (payout == null) {
+            payout = new Payout();
+        }
+        range("payout.base", payout.base, 0, 100000);
+        range("payout.perRaid", payout.perRaid, 0, 100000);
+        range("payout.calledMultiplier", payout.calledMultiplier, 0.0D, 100.0D);
         range("budget.base", budget.base, 1, 100000);
         range("budget.perNight", budget.perNight, 0, 100000);
         range("budget.perLevel", budget.perLevel, 0, 100000);

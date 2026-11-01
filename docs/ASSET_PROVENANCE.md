@@ -43,3 +43,5 @@ parent) is fine and does not need a row: nothing of Mojang's is redistributed in
 | `blockstates/tower_core.json`, `models/block/tower_core_*.json`, `models/item/blueprint.json` | original | Mica Technologies | Original (parents `block/cube_bottom_top`, `item/generated`, referenced) | MIT | |
 | `recipes/blueprint_*.json` | original | Mica Technologies | Original | MIT | |
 | `textures/entity/hearth_sprite.png` | script-generated | Mica Technologies | `tools/gen_textures.py` | MIT | Atlas matches `client/model/ModelHearthSprite.java` |
+| `textures/blocks/tower_core_{archer,cannon,frost}_side_t{2,3}.png`, `textures/items/duskglass.png` | script-generated | Mica Technologies | `tools/gen_textures.py` | MIT | |
+| `models/block/tower_core_*_t{2,3}.json`, `models/item/duskglass.json` | original | Mica Technologies | Original | MIT | |

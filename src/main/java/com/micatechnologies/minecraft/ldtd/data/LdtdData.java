@@ -10,6 +10,7 @@ import com.micatechnologies.minecraft.ldtd.sim.HearthLevelTable;
 import com.micatechnologies.minecraft.ldtd.sim.raid.RaidRules;
 import com.micatechnologies.minecraft.ldtd.sim.tower.Blueprint;
 import com.micatechnologies.minecraft.ldtd.sim.tower.TowerStats;
+import com.micatechnologies.minecraft.ldtd.sim.tower.TowerUpgrade;
 import com.micatechnologies.minecraft.ldtd.tower.TowerKind;
 import java.io.File;
 import java.io.IOException;
@@ -50,6 +51,7 @@ public final class LdtdData {
     private static volatile Map<String, GloamStats> gloam;
     private static volatile RaidRules raid;
     private static volatile Map<String, TowerStats> towers;
+    private static volatile TowerUpgrade upgrade;
     private static volatile Map<String, Blueprint> blueprints;
 
     private LdtdData() {
@@ -70,7 +72,9 @@ public final class LdtdData {
         hearthLevels = HearthLevelTable.validate(readDefault(HEARTH_LEVELS, HearthLevelsFile.class).levels);
         gloam = GloamStats.validate(readDefault(GLOAM, GloamFile.class).units, GloamKind.ids());
         raid = readDefault(RAID, RaidRules.class).validate(GloamKind.ids());
-        towers = TowerStats.validate(readDefault(TOWERS, TowersFile.class).towers, TowerKind.ids());
+        TowersFile defaultTowers = readDefault(TOWERS, TowersFile.class);
+        towers = TowerStats.validate(defaultTowers.towers, TowerKind.ids());
+        upgrade = (defaultTowers.upgrade == null ? new TowerUpgrade() : defaultTowers.upgrade).validate();
         blueprints = validateBlueprints(readDefault(BLUEPRINTS, BlueprintsFile.class).blueprints);
         reload();
     }
@@ -112,7 +116,11 @@ public final class LdtdData {
             problems.add(report(RAID, e));
         }
         try {
-            towers = TowerStats.validate(readUser(TOWERS, TowersFile.class).towers, TowerKind.ids());
+            TowersFile userTowers = readUser(TOWERS, TowersFile.class);
+            Map<String, TowerStats> t = TowerStats.validate(userTowers.towers, TowerKind.ids());
+            TowerUpgrade u = (userTowers.upgrade == null ? new TowerUpgrade() : userTowers.upgrade).validate();
+            towers = t;
+            upgrade = u;
         } catch (IOException | JsonParseException | IllegalArgumentException | IllegalStateException e) {
             problems.add(report(TOWERS, e));
         }
@@ -155,6 +163,11 @@ public final class LdtdData {
     /** Stats for one tower kind. Always present: validation guarantees every {@link TowerKind}. */
     public static TowerStats tower(TowerKind kind) {
         return towers.get(kind.id());
+    }
+
+    /** Tower tier costs and scaling. */
+    public static TowerUpgrade upgrade() {
+        return upgrade;
     }
 
     /** Every blueprint, by id, in file order. */
@@ -228,6 +241,7 @@ public final class LdtdData {
     /** The shape of {@code towers.json}. */
     private static final class TowersFile {
         Map<String, TowerStats> towers;
+        TowerUpgrade upgrade;
     }
 
     /** The shape of {@code blueprints.json}. */

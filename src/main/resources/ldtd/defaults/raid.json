@@ -1,16 +1,54 @@
 {
-  "_comment": "LDTD raid rules. A raid's budget = base + perNight x (raids survived) + perLevel x (Hearth level - 1), capped at max, and +callEarlyBonus when called at the Hearth. Units are bought by weight from those allowed tonight (fromNight) until the budget runs out, each capped at maxShare of the budget. drain = Flame lost per second for each unit standing at the Hearth. Edit, then run /ldtd reload.",
+  "_comment": "LDTD raid rules. A raid's budget = base + perNight x (raids survived) + perLevel x (Hearth level - 1), capped at max, and +callEarlyBonus when called at the Hearth. Units are bought by weight from those allowed tonight (fromNight) until the budget runs out, each capped at maxShare of the budget. drain = Flame lost per second for each unit standing at the Hearth. Edit, then run /ldtd reload. payout: Duskglass paid into the stockpile for a raid survived (base + perRaid x raid number, x calledMultiplier if called early; nothing if the Hearth falls).",
   "countdownSeconds": 30,
   "waves": 3,
   "waveIntervalSeconds": 40,
-  "budget": { "base": 6, "perNight": 3, "perLevel": 4, "max": 400 },
+  "budget": {
+    "base": 6,
+    "perNight": 3,
+    "perLevel": 4,
+    "max": 400
+  },
   "callEarlyBonus": 0.25,
-  "flame": { "max": 100, "regenPerMinute": 5 },
+  "flame": {
+    "max": 100,
+    "regenPerMinute": 5
+  },
   "units": {
-    "shade":       { "fromNight": 1, "weight": 10, "drain": 1, "maxShare": 1.0 },
-    "flicker":     { "fromNight": 2, "weight": 4,  "drain": 1, "maxShare": 0.4 },
-    "dimcaster":   { "fromNight": 3, "weight": 3,  "drain": 1, "maxShare": 0.3 },
-    "smother":     { "fromNight": 3, "weight": 2,  "drain": 4, "maxShare": 0.3 },
-    "moth_wraith": { "fromNight": 4, "weight": 3,  "drain": 2, "maxShare": 0.3 }
+    "shade": {
+      "fromNight": 1,
+      "weight": 10,
+      "drain": 1,
+      "maxShare": 1.0
+    },
+    "flicker": {
+      "fromNight": 2,
+      "weight": 4,
+      "drain": 1,
+      "maxShare": 0.4
+    },
+    "dimcaster": {
+      "fromNight": 3,
+      "weight": 3,
+      "drain": 1,
+      "maxShare": 0.3
+    },
+    "smother": {
+      "fromNight": 3,
+      "weight": 2,
+      "drain": 4,
+      "maxShare": 0.3
+    },
+    "moth_wraith": {
+      "fromNight": 4,
+      "weight": 3,
+      "drain": 2,
+      "maxShare": 0.3
+    }
+  },
+  "payout": {
+    "base": 2,
+    "perRaid": 1,
+    "calledMultiplier": 1.25
   }
 }

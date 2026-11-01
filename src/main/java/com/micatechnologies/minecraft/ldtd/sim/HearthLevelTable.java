@@ -41,7 +41,10 @@ public final class HearthLevelTable {
             if (l == null) {
                 throw new IllegalArgumentException("the table has an empty entry");
             }
-            sorted.add(new HearthLevel(l.level, l.radius, l.maxSprites));
+            HearthLevel copy = new HearthLevel(l.level, l.radius, l.maxSprites);
+            copy.duskglass = l.duskglass;
+            copy.materials = l.materials == null ? new java.util.LinkedHashMap<>() : l.materials;
+            sorted.add(copy);
         }
         sorted.sort(Comparator.comparingInt(l -> l.level));
         int previousRadius = 0;
@@ -59,6 +62,15 @@ public final class HearthLevelTable {
             if (l.radius < previousRadius) {
                 throw new IllegalArgumentException("level " + l.level + " has a smaller radius ("
                     + l.radius + ") than the level before it (" + previousRadius + ")");
+            }
+            if (l.duskglass < 0 || l.duskglass > 100000) {
+                throw new IllegalArgumentException("level " + l.level + " has duskglass " + l.duskglass
+                    + ", outside 0..100000");
+            }
+            for (java.util.Map.Entry<String, Integer> m : l.materials.entrySet()) {
+                if (m.getValue() == null || m.getValue() < 1) {
+                    throw new IllegalArgumentException("level " + l.level + " needs a positive count of " + m.getKey());
+                }
             }
             if (l.maxSprites < 0) {
                 throw new IllegalArgumentException("level " + l.level + " has a negative maxSprites");

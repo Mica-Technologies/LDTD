@@ -1,8 +1,40 @@
 {
   "variants": {
-    "kind=archer": { "model": "ldtd:tower_core_archer" },
-    "kind=cannon": { "model": "ldtd:tower_core_cannon" },
-    "kind=frost": { "model": "ldtd:tower_core_frost" },
-    "kind=lantern": { "model": "ldtd:tower_core_lantern" }
+    "kind=archer,tier=1": {
+      "model": "ldtd:tower_core_archer"
+    },
+    "kind=archer,tier=2": {
+      "model": "ldtd:tower_core_archer_t2"
+    },
+    "kind=archer,tier=3": {
+      "model": "ldtd:tower_core_archer_t3"
+    },
+    "kind=cannon,tier=1": {
+      "model": "ldtd:tower_core_cannon"
+    },
+    "kind=cannon,tier=2": {
+      "model": "ldtd:tower_core_cannon_t2"
+    },
+    "kind=cannon,tier=3": {
+      "model": "ldtd:tower_core_cannon_t3"
+    },
+    "kind=frost,tier=1": {
+      "model": "ldtd:tower_core_frost"
+    },
+    "kind=frost,tier=2": {
+      "model": "ldtd:tower_core_frost_t2"
+    },
+    "kind=frost,tier=3": {
+      "model": "ldtd:tower_core_frost_t3"
+    },
+    "kind=lantern,tier=1": {
+      "model": "ldtd:tower_core_lantern"
+    },
+    "kind=lantern,tier=2": {
+      "model": "ldtd:tower_core_lantern"
+    },
+    "kind=lantern,tier=3": {
+      "model": "ldtd:tower_core_lantern"
+    }
   }
 }

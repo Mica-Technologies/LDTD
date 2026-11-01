@@ -1,0 +1,8 @@
+{
+  "parent": "block/cube_bottom_top",
+  "textures": {
+    "top": "ldtd:blocks/tower_core_cannon_top",
+    "bottom": "ldtd:blocks/tower_core_cannon_side_t3",
+    "side": "ldtd:blocks/tower_core_cannon_side_t3"
+  }
+}

@@ -26,7 +26,7 @@ which a Hearth can burn to grow stronger.
 | Call the raid | Ringing the Hearth to start a raid early, for a bonus | (concept) | D7 |
 | Hearth-sprite | Builder/repair helper | `ldtd:hearth_sprite` | Floating ember-spirit with little tongs. Hides in the Hearth during raids |
 | Blueprint | Item that places a planned structure for sprites to build | `ldtd:blueprint` | Variants by structure |
-| Duskglass | The raid currency, dropped by the Gloam | `ldtd:duskglass` | Spent on upgrades and unlocks (D5) |
+| Duskglass | The raid currency, dropped by the Gloam and paid out for raids survived | `ldtd:duskglass` | Fed to the Hearth to raise its level, and to a tower's core to raise its tier (I-III) |
 | Stockpile | The Hearth's material store | (concept) | Real items: wood, stone, iron and so on |
 
 ## The Gloam (enemy faction)

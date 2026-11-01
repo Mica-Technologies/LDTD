@@ -141,11 +141,17 @@ final class Raid {
         switch (outcome) {
             case HELD:
             case DAWN:
+                int paid = 0;
                 if (hearth != null) {
                     hearth.addRaidSurvived();
+                    paid = LdtdData.raid().payoutFor(night, called);
+                    pay(hearth, paid);
                 }
                 broadcast(new TextComponentTranslation(outcome == Outcome.HELD ? "ldtd.raid.held" : "ldtd.raid.dawn",
                     night));
+                if (paid > 0) {
+                    broadcast(new TextComponentTranslation("ldtd.raid.payout", paid));
+                }
                 break;
             case FELL:
                 if (hearth != null) {
@@ -238,6 +244,20 @@ final class Raid {
         world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, hearthPos.getX() + 0.5D, hearthPos.getY() + 1.1D,
             hearthPos.getZ() + 0.5D, (int) Math.min(20, total * 2), 0.2D, 0.1D, 0.2D, 0.02D);
         return hearth.drainFlame(total);
+    }
+
+    /** Raid payout (Phase 7): Duskglass into the stockpile, any overflow dropped at the Hearth. */
+    private void pay(TileEntityHearth hearth, int count) {
+        while (count > 0) {
+            int n = Math.min(count, 64);
+            count -= n;
+            ItemStack left = hearth.stockpile().addItem(new ItemStack(
+                com.micatechnologies.minecraft.ldtd.LdtdRegistry.ITEM_DUSKGLASS, n));
+            if (!left.isEmpty()) {
+                net.minecraft.inventory.InventoryHelper.spawnItemStack(world, hearthPos.getX() + 0.5D,
+                    hearthPos.getY() + 1.2D, hearthPos.getZ() + 0.5D, left);
+            }
+        }
     }
 
     private void loseStockpile(TileEntityHearth hearth) {

@@ -10,6 +10,7 @@ import com.micatechnologies.minecraft.ldtd.gloam.EntitySmother;
 import com.micatechnologies.minecraft.ldtd.gloam.GloamKind;
 import com.micatechnologies.minecraft.ldtd.hearth.BlockHearth;
 import com.micatechnologies.minecraft.ldtd.hearth.EntityHearthSprite;
+import com.micatechnologies.minecraft.ldtd.hearth.ItemDuskglass;
 import com.micatechnologies.minecraft.ldtd.hearth.ItemBlockHearth;
 import com.micatechnologies.minecraft.ldtd.hearth.TileEntityHearth;
 import com.micatechnologies.minecraft.ldtd.tower.BlockTowerCore;
@@ -38,6 +39,8 @@ public final class LdtdRegistry {
     public static final ItemBlockHearth ITEM_HEARTH = new ItemBlockHearth(BLOCK_HEARTH);
     public static final BlockTowerCore BLOCK_TOWER_CORE = new BlockTowerCore();
     public static final ItemBlueprint ITEM_BLUEPRINT = new ItemBlueprint();
+    /** The raid currency (design decision D5, Phase 7). */
+    public static final ItemDuskglass ITEM_DUSKGLASS = new ItemDuskglass();
 
     private LdtdRegistry() {
         throw new AssertionError("No instances.");
@@ -57,6 +60,7 @@ public final class LdtdRegistry {
     public static void registerItems(RegistryEvent.Register<Item> event) {
         event.getRegistry().register(ITEM_HEARTH);
         event.getRegistry().register(ITEM_BLUEPRINT);
+        event.getRegistry().register(ITEM_DUSKGLASS);
     }
 
     /**

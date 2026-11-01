@@ -472,6 +472,40 @@ def sprite_atlas(rng):
     return img
 
 
+GOLD = (0xE3, 0xB2, 0x3C)
+
+
+def tiered(fn, tier):
+    """A tower core's side texture with its tier marked: one gold band at II, two and a gem at III."""
+    def paint(rng):
+        px = fn(rng)
+        rows = (7, 8) if tier == 2 else (3, 4, 11, 12)
+        for y in rows:
+            for x in range(16):
+                px[y][x] = rgba(shade(GOLD, -1 if x % 4 == 0 else 0))
+        if tier == 3:
+            for y in (7, 8):
+                for x in (7, 8):
+                    px[y][x] = rgba(EYE)
+        return px
+    return paint
+
+
+def duskglass(rng):
+    """A shard of hardened shadow: violet-black glass with a cold cyan glint."""
+    px = [[CLEAR] * 16 for _ in range(16)]
+    shard = [(7, 1), (8, 1), (6, 2), (9, 2)]
+    for y in range(3, 14):
+        half = 1 + min(y - 1, 14 - y) // 2
+        for x in range(8 - half, 8 + half):
+            shard.append((x, y))
+    for (x, y) in shard:
+        px[y][x] = rgba((0x2A, 0x1C, 0x3D) if (x + y) % 3 else VIOLET)
+    for (x, y) in ((7, 4), (7, 5), (8, 6), (6, 9)):
+        px[y][x] = rgba(EYE)
+    return px
+
+
 TEXTURES = {
     "blocks/hearth_side.png": hearth_side,
     "blocks/hearth_top.png": hearth_top,
@@ -498,7 +532,11 @@ TEXTURES = {
     "blocks/tower_core_lantern_top.png": lantern_top,
     "items/blueprint.png": blueprint_item,
     "entity/hearth_sprite.png": sprite_atlas,
+    "items/duskglass.png": duskglass,
 }
+for _kind, _fn in (("archer", archer_side), ("cannon", cannon_side), ("frost", frost_side)):
+    for _tier in (2, 3):
+        TEXTURES["blocks/tower_core_%s_side_t%d.png" % (_kind, _tier)] = tiered(_fn, _tier)
 
 
 def main():

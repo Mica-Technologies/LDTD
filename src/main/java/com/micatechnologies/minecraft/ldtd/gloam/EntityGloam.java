@@ -190,6 +190,19 @@ public abstract class EntityGloam extends EntityMob {
     // ----------------------------------------------------------------------------------------
     // Spawning and persistence
 
+    /** Duskglass (Phase 7): a chance to drop some, unless it simply faded in the daylight. */
+    @Override
+    protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier) {
+        if (getLastDamageSource() == DAYLIGHT) {
+            return;
+        }
+        GloamStats s = stats();
+        if (s.duskglassCount > 0 && rand.nextDouble() < s.duskglassChance) {
+            entityDropItem(new net.minecraft.item.ItemStack(com.micatechnologies.minecraft.ldtd.LdtdRegistry.ITEM_DUSKGLASS,
+                s.duskglassCount + (lootingModifier > 0 ? rand.nextInt(lootingModifier + 1) : 0)), 0.5F);
+        }
+    }
+
     @Override
     protected boolean canDespawn() {
         return false;

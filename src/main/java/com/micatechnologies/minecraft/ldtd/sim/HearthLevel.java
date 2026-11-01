@@ -15,6 +15,12 @@ public final class HearthLevel {
     /** How many Hearth-sprites this Hearth may keep. */
     public int maxSprites;
 
+    /** Duskglass it takes to reach this level (Phase 7). 0 for level 1. */
+    public int duskglass;
+
+    /** Stockpile materials it takes to reach this level, {@code modid:name[@meta]} to count. */
+    public java.util.Map<String, Integer> materials = new java.util.LinkedHashMap<>();
+
     public HearthLevel() {
     }
 

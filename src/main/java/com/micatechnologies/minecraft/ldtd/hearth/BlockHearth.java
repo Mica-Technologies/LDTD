@@ -2,6 +2,7 @@ package com.micatechnologies.minecraft.ldtd.hearth;
 
 import com.micatechnologies.minecraft.ldtd.LdtdConfig;
 import com.micatechnologies.minecraft.ldtd.LdtdConstants;
+import com.micatechnologies.minecraft.ldtd.LdtdRegistry;
 import com.micatechnologies.minecraft.ldtd.LdtdTab;
 import javax.annotation.Nullable;
 import net.minecraft.block.Block;
@@ -74,6 +75,13 @@ public class BlockHearth extends Block {
         ItemStack held = player.getHeldItem(hand);
         if (hearth.isDormant() && isFuel(held)) {
             relight(world, pos, player, hearth, held);
+        } else if (!hearth.isDormant() && held.getItem() == LdtdRegistry.ITEM_DUSKGLASS) {
+            // Feed the Hearth to raise its level (Phase 7). Owner and trusted players only.
+            if (!hearth.mayUse(player) && !player.canUseCommand(2, "")) {
+                player.sendStatusMessage(new TextComponentTranslation("ldtd.protect.stockpile", hearth.ownerName()), true);
+            } else {
+                player.sendStatusMessage(hearth.levelUp(player, held), true);
+            }
         } else if (player.isSneaking() && held.isEmpty()) {
             sneakUse(world, player, hearth);
         } else {

@@ -54,6 +54,8 @@ public class TileEntityTower extends TileEntity implements ITickable {
     private BlockPos anchor;
     private int rotation;
     private Priority priority = Priority.FIRST;
+    /** Tier I-III (Phase 7). Synced, so the core can show it. */
+    private int tier = 1;
 
     private int cooldown;
     private boolean intact = true;
@@ -73,6 +75,92 @@ public class TileEntityTower extends TileEntity implements ITickable {
 
     public boolean isIntact() {
         return intact;
+    }
+
+    public int tier() {
+        return tier;
+    }
+
+    /** The kind's stats scaled for this tower's tier. */
+    private TowerStats effective(TowerKind kind) {
+        TowerStats base = LdtdData.tower(kind);
+        com.micatechnologies.minecraft.ldtd.sim.tower.TowerUpgrade up = LdtdData.upgrade();
+        TowerStats s = new TowerStats();
+        s.range = base.range * up.range(tier);
+        s.cooldownTicks = Math.max(1, (int) Math.round(base.cooldownTicks * up.cooldown(tier)));
+        s.damage = base.damage * up.damage(tier);
+        s.splashRadius = base.splashRadius;
+        s.slowAmplifier = base.slowAmplifier;
+        s.slowTicks = base.slowTicks;
+        return s;
+    }
+
+    /**
+     * Raises the tower a tier, paid with the Duskglass in {@code held} (Phase 7).
+     *
+     * @return the message for the player
+     */
+    private net.minecraft.util.text.ITextComponent upgrade(EntityPlayer player, net.minecraft.item.ItemStack held) {
+        if (kind() == TowerKind.LANTERN) {
+            return new TextComponentTranslation("ldtd.tower.no_upgrade");
+        }
+        int cost = LdtdData.upgrade().costFrom(tier);
+        if (cost < 0) {
+            return new TextComponentTranslation("ldtd.tower.max_tier");
+        }
+        if (!player.capabilities.isCreativeMode) {
+            if (held.getCount() < cost) {
+                return new TextComponentTranslation("ldtd.tower.upgrade_missing", cost - held.getCount(),
+                    held.getDisplayName());
+            }
+            held.shrink(cost);
+        }
+        tier++;
+        markDirty();
+        IBlockState state = world.getBlockState(pos);
+        world.notifyBlockUpdate(pos, state, state, 3);
+        world.playSound(null, pos, SoundEvents.BLOCK_ANVIL_USE, SoundCategory.BLOCKS, 0.6F, 1.3F);
+        return new TextComponentTranslation("ldtd.tower.upgraded", tier);
+    }
+
+    /**
+     * When the owner (or someone they trust) takes the tower down: half its blueprint cost and half
+     * the Duskglass spent on tiers go back to the Hearth's stockpile (Phase 7).
+     */
+    void salvage(EntityPlayer player) {
+        com.micatechnologies.minecraft.ldtd.hearth.HearthRegistry.HearthRecord r =
+            com.micatechnologies.minecraft.ldtd.hearth.HearthRegistry.get(world).territoryAt(pos.getX(), pos.getZ());
+        Blueprint bp = LdtdData.blueprints().get(blueprint);
+        if (r == null || bp == null || !r.mayBuild(player.getUniqueID()) && !player.canUseCommand(2, "")) {
+            return;
+        }
+        TileEntity te = world.getTileEntity(r.pos);
+        if (!(te instanceof com.micatechnologies.minecraft.ldtd.hearth.TileEntityHearth)) {
+            return;
+        }
+        net.minecraft.inventory.IInventory stockpile =
+            ((com.micatechnologies.minecraft.ldtd.hearth.TileEntityHearth) te).stockpile();
+        List<net.minecraft.item.ItemStack> refund = new ArrayList<>();
+        for (net.minecraft.item.ItemStack s : BlueprintPlacer.cost(bp)) {
+            s.setCount(s.getCount() / 2);
+            refund.add(s);
+        }
+        int dusk = LdtdData.upgrade().spentTo(tier) / 2;
+        if (dusk > 0) {
+            refund.add(new net.minecraft.item.ItemStack(com.micatechnologies.minecraft.ldtd.LdtdRegistry.ITEM_DUSKGLASS,
+                dusk));
+        }
+        for (net.minecraft.item.ItemStack s : refund) {
+            while (!s.isEmpty()) {
+                net.minecraft.item.ItemStack part = s.splitStack(s.getMaxStackSize());
+                net.minecraft.item.ItemStack left = ((net.minecraft.inventory.InventoryBasic) stockpile).addItem(part);
+                if (!left.isEmpty()) {
+                    net.minecraft.inventory.InventoryHelper.spawnItemStack(world, pos.getX() + 0.5D, pos.getY() + 0.5D,
+                        pos.getZ() + 0.5D, left);
+                }
+            }
+        }
+        player.sendStatusMessage(new TextComponentTranslation("ldtd.tower.salvaged"), true);
     }
 
     @Override
@@ -96,7 +184,7 @@ public class TileEntityTower extends TileEntity implements ITickable {
         if ((t + phase) % 5 != 0) {
             return;
         }
-        TowerStats stats = LdtdData.tower(kind);
+        TowerStats stats = effective(kind);
         List<EntityGloam> targets = targets(stats.range);
         if (targets.isEmpty()) {
             return;
@@ -230,6 +318,11 @@ public class TileEntityTower extends TileEntity implements ITickable {
     }
 
     void interact(EntityPlayer player) {
+        net.minecraft.item.ItemStack held = player.getHeldItemMainhand();
+        if (player.isSneaking() && held.getItem() == com.micatechnologies.minecraft.ldtd.LdtdRegistry.ITEM_DUSKGLASS) {
+            player.sendStatusMessage(upgrade(player, held), true);
+            return;
+        }
         if (player.isSneaking()) {
             priority = Priority.values()[(priority.ordinal() + 1) % Priority.values().length];
             markDirty();
@@ -238,9 +331,9 @@ public class TileEntityTower extends TileEntity implements ITickable {
             return;
         }
         TowerKind kind = kind();
-        TowerStats s = LdtdData.tower(kind);
+        TowerStats s = effective(kind);
         player.sendStatusMessage(new TextComponentTranslation(intact ? "ldtd.tower.info" : "ldtd.tower.info_broken",
-            new TextComponentTranslation("ldtd.tower." + kind.id()), (int) s.range,
+            new TextComponentTranslation("ldtd.tower." + kind.id()), tier, (int) s.range,
             new TextComponentTranslation("ldtd.tower.priority." + priority.name().toLowerCase())), true);
     }
 
@@ -253,7 +346,34 @@ public class TileEntityTower extends TileEntity implements ITickable {
         }
         nbt.setInteger("rotation", rotation);
         nbt.setString("priority", priority.name());
+        nbt.setInteger("tier", tier);
         return nbt;
+    }
+
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        NBTTagCompound nbt = super.writeToNBT(new NBTTagCompound());
+        nbt.setInteger("tier", tier);
+        return nbt;
+    }
+
+    @Override
+    public void handleUpdateTag(NBTTagCompound nbt) {
+        tier = Math.max(1, nbt.getInteger("tier"));
+    }
+
+    @Nullable
+    @Override
+    public net.minecraft.network.play.server.SPacketUpdateTileEntity getUpdatePacket() {
+        return new net.minecraft.network.play.server.SPacketUpdateTileEntity(pos, 0, getUpdateTag());
+    }
+
+    @Override
+    public void onDataPacket(net.minecraft.network.NetworkManager net,
+                             net.minecraft.network.play.server.SPacketUpdateTileEntity pkt) {
+        handleUpdateTag(pkt.getNbtCompound());
+        // The tier picks the core's model: redraw it.
+        world.markBlockRangeForRenderUpdate(pos, pos);
     }
 
     @Override
@@ -262,6 +382,7 @@ public class TileEntityTower extends TileEntity implements ITickable {
         blueprint = nbt.getString("blueprint");
         anchor = nbt.hasKey("anchor") ? BlockPos.fromLong(nbt.getLong("anchor")) : null;
         rotation = nbt.getInteger("rotation");
+        tier = Math.max(1, nbt.getInteger("tier"));
         try {
             priority = Priority.valueOf(nbt.getString("priority"));
         } catch (IllegalArgumentException e) {

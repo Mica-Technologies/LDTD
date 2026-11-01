@@ -1,9 +1,49 @@
 {
-  "_comment": "LDTD tower stats. range in blocks, cooldownTicks between shots (20 = 1 s), damage in half-hearts per hit. Cannon: splashRadius. Frost: slowAmplifier (0 = Slowness I) for slowTicks, hitting everything in range. Lantern: no shots; its core gives off full light, which weakens the Gloam. Edit, then run /ldtd reload.",
+  "_comment": "LDTD tower stats. range in blocks, cooldownTicks between shots (20 = 1 s), damage in half-hearts per hit. Cannon: splashRadius. Frost: slowAmplifier (0 = Slowness I) for slowTicks, hitting everything in range. Lantern: no shots; its core gives off full light, which weakens the Gloam. Edit, then run /ldtd reload. upgrade: tiers II and III, bought with Duskglass at a tower's core (sneak-use holding Duskglass); cost is per step, the rest are multipliers per tier.",
   "towers": {
-    "archer":  { "range": 20, "cooldownTicks": 20, "damage": 4 },
-    "cannon":  { "range": 16, "cooldownTicks": 60, "damage": 8, "splashRadius": 2.5 },
-    "frost":   { "range": 10, "cooldownTicks": 40, "damage": 1, "slowAmplifier": 1, "slowTicks": 60 },
-    "lantern": { "range": 0,  "cooldownTicks": 20, "damage": 0 }
+    "archer": {
+      "range": 20,
+      "cooldownTicks": 20,
+      "damage": 4
+    },
+    "cannon": {
+      "range": 16,
+      "cooldownTicks": 60,
+      "damage": 8,
+      "splashRadius": 2.5
+    },
+    "frost": {
+      "range": 10,
+      "cooldownTicks": 40,
+      "damage": 1,
+      "slowAmplifier": 1,
+      "slowTicks": 60
+    },
+    "lantern": {
+      "range": 0,
+      "cooldownTicks": 20,
+      "damage": 0
+    }
+  },
+  "upgrade": {
+    "cost": [
+      10,
+      25
+    ],
+    "damage": [
+      1.0,
+      1.5,
+      2.2
+    ],
+    "range": [
+      1.0,
+      1.15,
+      1.3
+    ],
+    "cooldown": [
+      1.0,
+      0.85,
+      0.7
+    ]
   }
 }

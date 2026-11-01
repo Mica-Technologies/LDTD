@@ -31,6 +31,9 @@ import net.minecraft.world.World;
 public class BlockTowerCore extends Block {
 
     public static final PropertyEnum<TowerKind> KIND = PropertyEnum.create("kind", TowerKind.class);
+    /** The tower's tier (Phase 7). Not stored in metadata: read from the tile entity for rendering. */
+    public static final net.minecraft.block.properties.PropertyInteger TIER =
+        net.minecraft.block.properties.PropertyInteger.create("tier", 1, 3);
 
     public BlockTowerCore() {
         super(Material.ROCK);
@@ -40,12 +43,12 @@ public class BlockTowerCore extends Block {
         setResistance(15.0F);
         setSoundType(SoundType.METAL);
         setHarvestLevel("pickaxe", 1);
-        setDefaultState(blockState.getBaseState().withProperty(KIND, TowerKind.ARCHER));
+        setDefaultState(blockState.getBaseState().withProperty(KIND, TowerKind.ARCHER).withProperty(TIER, 1));
     }
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, KIND);
+        return new BlockStateContainer(this, KIND, TIER);
     }
 
     @Override
@@ -57,6 +60,27 @@ public class BlockTowerCore extends Block {
     @Override
     public int getMetaFromState(IBlockState state) {
         return state.getValue(KIND).ordinal();
+    }
+
+    @Override
+    public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+        TileEntity te = world instanceof net.minecraft.world.ChunkCache
+            ? ((net.minecraft.world.ChunkCache) world).getTileEntity(pos, net.minecraft.world.chunk.Chunk.EnumCreateEntityType.CHECK)
+            : world.getTileEntity(pos);
+        int tier = te instanceof TileEntityTower ? ((TileEntityTower) te).tier() : 1;
+        return state.withProperty(TIER, Math.max(1, Math.min(tier, 3)));
+    }
+
+    /** Taking your own tower down refunds half of what it cost (Phase 7). */
+    @Override
+    public void onBlockHarvested(World world, BlockPos pos, IBlockState state, EntityPlayer player) {
+        if (!world.isRemote) {
+            TileEntity te = world.getTileEntity(pos);
+            if (te instanceof TileEntityTower) {
+                ((TileEntityTower) te).salvage(player);
+            }
+        }
+        super.onBlockHarvested(world, pos, state, player);
     }
 
     @Override

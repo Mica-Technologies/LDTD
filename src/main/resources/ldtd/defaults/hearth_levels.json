@@ -1,10 +1,51 @@
 {
-  "_comment": "LDTD Hearth levels. radius: territory radius in blocks (8-128, never shrinking). maxSprites: Hearth-sprites the Hearth may keep. Edit, then run /ldtd reload.",
+  "_comment": "LDTD Hearth levels. radius: territory radius in blocks (8-128, never shrinking). maxSprites: Hearth-sprites the Hearth may keep. duskglass + materials: what reaching the level costs (Duskglass held in hand, materials from the stockpile; right-click the Hearth with Duskglass). Edit, then run /ldtd reload.",
   "levels": [
-    { "level": 1, "radius": 24, "maxSprites": 2 },
-    { "level": 2, "radius": 32, "maxSprites": 3 },
-    { "level": 3, "radius": 40, "maxSprites": 4 },
-    { "level": 4, "radius": 48, "maxSprites": 6 },
-    { "level": 5, "radius": 64, "maxSprites": 8 }
+    {
+      "level": 1,
+      "radius": 24,
+      "maxSprites": 2,
+      "duskglass": 0,
+      "materials": {}
+    },
+    {
+      "level": 2,
+      "radius": 32,
+      "maxSprites": 3,
+      "duskglass": 8,
+      "materials": {
+        "minecraft:stonebrick": 32
+      }
+    },
+    {
+      "level": 3,
+      "radius": 40,
+      "maxSprites": 4,
+      "duskglass": 20,
+      "materials": {
+        "minecraft:stonebrick": 64,
+        "minecraft:stone_slab@5": 64
+      }
+    },
+    {
+      "level": 4,
+      "radius": 48,
+      "maxSprites": 6,
+      "duskglass": 40,
+      "materials": {
+        "minecraft:iron_ingot": 32
+      }
+    },
+    {
+      "level": 5,
+      "radius": 64,
+      "maxSprites": 8,
+      "duskglass": 80,
+      "materials": {
+        "minecraft:stonebrick": 64,
+        "minecraft:glass": 16,
+        "minecraft:glowstone": 4
+      }
+    }
   ]
 }

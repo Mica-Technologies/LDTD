@@ -233,6 +233,69 @@ public class TileEntityHearth extends TileEntity {
         markDirtyAndSync();
     }
 
+    /**
+     * Raises the Hearth one level, paying with the Duskglass in {@code held} and the level's
+     * materials from the stockpile (Phase 7). Nothing is taken unless everything is there.
+     *
+     * @return the message for the player
+     */
+    public net.minecraft.util.text.ITextComponent levelUp(EntityPlayer player, net.minecraft.item.ItemStack held) {
+        com.micatechnologies.minecraft.ldtd.sim.HearthLevelTable table = LdtdData.hearthLevels();
+        if (level >= table.maxLevel()) {
+            return new net.minecraft.util.text.TextComponentTranslation("ldtd.hearth.max_level", level);
+        }
+        com.micatechnologies.minecraft.ldtd.sim.HearthLevel next = table.get(level + 1);
+        boolean free = player.capabilities.isCreativeMode;
+        StringBuilder missing = new StringBuilder();
+        if (!free && held.getCount() < next.duskglass) {
+            missing.append(next.duskglass - held.getCount()).append(' ').append(held.getDisplayName());
+        }
+        for (Map.Entry<String, Integer> m : next.materials.entrySet()) {
+            net.minecraft.item.ItemStack need = com.micatechnologies.minecraft.ldtd.tower.BlockSpec.item(m.getKey());
+            int have = countInStockpile(need);
+            if (!free && !need.isEmpty() && have < m.getValue()) {
+                if (missing.length() > 0) {
+                    missing.append(", ");
+                }
+                missing.append(m.getValue() - have).append(' ').append(need.getDisplayName());
+            }
+        }
+        if (missing.length() > 0) {
+            return new net.minecraft.util.text.TextComponentTranslation("ldtd.hearth.level_missing", level + 1,
+                missing.toString());
+        }
+        if (!free) {
+            held.shrink(next.duskglass);
+            for (Map.Entry<String, Integer> m : next.materials.entrySet()) {
+                takeFromStockpile(com.micatechnologies.minecraft.ldtd.tower.BlockSpec.item(m.getKey()), m.getValue());
+            }
+        }
+        setLevel(level + 1);
+        return new net.minecraft.util.text.TextComponentTranslation("ldtd.hearth.levelled", level, radius());
+    }
+
+    private int countInStockpile(net.minecraft.item.ItemStack like) {
+        int n = 0;
+        for (int i = 0; i < stockpile.getSizeInventory(); i++) {
+            net.minecraft.item.ItemStack s = stockpile.getStackInSlot(i);
+            if (net.minecraft.item.ItemStack.areItemsEqual(s, like)) {
+                n += s.getCount();
+            }
+        }
+        return n;
+    }
+
+    private void takeFromStockpile(net.minecraft.item.ItemStack like, int amount) {
+        for (int i = 0; i < stockpile.getSizeInventory() && amount > 0; i++) {
+            net.minecraft.item.ItemStack s = stockpile.getStackInSlot(i);
+            if (net.minecraft.item.ItemStack.areItemsEqual(s, like)) {
+                int n = Math.min(amount, s.getCount());
+                stockpile.decrStackSize(i, n);
+                amount -= n;
+            }
+        }
+    }
+
     // ----------------------------------------------------------------------------------------
     // Builders (Phase 6)
 
