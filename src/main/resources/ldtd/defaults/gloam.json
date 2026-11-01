@@ -1,0 +1,7 @@
+{
+  "_comment": "LDTD Gloam unit stats. health/attack in half-hearts, speed is the movement attribute (vanilla zombie 0.23), digPower is how hard it hits walls (1 = a bare-handed player, 0 = never digs), budgetCost is what the unit costs a raid. Edit, then run /ldtd reload (applies to newly spawned Gloam).",
+  "units": {
+    "shade":   { "health": 20, "speed": 0.25, "attack": 3, "armor": 0, "digPower": 1.0, "budgetCost": 1 },
+    "smother": { "health": 60, "speed": 0.19, "attack": 6, "armor": 6, "digPower": 6.0, "budgetCost": 5 }
+  }
+}

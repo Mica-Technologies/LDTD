@@ -3,6 +3,9 @@ package com.micatechnologies.minecraft.ldtd;
 import com.micatechnologies.minecraft.ldtd.command.CommandLdtd;
 import com.micatechnologies.minecraft.ldtd.data.LdtdData;
 import com.micatechnologies.minecraft.ldtd.network.LdtdNetwork;
+import com.micatechnologies.minecraft.ldtd.route.RouteEvents;
+import com.micatechnologies.minecraft.ldtd.route.RouteService;
+import com.micatechnologies.minecraft.ldtd.route.SiegeDamage;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -10,6 +13,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -70,5 +74,13 @@ public class Ldtd {
     @EventHandler
     public void serverStarting(FMLServerStartingEvent event) {
         event.registerServerCommand(new CommandLdtd());
+    }
+
+    /** Per-server caches must not leak from one singleplayer world into the next. */
+    @EventHandler
+    public void serverStopped(FMLServerStoppedEvent event) {
+        RouteService.clearAll();
+        SiegeDamage.clearAll();
+        RouteEvents.clearAll();
     }
 }

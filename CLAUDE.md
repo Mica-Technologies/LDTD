@@ -79,3 +79,21 @@ two deliberate edits (the RFG 1.4.7 pin and the lwjgl3ify NOTE). **Never run
 
 `docs/agent-plans/` is **gitignored**. It holds the phased implementation plan
 (`LDTD-v1-plan.md`) and agent working notes. Read its STATUS section first when resuming work.
+
+## Testing gameplay headlessly
+
+Pure logic gets JUnit tests in `ldtd.sim`. For in-world behaviour, drive a dev dedicated server
+(`./gradlew runServer`) through its console: pipe commands into stdin once `Done (` appears in
+`run/logs/latest.log`, and read the results from the server output.
+
+- Vanilla stops ticking entities 15 seconds after the last player leaves, so run
+  `/ldtd debug keepticking true` first, or marches and sieges silently freeze.
+- The console has no position. Run position-based commands through an entity:
+  `summon minecraft:armor_stand x y z {NoGravity:1b}` then
+  `execute @e[type=armor_stand] ~ ~ ~ ldtd spawn shade 4`.
+- `tp @e[type=ldtd:gloam_shade] ~ ~ ~` prints each mob's position, and `/ldtd route show` prints a
+  route's length and breach count.
+- `setworldspawn 0 100 0` keeps the chunks around the origin loaded for a test arena.
+
+Rendering, GUIs and anything a player does with their hands still need the client. Drive it
+through MCMCP when it is connected.

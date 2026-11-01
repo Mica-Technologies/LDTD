@@ -32,3 +32,5 @@ parent) is fine and does not need a row: nothing of Mojang's is redistributed in
 | `textures/blocks/hearth_bottom.png` | script-generated | Mica Technologies | `tools/gen_textures.py` | MIT | |
 | `blockstates/hearth.json`, `models/block/hearth.json`, `models/item/hearth.json` | original | Mica Technologies | Original (parent: vanilla `block/cube_bottom_top`, referenced, not copied) | MIT | |
 | `recipes/hearth.json` | original | Mica Technologies | Original | MIT | |
+| `textures/entity/gloam_shade.png`, `textures/entity/gloam_shade_eyes.png` | script-generated | Mica Technologies | `tools/gen_textures.py` | MIT | Atlas matches `client/model/ModelShade.java` |
+| `textures/entity/gloam_smother.png`, `textures/entity/gloam_smother_eyes.png` | script-generated | Mica Technologies | `tools/gen_textures.py` | MIT | Atlas matches `client/model/ModelSmother.java` |

@@ -127,10 +127,134 @@ def hearth_bottom(rng):
     return masonry(rng)
 
 
+# ---------------------------------------------------------------------------------------------
+# Entity atlases.
+#
+# Each model box unwraps onto the atlas the vanilla way. A W x H x D box at texture offset (u, v):
+#   top    (u+D,     v)     W x D      bottom (u+D+W,   v)     W x D
+#   right  (u,       v+D)   D x H      front  (u+D,     v+D)   W x H
+#   left   (u+D+W,   v+D)   D x H      back   (u+2D+W,  v+D)   W x H
+# The (u, v) offsets and sizes below MUST match the ModelRenderer boxes in the Java model classes
+# (client/model/ModelShade.java, client/model/ModelSmother.java).
+
+INK = (0x14, 0x10, 0x19)
+SMOKE = (0x2E, 0x24, 0x40)
+VIOLET = (0x4B, 0x2E, 0x6F)
+BONE = (0xE9, 0xE4, 0xD8)
+EYE = (0x5C, 0xF2, 0xE6)
+CLEAR = (0, 0, 0, 0)
+
+
+def blank(w, h):
+    return [[CLEAR] * w for _ in range(h)]
+
+
+def paint_box(img, u, v, w, h, d, painter):
+    """Fill each face of a box. painter(face, x, y, fw, fh) returns an RGBA tuple."""
+    faces = {
+        "top": (u + d, v, w, d),
+        "bottom": (u + d + w, v, w, d),
+        "right": (u, v + d, d, h),
+        "front": (u + d, v + d, w, h),
+        "left": (u + d + w, v + d, d, h),
+        "back": (u + 2 * d + w, v + d, w, h),
+    }
+    for face, (fu, fv, fw, fh) in faces.items():
+        for y in range(fh):
+            for x in range(fw):
+                img[fv + y][fu + x] = painter(face, x, y, fw, fh)
+
+
+def cloth(rng, base=INK, fold=SMOKE, edge=VIOLET):
+    """Dark cloth with vertical folds and a violet sheen near the top edge."""
+    def p(face, x, y, fw, fh):
+        if y == 0 and face not in ("top", "bottom"):
+            return rgba(edge)
+        if x % 3 == 1 and rng.random() < 0.7:
+            return rgba(fold)
+        return rgba(shade(base, rng.choice((0, 0, 1))))
+    return p
+
+
+def ragged(rng, inner, rows=3):
+    """Wrap a painter so the bottom rows of the side faces fray into nothing."""
+    def p(face, x, y, fw, fh):
+        if face not in ("top", "bottom") and y >= fh - rows and rng.random() < (y - (fh - rows) + 1) / (rows + 1.0):
+            return CLEAR
+        return inner(face, x, y, fw, fh)
+    return p
+
+
+def mask_face(rng, eye_cols, eye_row, hood):
+    """A blank bone mask on the front face with dark eye slits. Other faces are the hood."""
+    def p(face, x, y, fw, fh):
+        if face == "front":
+            if 0 < x < fw - 1 and 0 < y < fh - 1:
+                if y == eye_row and x in eye_cols:
+                    return rgba(INK)
+                return rgba(shade(BONE, rng.choice((-1, 0, 0))))
+            return rgba(VIOLET)
+        return hood(face, x, y, fw, fh)
+    return p
+
+
+def eyes_only(eye_cols, eye_row):
+    """The full-bright eye layer: cyan where the mask's eye slits are, nothing anywhere else."""
+    def p(face, x, y, fw, fh):
+        if face == "front" and y == eye_row and x in eye_cols:
+            return rgba(EYE)
+        return CLEAR
+    return p
+
+
+def shade_atlas(rng, eyes=False):
+    img = blank(64, 64)
+    eye_cols, eye_row = (1, 2, 5, 6), 3
+    if eyes:
+        paint_box(img, 0, 0, 8, 8, 8, eyes_only(eye_cols, eye_row))
+        return img
+    paint_box(img, 0, 0, 8, 8, 8, mask_face(rng, eye_cols, eye_row, cloth(rng)))       # head
+    paint_box(img, 16, 16, 8, 12, 4, ragged(rng, cloth(rng)))                          # body
+    paint_box(img, 40, 16, 3, 14, 3, ragged(rng, cloth(rng, fold=VIOLET), rows=2))     # arm
+    paint_box(img, 0, 16, 4, 12, 4, cloth(rng, base=shade(INK, -1)))                   # leg
+    return img
+
+
+def smother_atlas(rng, eyes=False):
+    img = blank(64, 64)
+    eye_cols, eye_row = (1, 4), 2
+    if eyes:
+        paint_box(img, 0, 0, 6, 6, 6, eyes_only(eye_cols, eye_row))
+        return img
+    paint_box(img, 0, 0, 6, 6, 6, mask_face(rng, eye_cols, eye_row, cloth(rng)))       # head
+
+    def plated(face, x, y, fw, fh):
+        # Heavy violet bands across the chest and shoulders: armour of hardened shadow.
+        if face != "bottom" and (y in (1, 2, 6) or face == "top"):
+            return rgba(shade(VIOLET, rng.choice((-1, 0))))
+        return cloth(rng)(face, x, y, fw, fh)
+    paint_box(img, 0, 12, 14, 14, 8, plated)                                           # body
+
+    def arm(face, x, y, fw, fh):
+        # Bone claws at the bottom of the front face.
+        if face == "front" and y >= fh - 2 and x % 2 == 0:
+            return rgba(BONE)
+        if y >= fh - 3:
+            return rgba(shade(INK, -1))
+        return cloth(rng, fold=VIOLET)(face, x, y, fw, fh)
+    paint_box(img, 40, 34, 6, 16, 6, arm)                                              # arm
+    paint_box(img, 0, 34, 5, 10, 5, cloth(rng, base=shade(INK, -1)))                   # leg
+    return img
+
+
 TEXTURES = {
     "blocks/hearth_side.png": hearth_side,
     "blocks/hearth_top.png": hearth_top,
     "blocks/hearth_bottom.png": hearth_bottom,
+    "entity/gloam_shade.png": shade_atlas,
+    "entity/gloam_shade_eyes.png": lambda rng: shade_atlas(rng, eyes=True),
+    "entity/gloam_smother.png": smother_atlas,
+    "entity/gloam_smother_eyes.png": lambda rng: smother_atlas(rng, eyes=True),
 }
 
 
@@ -141,7 +265,8 @@ def main():
         pixels = fn(random.Random(name))
         write_png(os.path.join(OUT, name), pixels)
         if preview:
-            write_png(os.path.join(PREVIEW, name.replace("/", "_")), pixels, scale=16)
+            scale = 16 if len(pixels) <= 16 else 8
+            write_png(os.path.join(PREVIEW, name.replace("/", "_")), pixels, scale=scale)
         print("wrote", name)
 
 

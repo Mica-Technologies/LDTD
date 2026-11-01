@@ -9,7 +9,7 @@ ldtd.hearth.info=Hearth of %1$s - level %2$s, territory radius %3$s
 ldtd.hearth.not_owner=Only this Hearth's owner can put it out.
 ldtd.hearth.too_close=Too close to the Hearth of %1$s at %2$s, %3$s, %4$s. Territories need room to grow.
 
-commands.ldtd.usage=/ldtd <reload|hearth>
+commands.ldtd.usage=/ldtd <reload|hearth|spawn|route|debug>
 commands.ldtd.reload.usage=/ldtd reload
 commands.ldtd.reload.ok=LDTD data reloaded.
 commands.ldtd.reload.problems=LDTD data reloaded with %s problem(s). The previous values were kept for those files:
@@ -25,3 +25,18 @@ commands.ldtd.hearth.none=There are no Hearths in this dimension.
 commands.ldtd.hearth.not_inside=You are not inside a Hearth's territory.
 commands.ldtd.hearth.not_loaded=That Hearth's chunk is not loaded.
 commands.ldtd.hearth.setlevel.ok=Hearth set to level %1$s (territory radius %2$s).
+
+entity.ldtd.gloam_shade.name=Shade
+entity.ldtd.gloam_smother.name=Smother
+death.attack.ldtd_daylight=%1$s faded in the daylight
+
+commands.ldtd.spawn.usage=/ldtd spawn <unit> [count]
+commands.ldtd.spawn.unknown=There is no Gloam unit called %s.
+commands.ldtd.spawn.ok=Spawned %1$s %2$s, marching on the nearest Hearth.
+commands.ldtd.spawn.ok_idle=Spawned %1$s %2$s. There is no Hearth for them to march on.
+commands.ldtd.route.usage=/ldtd route show
+commands.ldtd.route.show.usage=/ldtd route show
+commands.ldtd.route.none=No route from here to the nearest Hearth, not even through its walls.
+commands.ldtd.route.show.ok=Route: %1$s steps, %2$s blocks to break, cost %3$s. Showing it for 10 seconds.
+commands.ldtd.debug.usage=/ldtd debug keepticking <true|false>
+commands.ldtd.debug.keepticking=Keep entities ticking with nobody online: %s

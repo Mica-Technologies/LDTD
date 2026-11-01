@@ -1,17 +1,28 @@
 package com.micatechnologies.minecraft.ldtd.command;
 
+import com.micatechnologies.minecraft.ldtd.LdtdConstants;
 import com.micatechnologies.minecraft.ldtd.data.LdtdData;
+import com.micatechnologies.minecraft.ldtd.gloam.EntityGloam;
+import com.micatechnologies.minecraft.ldtd.gloam.GloamKind;
 import com.micatechnologies.minecraft.ldtd.hearth.HearthRegistry;
 import com.micatechnologies.minecraft.ldtd.hearth.HearthRegistry.HearthRecord;
 import com.micatechnologies.minecraft.ldtd.hearth.TileEntityHearth;
+import com.micatechnologies.minecraft.ldtd.route.RouteEvents;
+import com.micatechnologies.minecraft.ldtd.route.RouteService;
+import com.micatechnologies.minecraft.ldtd.sim.route.Route;
+import java.util.Collections;
 import java.util.List;
+import javax.annotation.Nullable;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
+import net.minecraft.entity.EntityList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -25,6 +36,8 @@ import net.minecraftforge.server.command.CommandTreeBase;
  *   <li>{@code /ldtd hearth info}: the territory you are standing in, or the nearest Hearth.</li>
  *   <li>{@code /ldtd hearth list}: every Hearth in your dimension.</li>
  *   <li>{@code /ldtd hearth setlevel <level>}: set the level of the Hearth whose territory you're in.</li>
+ *   <li>{@code /ldtd spawn <unit> [count]}: spawn Gloam marching on the nearest Hearth.</li>
+ *   <li>{@code /ldtd route show}: draw the raid route from where you stand to the nearest Hearth.</li>
  * </ul>
  */
 public final class CommandLdtd extends CommandTreeBase {
@@ -32,6 +45,168 @@ public final class CommandLdtd extends CommandTreeBase {
     public CommandLdtd() {
         addSubcommand(new Reload());
         addSubcommand(new HearthTree());
+        addSubcommand(new Spawn());
+        addSubcommand(new RouteTree());
+        addSubcommand(new Debug());
+    }
+
+    /**
+     * {@code /ldtd debug keepticking <true|false>}: keep entities ticking with nobody online, for
+     * headless dedicated-server tests. Resets when the server stops.
+     */
+    private static final class Debug extends CommandBase {
+
+        @Override
+        public String getName() {
+            return "debug";
+        }
+
+        @Override
+        public String getUsage(ICommandSender sender) {
+            return "commands.ldtd.debug.usage";
+        }
+
+        @Override
+        public int getRequiredPermissionLevel() {
+            return 2;
+        }
+
+        @Override
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+            if (args.length != 2 || !"keepticking".equals(args[0])) {
+                throw new WrongUsageException(getUsage(sender));
+            }
+            RouteEvents.keepTicking = parseBoolean(args[1]);
+            sender.sendMessage(new TextComponentTranslation("commands.ldtd.debug.keepticking", RouteEvents.keepTicking));
+        }
+    }
+
+    /**
+     * {@code /ldtd spawn <unit> [count]}: spawns Gloam at your position, marching on the nearest
+     * Hearth. A testing tool until raids exist (Phase 4).
+     */
+    private static final class Spawn extends CommandBase {
+
+        @Override
+        public String getName() {
+            return "spawn";
+        }
+
+        @Override
+        public String getUsage(ICommandSender sender) {
+            return "commands.ldtd.spawn.usage";
+        }
+
+        @Override
+        public int getRequiredPermissionLevel() {
+            return 2;
+        }
+
+        @Override
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+            if (args.length < 1 || args.length > 2) {
+                throw new WrongUsageException(getUsage(sender));
+            }
+            GloamKind kind = null;
+            for (GloamKind k : GloamKind.values()) {
+                if (k.id().equals(args[0])) {
+                    kind = k;
+                }
+            }
+            if (kind == null) {
+                throw new CommandException("commands.ldtd.spawn.unknown", args[0]);
+            }
+            int count = args.length == 2 ? parseInt(args[1], 1, 64) : 1;
+            World world = sender.getEntityWorld();
+            Vec3d at = sender.getPositionVector();
+            HearthRecord hearth = HearthRegistry.get(world).nearest((int) at.x, (int) at.z);
+            for (int i = 0; i < count; i++) {
+                EntityGloam mob = (EntityGloam) EntityList.newEntity(EntityList.getClass(
+                    new ResourceLocation(LdtdConstants.MOD_NAMESPACE, kind.registryPath())), world);
+                if (mob == null) {
+                    throw new CommandException("commands.ldtd.spawn.unknown", args[0]);
+                }
+                double ox = (world.rand.nextDouble() - 0.5D) * Math.min(count, 6);
+                double oz = (world.rand.nextDouble() - 0.5D) * Math.min(count, 6);
+                mob.setLocationAndAngles(at.x + ox, at.y, at.z + oz, world.rand.nextFloat() * 360.0F, 0.0F);
+                mob.onInitialSpawn(world.getDifficultyForLocation(mob.getPosition()), null);
+                world.spawnEntity(mob);
+                if (hearth != null) {
+                    mob.marchOn(hearth);
+                }
+            }
+            sender.sendMessage(new TextComponentTranslation(hearth == null
+                ? "commands.ldtd.spawn.ok_idle" : "commands.ldtd.spawn.ok", count, args[0]));
+        }
+
+        @Override
+        public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args,
+                                              @Nullable BlockPos targetPos) {
+            return args.length == 1 ? getListOfStringsMatchingLastWord(args, GloamKind.ids()) : Collections.emptyList();
+        }
+    }
+
+    private static final class RouteTree extends CommandTreeBase {
+
+        RouteTree() {
+            addSubcommand(new RouteShow());
+        }
+
+        @Override
+        public String getName() {
+            return "route";
+        }
+
+        @Override
+        public String getUsage(ICommandSender sender) {
+            return "commands.ldtd.route.usage";
+        }
+
+        @Override
+        public int getRequiredPermissionLevel() {
+            return 2;
+        }
+    }
+
+    /**
+     * {@code /ldtd route show}: plans a raid route from where you stand to the nearest Hearth and
+     * draws it for ten seconds. End-rod sparks mark the march, witch sparkles mark the blocks it
+     * would break.
+     */
+    private static final class RouteShow extends CommandBase {
+
+        @Override
+        public String getName() {
+            return "show";
+        }
+
+        @Override
+        public String getUsage(ICommandSender sender) {
+            return "commands.ldtd.route.show.usage";
+        }
+
+        @Override
+        public int getRequiredPermissionLevel() {
+            return 2;
+        }
+
+        @Override
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+            World world = sender.getEntityWorld();
+            BlockPos at = sender.getPosition();
+            HearthRecord hearth = HearthRegistry.get(world).nearest(at.getX(), at.getZ());
+            if (hearth == null) {
+                throw new CommandException("commands.ldtd.hearth.none");
+            }
+            Route route = RouteService.get(world).route(world, at, hearth, true);
+            if (route == null) {
+                sender.sendMessage(new TextComponentTranslation("commands.ldtd.route.none"));
+                return;
+            }
+            RouteEvents.show((WorldServer) world, route);
+            sender.sendMessage(new TextComponentTranslation("commands.ldtd.route.show.ok",
+                route.points.size(), route.breaches.size(), String.format("%.1f", route.cost)));
+        }
     }
 
     @Override

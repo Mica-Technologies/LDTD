@@ -1,10 +1,10 @@
 package com.micatechnologies.minecraft.ldtd.data;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
-import com.google.gson.reflect.TypeToken;
 import com.micatechnologies.minecraft.ldtd.Ldtd;
+import com.micatechnologies.minecraft.ldtd.gloam.GloamKind;
+import com.micatechnologies.minecraft.ldtd.sim.GloamStats;
 import com.micatechnologies.minecraft.ldtd.sim.HearthLevel;
 import com.micatechnologies.minecraft.ldtd.sim.HearthLevelTable;
 import java.io.File;
@@ -12,11 +12,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * LDTD's data-driven content (design decision D11).
@@ -24,17 +25,22 @@ import java.util.List;
  * <p>Content lives as JSON in {@code config/ldtd/}. The defaults ship in the jar under
  * {@code /ldtd/defaults/} and are copied out the first time, so a server owner always has a file to
  * edit. Each file is validated as it is read. A broken file is reported in the log and the last good
- * table (or, on first load, the jar's default) stays in force, so a typo can't take a server down.
+ * values (or, on first load, the jar's defaults) stay in force, so a typo can't take a server down.
  * {@code /ldtd reload} re-reads everything.</p>
+ *
+ * <p>When a newer LDTD adds a unit that an older edited file doesn't have, the jar's default for
+ * that unit is used and the gap is reported, rather than the whole file being rejected.</p>
  */
 public final class LdtdData {
 
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final Gson GSON = new Gson();
     private static final String DEFAULTS_ROOT = "/ldtd/defaults/";
     private static final String HEARTH_LEVELS = "hearth_levels.json";
+    private static final String GLOAM = "gloam.json";
 
     private static File dataDir;
     private static volatile HearthLevelTable hearthLevels;
+    private static volatile Map<String, GloamStats> gloam;
 
     private LdtdData() {
         throw new AssertionError("No instances.");
@@ -47,7 +53,9 @@ public final class LdtdData {
             Ldtd.LOGGER.error("Could not create {}; using built-in defaults only", dataDir);
         }
         copyDefaultIfMissing(HEARTH_LEVELS);
-        hearthLevels = readDefaultHearthLevels();
+        copyDefaultIfMissing(GLOAM);
+        hearthLevels = HearthLevelTable.validate(readDefault(HEARTH_LEVELS, HearthLevelsFile.class).levels);
+        gloam = GloamStats.validate(readDefault(GLOAM, GloamFile.class).units, GloamKind.ids());
         reload();
     }
 
@@ -59,11 +67,28 @@ public final class LdtdData {
     public static List<String> reload() {
         List<String> problems = new ArrayList<>();
         try {
-            hearthLevels = HearthLevelTable.validate(readHearthLevels(new File(dataDir, HEARTH_LEVELS)));
-        } catch (IOException | JsonParseException | IllegalArgumentException e) {
-            String msg = HEARTH_LEVELS + ": " + e.getMessage() + " (kept the previous table)";
-            Ldtd.LOGGER.error("Invalid data file {}", msg);
-            problems.add(msg);
+            hearthLevels = HearthLevelTable.validate(readUser(HEARTH_LEVELS, HearthLevelsFile.class).levels);
+        } catch (IOException | JsonParseException | IllegalArgumentException | IllegalStateException e) {
+            problems.add(report(HEARTH_LEVELS, e));
+        }
+        try {
+            Map<String, GloamStats> units = new LinkedHashMap<>();
+            Map<String, GloamStats> user = readUser(GLOAM, GloamFile.class).units;
+            if (user != null) {
+                units.putAll(user);
+            }
+            Map<String, GloamStats> defaults = readDefault(GLOAM, GloamFile.class).units;
+            for (String id : GloamKind.ids()) {
+                if (!units.containsKey(id)) {
+                    units.put(id, defaults.get(id));
+                    String msg = GLOAM + ": unit '" + id + "' is missing, so the built-in default is used";
+                    Ldtd.LOGGER.warn(msg);
+                    problems.add(msg);
+                }
+            }
+            gloam = GloamStats.validate(units, GloamKind.ids());
+        } catch (IOException | JsonParseException | IllegalArgumentException | IllegalStateException e) {
+            problems.add(report(GLOAM, e));
         }
         return problems;
     }
@@ -72,30 +97,36 @@ public final class LdtdData {
         return hearthLevels;
     }
 
-    private static List<HearthLevel> readHearthLevels(File file) throws IOException {
-        try (Reader r = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
-            return parseHearthLevels(r);
-        }
+    /** Stats for one Gloam unit. Always present: validation guarantees every {@link GloamKind}. */
+    public static GloamStats gloam(GloamKind kind) {
+        return gloam.get(kind.id());
     }
 
-    private static HearthLevelTable readDefaultHearthLevels() {
-        try (InputStream in = LdtdData.class.getResourceAsStream(DEFAULTS_ROOT + HEARTH_LEVELS)) {
-            if (in == null) {
-                throw new IllegalStateException("default " + HEARTH_LEVELS + " is missing from the jar");
+    private static String report(String file, Exception e) {
+        String msg = file + ": " + e.getMessage() + " (kept the previous values)";
+        Ldtd.LOGGER.error("Invalid data file {}", msg);
+        return msg;
+    }
+
+    private static <T> T readUser(String name, Class<T> type) throws IOException {
+        try (Reader r = Files.newBufferedReader(new File(dataDir, name).toPath(), StandardCharsets.UTF_8)) {
+            T value = GSON.fromJson(r, type);
+            if (value == null) {
+                throw new JsonParseException("the file is empty");
             }
-            return HearthLevelTable.validate(parseHearthLevels(new InputStreamReader(in, StandardCharsets.UTF_8)));
-        } catch (IOException e) {
-            throw new IllegalStateException("could not read the default " + HEARTH_LEVELS, e);
+            return value;
         }
     }
 
-    private static List<HearthLevel> parseHearthLevels(Reader r) {
-        Type type = new TypeToken<HearthLevelsFile>() { }.getType();
-        HearthLevelsFile f = GSON.fromJson(r, type);
-        if (f == null) {
-            throw new JsonParseException("the file is empty");
+    private static <T> T readDefault(String name, Class<T> type) {
+        try (InputStream in = LdtdData.class.getResourceAsStream(DEFAULTS_ROOT + name)) {
+            if (in == null) {
+                throw new IllegalStateException("default " + name + " is missing from the jar");
+            }
+            return GSON.fromJson(new InputStreamReader(in, StandardCharsets.UTF_8), type);
+        } catch (IOException e) {
+            throw new IllegalStateException("could not read the default " + name, e);
         }
-        return f.levels;
     }
 
     private static void copyDefaultIfMissing(String name) {
@@ -118,5 +149,10 @@ public final class LdtdData {
     /** The shape of {@code hearth_levels.json}. */
     private static final class HearthLevelsFile {
         List<HearthLevel> levels;
+    }
+
+    /** The shape of {@code gloam.json}. */
+    private static final class GloamFile {
+        Map<String, GloamStats> units;
     }
 }
