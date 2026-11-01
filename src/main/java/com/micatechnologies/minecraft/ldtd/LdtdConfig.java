@@ -82,6 +82,9 @@ public final class LdtdConfig {
     /** Extra gap, in blocks, required between the edges of two territories. */
     public static int territorySpacing = 4;
 
+    /** Whether villages can get a Hearth Square and Watch Posts (Phase 9, D21/D22). */
+    public static boolean villageBuildings = true;
+
     /** Whether Dusk Spires generate in new chunks (Phase 9). */
     public static boolean spiresEnabled = true;
     /** One chunk in this many gets a spire (before spacing and distance rules). */
@@ -191,6 +194,9 @@ public final class LdtdConfig {
         territorySpacing = c.getInt("territorySpacing", CATEGORY_HEARTH, territorySpacing, 0, 256,
             "Extra gap, in blocks, required between the edges of two territories.");
 
+        villageBuildings = c.getBoolean("villageBuildings", CATEGORY_HEARTH, villageBuildings,
+            "Whether new villages can have a Hearth Square (an unclaimed Hearth with room to grow) and Watch Posts"
+                + " (ready-built archer towers). Needs a restart.");
         spiresEnabled = c.getBoolean("enabled", CATEGORY_SPIRES, spiresEnabled,
             "Whether Dusk Spires generate in new chunks. They send raids and can be destroyed.");
         spireRarity = c.getInt("rarity", CATEGORY_SPIRES, spireRarity, 10, 100000,

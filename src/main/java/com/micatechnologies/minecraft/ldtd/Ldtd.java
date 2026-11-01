@@ -69,6 +69,7 @@ public class Ldtd {
     public void init(FMLInitializationEvent event) {
         net.minecraftforge.fml.common.registry.GameRegistry.registerWorldGenerator(
             new com.micatechnologies.minecraft.ldtd.spire.SpireEvents.Generator(), 50);
+        com.micatechnologies.minecraft.ldtd.village.VillagePieces.register();
         proxy.init(event);
     }
 

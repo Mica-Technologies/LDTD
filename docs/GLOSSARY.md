@@ -39,7 +39,7 @@ which a Hearth can burn to grow stronger.
 | Moth-wraith | Flyer | `ldtd:gloam_moth_wraith` | Ignores the ground route and walls, steering towards the brightest light nearby. Lanterns can lure it into a kill zone. Countered by anti-air |
 | Dimcaster | Ranged | `ldtd:gloam_dimcaster` | Throws darkness bolts (`ldtd:dark_bolt`, "Darkness Bolt") that hurt and weaken. Countered by range and walls |
 | The Eclipse | Boss | `ldtd:gloam_eclipse` | Dims the whole territory while it lives |
-| Dusk Spire | Outpost | `ldtd:dusk_spire` (structure) | Black obelisk that spreads a dimming zone. Raid source (D6) |
+| Dusk Spire | Outpost | structure of `ldtd:dusk_stone` around a `ldtd:spire_core` | Generates in the world, guarded at night; feeds and aims nearby raids. Breaking the core razes it |
 
 Registry ids carry a `gloam_` prefix so the faction's entities sort together and can't collide
 with a generic word that another mod also registers.
@@ -54,6 +54,13 @@ with a generic word that another mod also registers.
 | Lantern tower | Support. Light aura that weakens the Gloam | `ldtd:tower_lantern` |
 | Guard post | Keeps a squad of Ember Guards | `ldtd:tower_core` (kind `guardpost`), blueprint `guard_post` |
 | Stone wall | Barrier | blueprint `stone_wall` |
+
+## Villages (Phase 9)
+
+| Name | What it is |
+|---|---|
+| Hearth Square | A village plaza with an unclaimed Hearth at its centre and room for every growth stage. Sneak-use claims it |
+| Watch Post | A village's ready-built archer tower |
 
 ## Defenders (Phase 8)
 
