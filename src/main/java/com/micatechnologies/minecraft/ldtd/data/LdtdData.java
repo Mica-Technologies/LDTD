@@ -195,14 +195,41 @@ public final class LdtdData {
         return msg;
     }
 
+    /**
+     * Reads an owner's data file. A file from an older LDTD is first brought up to date: anything
+     * it lacks is filled in from the built-in default ({@link JsonMerge}), the result is written
+     * back with the owner's edits intact, and the log says what was added.
+     */
     private static <T> T readUser(String name, Class<T> type) throws IOException {
-        try (Reader r = Files.newBufferedReader(new File(dataDir, name).toPath(), StandardCharsets.UTF_8)) {
-            T value = GSON.fromJson(r, type);
-            if (value == null) {
-                throw new JsonParseException("the file is empty");
-            }
-            return value;
+        File file = new File(dataDir, name);
+        com.google.gson.JsonElement user;
+        try (Reader r = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
+            user = new com.google.gson.JsonParser().parse(r);
         }
+        if (user == null || user.isJsonNull()) {
+            throw new JsonParseException("the file is empty");
+        }
+        try (InputStream in = LdtdData.class.getResourceAsStream(DEFAULTS_ROOT + name)) {
+            if (in != null) {
+                com.google.gson.JsonElement defaults =
+                    new com.google.gson.JsonParser().parse(new InputStreamReader(in, StandardCharsets.UTF_8));
+                List<String> added = new ArrayList<>();
+                String before = user.toString();
+                JsonMerge.merge(user, defaults, "", added);
+                if (!added.isEmpty()) {
+                    Ldtd.LOGGER.info("{}: brought up to date from the built-in defaults; added {}", name, added);
+                }
+                if (!user.toString().equals(before)) {
+                    Files.write(file.toPath(), new com.google.gson.GsonBuilder().setPrettyPrinting().create()
+                        .toJson(user).concat("\n").getBytes(StandardCharsets.UTF_8));
+                }
+            }
+        }
+        T value = GSON.fromJson(user, type);
+        if (value == null) {
+            throw new JsonParseException("the file is empty");
+        }
+        return value;
     }
 
     private static <T> T readDefault(String name, Class<T> type) {
