@@ -81,6 +81,12 @@ public class BlockHearth extends Block {
                 player.sendStatusMessage(new TextComponentTranslation("ldtd.hearth.cold", LdtdConfig.relightFuelCount,
                     fuelName()), true);
             }
+            if (LdtdConfig.protectionEnabled && LdtdConfig.protectStockpile && !hearth.mayUse(player)
+                && !(LdtdConfig.protectionOpsBypass && player.canUseCommand(2, ""))) {
+                player.sendStatusMessage(new TextComponentTranslation("ldtd.protect.stockpile", hearth.ownerName()),
+                    true);
+                return true;
+            }
             player.displayGUIChest(hearth.stockpile());
         }
         return true;

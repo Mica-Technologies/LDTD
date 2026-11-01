@@ -22,6 +22,7 @@ public final class LdtdConfig {
     public static final String CATEGORY_GLOAM = "gloam";
     public static final String CATEGORY_CLIENT = "client";
     public static final String CATEGORY_RANDOM_SPAWN = "randomSpawn";
+    public static final String CATEGORY_PROTECTION = "protection";
 
     /** Master switch for raids. Off turns LDTD into a building-only mod. */
     public static boolean raidsEnabled = true;
@@ -80,6 +81,21 @@ public final class LdtdConfig {
     /** Extra gap, in blocks, required between the edges of two territories. */
     public static int territorySpacing = 4;
 
+    /** Master switch for territory protection (Phase 4b). The Gloam's siege is never affected. */
+    public static boolean protectionEnabled = true;
+
+    /** Untrusted players can't break or place blocks (or empty buckets, or light fires) in a territory. */
+    public static boolean protectBlocks = true;
+
+    /** Untrusted players can't open a Hearth's stockpile. */
+    public static boolean protectStockpile = true;
+
+    /** Explosions break no blocks inside a territory. */
+    public static boolean protectExplosions = true;
+
+    /** Operators ignore territory protection. */
+    public static boolean protectionOpsBypass = true;
+
     /** Whether {@code /randomspawn} ({@code /rs}) is available. */
     public static boolean randomSpawnEnabled = true;
 
@@ -94,6 +110,9 @@ public final class LdtdConfig {
      * ground within it. At or above it, only already-generated chunks.
      */
     public static int randomSpawnFallbackRadius = 1000;
+
+    /** Ember sparks along a territory's border when you are near it. */
+    public static boolean edgeParticles = true;
 
     /** When to draw territory borders: {@code holding} (holding a Hearth), {@code always}, {@code never}. */
     public static String showTerritoryBorders = "holding";
@@ -150,6 +169,17 @@ public final class LdtdConfig {
         territorySpacing = c.getInt("territorySpacing", CATEGORY_HEARTH, territorySpacing, 0, 256,
             "Extra gap, in blocks, required between the edges of two territories.");
 
+        protectionEnabled = c.getBoolean("enabled", CATEGORY_PROTECTION, protectionEnabled,
+            "Master switch for territory protection. The Gloam's siege is never affected by it.");
+        protectBlocks = c.getBoolean("blocks", CATEGORY_PROTECTION, protectBlocks,
+            "Untrusted players can't break or place blocks, empty buckets or light fires in a territory.");
+        protectStockpile = c.getBoolean("stockpile", CATEGORY_PROTECTION, protectStockpile,
+            "Untrusted players can't open a Hearth's stockpile.");
+        protectExplosions = c.getBoolean("explosions", CATEGORY_PROTECTION, protectExplosions,
+            "Explosions (creepers, TNT, ...) break no blocks inside a territory. They still hurt entities.");
+        protectionOpsBypass = c.getBoolean("opsBypass", CATEGORY_PROTECTION, protectionOpsBypass,
+            "Operators ignore territory protection.");
+
         randomSpawnEnabled = c.getBoolean("enabled", CATEGORY_RANDOM_SPAWN, randomSpawnEnabled,
             "Whether /randomspawn (/rs) is available.");
         randomSpawnPermissionLevel = c.getInt("permissionLevel", CATEGORY_RANDOM_SPAWN, randomSpawnPermissionLevel, 0, 4,
@@ -160,6 +190,8 @@ public final class LdtdConfig {
             100000, "If the generated world reaches less than this many blocks from spawn, /randomspawn may pick"
                 + " ungenerated ground within this radius. Otherwise it only picks already-generated chunks.");
 
+        edgeParticles = c.getBoolean("edgeParticles", CATEGORY_CLIENT, edgeParticles,
+            "Ember sparks along a territory's border when you are near it.");
         showTerritoryBorders = c.getString("showTerritoryBorders", CATEGORY_CLIENT, showTerritoryBorders,
             "When to draw territory borders: holding (while holding a Hearth), always, or never.",
             new String[] {"holding", "always", "never"});

@@ -31,7 +31,16 @@ night. Then take the fight to the enemy outposts that send them.
   new world, smaller than 1000 blocks from spawn, it may pick anywhere within that radius. Open to all
   players with a 5-minute cooldown. Operators skip the cooldown and can send others
   (`/rs <player>`). All of it is configurable under `randomSpawn` in `config/ldtd.cfg`.
+- `/hearth trust <player>`, `/hearth untrust <player>`, `/hearth trusted`: who may build in your
+  territory and use your stockpile. Run them while standing in your territory.
 - `/ldtd ...`: operator tools for Hearths, raids and testing.
+
+## Territory protection
+
+Inside a claimed territory, players the owner hasn't trusted can't break or place blocks, empty
+buckets, light fires or open the stockpile, and explosions break no blocks. Doors, chests,
+levers, PvP and animals work as normal. Each rule can be switched off under `protection` in
+`config/ldtd.cfg`. None of this stops the Gloam: their siege is the point.
 
 ## Building
 

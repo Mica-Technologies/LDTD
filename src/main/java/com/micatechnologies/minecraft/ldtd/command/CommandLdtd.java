@@ -363,6 +363,7 @@ public final class CommandLdtd extends CommandTreeBase {
             addSubcommand(new Info());
             addSubcommand(new ListAll());
             addSubcommand(new SetLevel());
+            addSubcommand(new SetOwner());
         }
 
         @Override
@@ -483,6 +484,39 @@ public final class CommandLdtd extends CommandTreeBase {
             ((TileEntityHearth) te).setLevel(level);
             sender.sendMessage(new TextComponentTranslation("commands.ldtd.hearth.setlevel.ok", level,
                 LdtdData.hearthLevels().get(level).radius));
+        }
+    }
+
+    /** {@code /ldtd hearth setowner <player>}: hand the Hearth whose territory you're in to someone else. */
+    private static final class SetOwner extends CommandBase {
+
+        @Override
+        public String getName() {
+            return "setowner";
+        }
+
+        @Override
+        public String getUsage(ICommandSender sender) {
+            return "commands.ldtd.hearth.setowner.usage";
+        }
+
+        @Override
+        public int getRequiredPermissionLevel() {
+            return 2;
+        }
+
+        @Override
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+            if (args.length != 1) {
+                throw new WrongUsageException(getUsage(sender));
+            }
+            TileEntityHearth hearth = hearthHere(sender);
+            com.mojang.authlib.GameProfile profile = server.getPlayerProfileCache().getGameProfileForUsername(args[0]);
+            java.util.UUID id = profile != null ? profile.getId()
+                : net.minecraft.entity.player.EntityPlayer.getOfflineUUID(args[0]);
+            String name = profile != null ? profile.getName() : args[0];
+            hearth.setOwner(id, name);
+            sender.sendMessage(new TextComponentTranslation("commands.ldtd.hearth.setowner.ok", name));
         }
     }
 

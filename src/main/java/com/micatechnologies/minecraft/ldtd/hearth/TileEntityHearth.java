@@ -3,10 +3,14 @@ package com.micatechnologies.minecraft.ldtd.hearth;
 import com.micatechnologies.minecraft.ldtd.Ldtd;
 import com.micatechnologies.minecraft.ldtd.data.LdtdData;
 import com.micatechnologies.minecraft.ldtd.hearth.HearthRegistry.HearthRecord;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nullable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -43,6 +47,9 @@ public class TileEntityHearth extends TileEntity {
     private int raidsSurvived;
     /** The world day of the last raid, so there is at most one night raid per night. */
     private long lastRaidDay = -1L;
+
+    /** Trusted players (id to last known name), mirrored into the registry record. */
+    private final Map<UUID, String> trusted = new LinkedHashMap<>();
 
     /** Client only: the territory radius the server sent. */
     private int syncedRadius;
@@ -158,6 +165,35 @@ public class TileEntityHearth extends TileEntity {
         return false;
     }
 
+    /** Trusted players, id to name. Read-only. */
+    public Map<UUID, String> trusted() {
+        return Collections.unmodifiableMap(trusted);
+    }
+
+    /** @return false if they were already trusted (or are the owner) */
+    public boolean trust(UUID id, String name) {
+        if (trusted.containsKey(id) || id.equals(owner)) {
+            return false;
+        }
+        trusted.put(id, name);
+        markDirtyAndSync();
+        return true;
+    }
+
+    /** @return false if they weren't trusted */
+    public boolean untrust(UUID id) {
+        if (trusted.remove(id) == null) {
+            return false;
+        }
+        markDirtyAndSync();
+        return true;
+    }
+
+    /** Whether {@code player} may use the stockpile: the owner or a trusted player. */
+    public boolean mayUse(EntityPlayer player) {
+        return isOwner(player) || trusted.containsKey(player.getUniqueID());
+    }
+
     public boolean isOwner(EntityPlayer player) {
         return owner == null || owner.equals(player.getUniqueID());
     }
@@ -167,6 +203,14 @@ public class TileEntityHearth extends TileEntity {
         owner = player.getUniqueID();
         ownerName = player.getName();
         level = 1;
+        markDirtyAndSync();
+    }
+
+    /** Hands the Hearth to another player (an operator's tool). They stop being merely trusted. */
+    public void setOwner(UUID id, String name) {
+        owner = id;
+        ownerName = name;
+        trusted.remove(id);
         markDirtyAndSync();
     }
 
@@ -191,7 +235,7 @@ public class TileEntityHearth extends TileEntity {
     }
 
     HearthRecord toRecord() {
-        return new HearthRecord(pos, owner, ownerName, level, dormant);
+        return new HearthRecord(pos, owner, ownerName, level, dormant, trusted.keySet());
     }
 
     @Override
@@ -238,6 +282,14 @@ public class TileEntityHearth extends TileEntity {
         nbt.setBoolean("dormant", dormant);
         nbt.setInteger("raidsSurvived", raidsSurvived);
         nbt.setLong("lastRaidDay", lastRaidDay);
+        NBTTagList trust = new NBTTagList();
+        for (Map.Entry<UUID, String> e : trusted.entrySet()) {
+            NBTTagCompound t = new NBTTagCompound();
+            t.setUniqueId("id", e.getKey());
+            t.setString("name", e.getValue());
+            trust.appendTag(t);
+        }
+        nbt.setTag("trusted", trust);
         nbt.setTag("stockpile", stockpile.write());
         return nbt;
     }
@@ -252,6 +304,12 @@ public class TileEntityHearth extends TileEntity {
         dormant = nbt.getBoolean("dormant");
         raidsSurvived = nbt.getInteger("raidsSurvived");
         lastRaidDay = nbt.hasKey("lastRaidDay") ? nbt.getLong("lastRaidDay") : -1L;
+        trusted.clear();
+        NBTTagList trust = nbt.getTagList("trusted", Constants.NBT.TAG_COMPOUND);
+        for (int i = 0; i < trust.tagCount(); i++) {
+            NBTTagCompound t = trust.getCompoundTagAt(i);
+            trusted.put(t.getUniqueId("id"), t.getString("name"));
+        }
         stockpile.read(nbt.getTagList("stockpile", Constants.NBT.TAG_COMPOUND));
     }
 

@@ -6,6 +6,8 @@ import com.micatechnologies.minecraft.ldtd.data.LdtdData;
 import com.micatechnologies.minecraft.ldtd.sim.TerritoryMath;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -149,13 +151,25 @@ public final class HearthRegistry extends WorldSavedData {
         public final int level;
         /** A fallen Hearth that hasn't been relit: no territory, no raids (design decision D17). */
         public final boolean dormant;
+        /** Players the owner trusts to build in the territory (Phase 4b). */
+        public final Set<UUID> trusted;
 
-        public HearthRecord(BlockPos pos, @Nullable UUID owner, String ownerName, int level, boolean dormant) {
+        public HearthRecord(BlockPos pos, @Nullable UUID owner, String ownerName, int level, boolean dormant,
+                            Set<UUID> trusted) {
             this.pos = pos.toImmutable();
             this.owner = owner;
             this.ownerName = ownerName == null ? "" : ownerName;
             this.level = level;
             this.dormant = dormant;
+            this.trusted = Collections.unmodifiableSet(new HashSet<>(trusted));
+        }
+
+        /**
+         * Whether {@code player} may build in this territory: the owner, or someone the owner trusts.
+         * An unclaimed Hearth protects nothing.
+         */
+        public boolean mayBuild(UUID player) {
+            return owner == null || owner.equals(player) || trusted.contains(player);
         }
 
         /** The territory radius for this Hearth's level, from the current level table. */
@@ -171,13 +185,25 @@ public final class HearthRegistry extends WorldSavedData {
             nbt.setString("ownerName", ownerName);
             nbt.setInteger("level", level);
             nbt.setBoolean("dormant", dormant);
+            NBTTagList list = new NBTTagList();
+            for (UUID id : trusted) {
+                NBTTagCompound t = new NBTTagCompound();
+                t.setUniqueId("id", id);
+                list.appendTag(t);
+            }
+            nbt.setTag("trusted", list);
             return nbt;
         }
 
         static HearthRecord read(NBTTagCompound nbt) {
             UUID owner = nbt.hasUniqueId("owner") ? nbt.getUniqueId("owner") : null;
+            Set<UUID> trusted = new HashSet<>();
+            NBTTagList list = nbt.getTagList("trusted", Constants.NBT.TAG_COMPOUND);
+            for (int i = 0; i < list.tagCount(); i++) {
+                trusted.add(list.getCompoundTagAt(i).getUniqueId("id"));
+            }
             return new HearthRecord(BlockPos.fromLong(nbt.getLong("pos")), owner,
-                nbt.getString("ownerName"), Math.max(1, nbt.getInteger("level")), nbt.getBoolean("dormant"));
+                nbt.getString("ownerName"), Math.max(1, nbt.getInteger("level")), nbt.getBoolean("dormant"), trusted);
         }
     }
 }

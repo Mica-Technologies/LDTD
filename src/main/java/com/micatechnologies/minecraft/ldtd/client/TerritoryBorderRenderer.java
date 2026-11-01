@@ -12,6 +12,8 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraft.util.EnumParticleTypes;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -76,6 +78,45 @@ public final class TerritoryBorderRenderer {
         GlStateManager.disableBlend();
         GlStateManager.enableTexture2D();
         GlStateManager.popMatrix();
+    }
+
+    /** How close to the edge a player must be to see its ember sparks. */
+    private static final double EDGE_NEAR = 6.0D;
+
+    /**
+     * A few ember-coloured sparks along the stretch of border nearest the player, whenever they are
+     * close to it: a light, always-on way to see where a territory starts, without holding a Hearth.
+     */
+    @SubscribeEvent
+    public void onClientTick(TickEvent.ClientTickEvent event) {
+        Minecraft mc = Minecraft.getMinecraft();
+        EntityPlayerSP player = mc.player;
+        if (event.phase != TickEvent.Phase.END || player == null || mc.world == null || mc.isGamePaused()
+            || !LdtdConfig.edgeParticles || player.ticksExisted % 4 != 0) {
+            return;
+        }
+        for (TileEntityHearth hearth : ClientHearths.snapshot()) {
+            if (hearth.isInvalid() || hearth.getWorld() != mc.world || hearth.radius() <= 0 || hearth.isDormant()) {
+                continue;
+            }
+            double cx = hearth.getPos().getX() + 0.5D;
+            double cz = hearth.getPos().getZ() + 0.5D;
+            double dx = player.posX - cx;
+            double dz = player.posZ - cz;
+            double r = hearth.radius() + 0.5D;
+            if (Math.abs(Math.sqrt(dx * dx + dz * dz) - r) > EDGE_NEAR) {
+                continue;
+            }
+            double angle = Math.atan2(dz, dx);
+            for (int i = 0; i < 3; i++) {
+                double a = angle + (player.getRNG().nextDouble() - 0.5D) * (8.0D / r);
+                double x = cx + Math.cos(a) * r;
+                double z = cz + Math.sin(a) * r;
+                double y = player.posY + player.getRNG().nextDouble() * 2.0D;
+                // SPELL_MOB takes its colour from the "speed" arguments.
+                mc.world.spawnParticle(EnumParticleTypes.SPELL_MOB, x, y, z, R, G, B);
+            }
+        }
     }
 
     private static boolean shouldShow(EntityPlayerSP player) {

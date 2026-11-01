@@ -1,8 +1,10 @@
 package com.micatechnologies.minecraft.ldtd;
 
+import com.micatechnologies.minecraft.ldtd.command.CommandHearth;
 import com.micatechnologies.minecraft.ldtd.command.CommandLdtd;
 import com.micatechnologies.minecraft.ldtd.command.CommandRandomSpawn;
 import com.micatechnologies.minecraft.ldtd.data.LdtdData;
+import com.micatechnologies.minecraft.ldtd.hearth.TerritoryProtection;
 import com.micatechnologies.minecraft.ldtd.network.LdtdNetwork;
 import com.micatechnologies.minecraft.ldtd.raid.RaidDirector;
 import com.micatechnologies.minecraft.ldtd.route.RouteEvents;
@@ -77,6 +79,7 @@ public class Ldtd {
     public void serverStarting(FMLServerStartingEvent event) {
         event.registerServerCommand(new CommandLdtd());
         event.registerServerCommand(new CommandRandomSpawn());
+        event.registerServerCommand(new CommandHearth());
     }
 
     /** Per-server caches must not leak from one singleplayer world into the next. */
@@ -86,5 +89,6 @@ public class Ldtd {
         SiegeDamage.clearAll();
         RouteEvents.clearAll();
         RaidDirector.clearAll();
+        TerritoryProtection.clearAll();
     }
 }
