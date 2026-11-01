@@ -3,6 +3,7 @@ package com.micatechnologies.minecraft.ldtd.hearth;
 import com.micatechnologies.minecraft.ldtd.hearth.HearthRegistry.HearthRecord;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -31,6 +32,11 @@ public class ItemBlockHearth extends ItemBlock {
                 player.sendStatusMessage(new TextComponentTranslation("ldtd.hearth.too_close",
                     conflict.ownerName.isEmpty() ? "-" : conflict.ownerName,
                     conflict.pos.getX(), conflict.pos.getY(), conflict.pos.getZ()), true);
+                // The client already predicted a successful placement and used up one Hearth.
+                // Send the real inventory back so its count doesn't drift until the next sync.
+                if (player instanceof EntityPlayerMP) {
+                    ((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
+                }
                 return false;
             }
         }
