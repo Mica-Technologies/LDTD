@@ -70,3 +70,6 @@ server-smoke.log
 
 # Python bytecode from tools/
 __pycache__/
+
+# Built documentation site (mkdocs build output). Published by CI from a fresh build; never committed.
+site/

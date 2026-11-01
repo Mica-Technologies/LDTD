@@ -1,0 +1,167 @@
+site_name: LDTD Wiki
+site_description: >-
+  LDTD (Limitless Development: Tower Defense) is a survival tower-defense mod for Minecraft 1.12.2
+  (Forge). Claim land with a Hearth, build towers from blueprints, hold off the Gloam each night,
+  and raze the Dusk Spires that send them.
+site_url: https://mica-technologies.github.io/LDTD/
+repo_url: https://github.com/Mica-Technologies/LDTD
+repo_name: Mica-Technologies/LDTD
+edit_uri: edit/main/docs/
+copyright: >-
+  LDTD is MIT-licensed. Not an official Minecraft product. Not approved by or associated with
+  Mojang or Microsoft.
+
+# Gitignored working documents and repo-only material. agent-plans/ is absent from a CI checkout
+# anyway; listing it stops a LOCAL `mkdocs serve` from picking it up and quietly publishing it on
+# the next deploy. MOD_PAGE.md is store copy, and the research notes are background reading kept
+# for contributors on GitHub, not wiki pages.
+exclude_docs: |
+  agent-plans/
+  MOD_PAGE.md
+  research/
+
+theme:
+  name: material
+  language: en
+  logo: assets/images/hearth-icon.png
+  favicon: assets/images/hearth-icon.png
+  icon:
+    repo: fontawesome/brands/github
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.top
+    - navigation.indexes
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.action.edit
+    - content.tooltips
+    - toc.follow
+  palette:
+    # Warm against cold, as in docs/design/ART_DIRECTION.md: ember and brass for the Hearth side
+    # in light mode, Gloam ink with an ember accent in dark mode. The exact values live in
+    # assets/ldtd.css; `custom` tells Material to read them from there.
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  # Renders :material-…: / :octicons-…: shortcodes as inline SVG icons. Without it they render as
+  # literal colon-wrapped text.
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+plugins:
+  - search
+
+extra_css:
+  - assets/ldtd.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Mica-Technologies/LDTD
+      name: LDTD on GitHub
+    - icon: material/download
+      link: https://github.com/Mica-Technologies/LDTD/releases
+      name: Download LDTD
+
+# Anchors are checked too, so a link to a heading that has been renamed fails the strict build
+# instead of silently landing at the top of the page.
+validation:
+  anchors: warn
+
+nav:
+  - Home: index.md
+  - Get started:
+      - start/index.md
+      - Installing: start/installing.md
+      - How LDTD plays: start/how-it-plays.md
+      - Your first night: start/first-night.md
+      - Strategy tips: start/strategy.md
+  - Hearth:
+      - hearth/index.md
+      - Levels and growth: hearth/levels.md
+      - Stockpile and Hearth-sprites: hearth/sprites.md
+      - Territory and protection: hearth/territory.md
+      - The Flame, falling and relighting: hearth/flame.md
+  - Defenses:
+      - defenses/index.md
+      - Blueprints: defenses/blueprints.md
+      - Towers: defenses/towers.md
+      - Ember Guards: defenses/ember-guards.md
+      - Light as a defense: defenses/light.md
+  - The Gloam:
+      - gloam/index.md
+      - Bestiary: gloam/bestiary.md
+      - Raids: gloam/raids.md
+      - Routes and sieges: gloam/sieges.md
+  - Strike back:
+      - offense/index.md
+      - Dusk Spires: offense/dusk-spires.md
+      - The Eclipse: offense/eclipse.md
+      - Villages: offense/villages.md
+  - Reference:
+      - reference/index.md
+      - Items and blocks: reference/items-and-blocks.md
+      - Crafting: reference/crafting.md
+      - Commands: reference/commands.md
+      - Configuration: reference/configuration.md
+      - Data files (JSON): reference/data-files.md
+      - Numbers and formulas: reference/numbers.md
+      - Sounds: reference/sounds.md
+  - Help:
+      - help/index.md
+      - FAQ and troubleshooting: help/troubleshooting.md
+      - Server admins: help/server-admins.md
+      - Glossary: help/glossary.md
+      - Release notes: help/release-notes.md
+  - Contributing:
+      - contributing/index.md
+      - Building from source: contributing/building.md
+      - How LDTD is built: contributing/architecture.md
+      - Balance simulator: contributing/balance-simulator.md
+      - Originality rules: contributing/originality.md
+      - Names (glossary source): GLOSSARY.md
+      - Art direction: design/ART_DIRECTION.md
+      - Asset provenance: ASSET_PROVENANCE.md

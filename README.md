@@ -9,6 +9,9 @@ blueprints, block by block, with materials from the Hearth's stockpile. When nig
 **Gloam** come for your flame. Hold the line, grow your Hearth, then take the fight to the Dusk
 Spires that send them, and face the Eclipse.
 
+**[Read the LDTD Wiki](https://mica-technologies.github.io/LDTD/)** for guides, every tower and
+Gloam unit, raids, commands, configuration and the data files.
+
 ![Archer, Lantern and Frost towers](docs/images/towers_all.png)
 
 ## How to play

@@ -1,0 +1,222 @@
+/* ============================================================================
+   LDTD wiki theme
+   ----------------------------------------------------------------------------
+   Colours come from docs/design/ART_DIRECTION.md, the mod's own art direction:
+   the Hearth side is warm (ember, brass, soot), the Gloam are cold (ink,
+   violet, cyan eye-glow). Light mode reads as the Hearth by day; dark mode as
+   the Gloam's night, with ember accents. Both are first-class.
+   ============================================================================ */
+
+:root {
+  /* Hearth side (warm) */
+  --ldtd-ember:      #FF9A3C;
+  --ldtd-ember-hi:   #FFD27A;
+  --ldtd-ember-deep: #C4651A;
+  --ldtd-soot:       #2B2522;
+  --ldtd-brass:      #C9A04A;
+  --ldtd-masonry:    #7A726B;
+
+  /* The Gloam (cold) */
+  --ldtd-ink:        #141019;
+  --ldtd-smoke:      #2E2440;
+  --ldtd-violet:     #4B2E6F;
+  --ldtd-bone:       #E9E4D8;
+  --ldtd-eye:        #5CF2E6;
+  --ldtd-duskglass:  #2A1C3D;
+}
+
+/* ---------------------------------------------------------------- light mode */
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color:        var(--ldtd-soot);
+  --md-primary-fg-color--light: #4a403b;
+  --md-primary-fg-color--dark:  #1b1715;
+  --md-primary-bg-color:        #fff7ec;
+  --md-primary-bg-color--light: #ffe9cc;
+  --md-accent-fg-color:         var(--ldtd-ember-deep);
+  --md-accent-fg-color--transparent: rgba(196, 101, 26, 0.1);
+  --md-typeset-a-color:         #a4520f;
+  --md-default-bg-color:        #fffdf9;
+}
+
+/* ----------------------------------------------------------------- dark mode */
+[data-md-color-scheme="slate"] {
+  --md-hue: 268;
+  --md-primary-fg-color:        var(--ldtd-ink);
+  --md-primary-fg-color--light: var(--ldtd-smoke);
+  --md-primary-fg-color--dark:  #0b0910;
+  --md-primary-bg-color:        var(--ldtd-ember-hi);
+  --md-primary-bg-color--light: #ffe2a8;
+  --md-accent-fg-color:         var(--ldtd-ember);
+  --md-accent-fg-color--transparent: rgba(255, 154, 60, 0.12);
+  --md-typeset-a-color:         var(--ldtd-ember);
+  --md-default-bg-color:        #17131d;
+  --md-code-bg-color:           #211b2b;
+}
+
+/* The tab bar sits on the same colour as the header in both modes. */
+.md-tabs {
+  background-color: var(--md-primary-fg-color);
+}
+
+/* A thin ember line under the header: the Hearth's flame on the horizon. */
+.md-header {
+  box-shadow: 0 2px 0 var(--ldtd-ember), 0 0 0.4rem rgba(0, 0, 0, 0.3);
+}
+
+/* ------------------------------------------------------------------- images */
+/* Screenshots get a soft frame and rounded corners, so they read as pictures
+   of the game rather than bleeding into the page. */
+.md-typeset img:not(.icon):not(.twemoji):not([src*="icons/"]) {
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+
+/* Pixel-art icons stay crisp when the browser scales them. */
+.md-typeset img[src*="icons/"],
+.md-header__button.md-logo img {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.md-typeset img.icon,
+.md-typeset img[src*="icons/"] {
+  vertical-align: middle;
+}
+
+/* Inline icon next to a heading or in a table: about one line tall. */
+.md-typeset .inline-icon {
+  width: 2.2em;
+  height: 2.2em;
+  margin-right: 0.3em;
+}
+
+/* Captions: an image's alt text repeated under it, as an <em> right after. */
+.md-typeset figure figcaption,
+.md-typeset .caption {
+  font-size: 0.75rem;
+  color: var(--md-default-fg-color--light);
+  text-align: center;
+  margin-top: 0.3em;
+}
+
+/* --------------------------------------------------------------- the hero */
+.ldtd-hero {
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 0 0 1.5em;
+  background: linear-gradient(160deg, var(--ldtd-ink) 0%, var(--ldtd-smoke) 60%, var(--ldtd-violet) 100%);
+  padding: 1.2em 1.2em 0.8em;
+  text-align: center;
+}
+
+.ldtd-hero img {
+  max-width: 100%;
+  image-rendering: pixelated;
+  box-shadow: none !important;
+}
+
+.ldtd-hero p {
+  color: var(--ldtd-bone);
+  margin: 0.4em 0 0;
+  font-size: 0.95rem;
+}
+
+/* --------------------------------------------------------- unit stat cards */
+/* The bestiary and tower pages use Material's grid cards; give the warm side
+   an ember edge and the Gloam a cold one. */
+.md-typeset .grid.cards.warm > ul > li,
+.md-typeset .grid.cards.warm > ol > li {
+  border-left: 3px solid var(--ldtd-ember);
+}
+
+.md-typeset .grid.cards.cold > ul > li,
+.md-typeset .grid.cards.cold > ol > li {
+  border-left: 3px solid var(--ldtd-eye);
+}
+
+/* Stat tables are dense; keep them compact and number-aligned. */
+.md-typeset table.stats td,
+.md-typeset .stats table td {
+  font-variant-numeric: tabular-nums;
+}
+
+/* -------------------------------------------------------------- admonitions */
+/* A "gloam" admonition, for notes about the enemy. */
+:root {
+  --md-admonition-icon--gloam: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a9 9 0 0 0-9 9v11l3-3 3 3 3-3 3 3 3-3 3 3V11a9 9 0 0 0-9-9m-3 8a2 2 0 1 1 0 4 2 2 0 0 1 0-4m6 0a2 2 0 1 1 0 4 2 2 0 0 1 0-4"/></svg>');
+  --md-admonition-icon--hearth: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.66 11.2c-.23-.3-.51-.56-.77-.82-.67-.6-1.43-1.03-2.07-1.66C13.33 7.26 13 4.85 13.95 3c-.95.23-1.78.75-2.49 1.32-2.59 2.08-3.61 5.75-2.39 8.9.04.1.08.2.08.33 0 .22-.15.42-.35.5-.23.1-.47.04-.66-.12a.6.6 0 0 1-.14-.17c-1.13-1.43-1.31-3.48-.55-5.12C5.78 10 4.87 12.3 5 14.47c.06.5.12 1 .29 1.5.14.6.41 1.2.71 1.73 1.08 1.73 2.95 2.97 4.96 3.22 2.14.27 4.43-.12 6.07-1.6 1.83-1.66 2.47-4.32 1.53-6.6l-.13-.26c-.21-.46-.77-1.26-.77-1.26"/></svg>');
+}
+
+.md-typeset .admonition.gloam,
+.md-typeset details.gloam {
+  border-color: var(--ldtd-violet);
+}
+
+.md-typeset .gloam > .admonition-title,
+.md-typeset .gloam > summary {
+  background-color: rgba(75, 46, 111, 0.12);
+}
+
+.md-typeset .gloam > .admonition-title::before,
+.md-typeset .gloam > summary::before {
+  background-color: var(--ldtd-violet);
+  -webkit-mask-image: var(--md-admonition-icon--gloam);
+  mask-image: var(--md-admonition-icon--gloam);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .admonition.gloam,
+[data-md-color-scheme="slate"] .md-typeset details.gloam {
+  border-color: var(--ldtd-eye);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .gloam > .admonition-title::before,
+[data-md-color-scheme="slate"] .md-typeset .gloam > summary::before {
+  background-color: var(--ldtd-eye);
+}
+
+.md-typeset .admonition.hearth,
+.md-typeset details.hearth {
+  border-color: var(--ldtd-ember);
+}
+
+.md-typeset .hearth > .admonition-title,
+.md-typeset .hearth > summary {
+  background-color: rgba(255, 154, 60, 0.12);
+}
+
+.md-typeset .hearth > .admonition-title::before,
+.md-typeset .hearth > summary::before {
+  background-color: var(--ldtd-ember);
+  -webkit-mask-image: var(--md-admonition-icon--hearth);
+  mask-image: var(--md-admonition-icon--hearth);
+}
+
+/* ------------------------------------------------------------ keyboard keys */
+.md-typeset kbd {
+  font-size: 0.75em;
+}
+
+/* ------------------------------------------------------------------ layout */
+/* Two columns at desktop widths: four cards make two even rows instead of three and an orphan. */
+.md-typeset .grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+}
+
+/* ------------------------------------------------------------------ buttons */
+/* The outline button takes the link colour, so it reads on both the light and dark pages. */
+.md-typeset .md-button:not(.md-button--primary) {
+  color: var(--md-typeset-a-color);
+  border-color: var(--md-typeset-a-color);
+}
+
+.md-typeset .md-button--primary {
+  background-color: var(--ldtd-ember-deep);
+  border-color: var(--ldtd-ember-deep);
+  color: #fff;
+}
+
+[data-md-color-scheme="slate"] .md-typeset .md-button--primary {
+  background-color: var(--ldtd-ember);
+  border-color: var(--ldtd-ember);
+  color: var(--ldtd-ink);
+}

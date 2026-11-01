@@ -8,7 +8,7 @@ that adds it**.
 
 - **Original work** made for LDTD.
 - **CC0 / public domain.**
-- **CC-BY**, with the credit also added to [CREDITS.md](../CREDITS.md).
+- **CC-BY**, with the credit also added to [CREDITS.md](https://github.com/Mica-Technologies/LDTD/blob/main/CREDITS.md).
 - **AI-generated**, disclosed: Kind is `AI-generated`, Source names the tool and model, and it
   meets the rules in [design/ART_DIRECTION.md](design/ART_DIRECTION.md#ai-generated-assets-allowed-disclosed-decided-2026-11-01).
 
@@ -54,3 +54,7 @@ parent) is fine and does not need a row: nothing of Mojang's is redistributed in
 | `mcmod.info`, `pack.mcmeta` | original | Mica Technologies | Original | MIT | Mod metadata |
 | `ldtd_logo.png` (jar root), `docs/images/logo.png` | script-generated | Mica Technologies | `tools/gen_logo.py` | MIT | Original pixel art, no fonts or third-party art |
 | `docs/images/{towers_all,raid_active,roster,village,natural_spire}.png` | original | Mica Technologies | In-game screenshots of LDTD | MIT (LDTD content) | Docs only, not in the jar. They show vanilla Minecraft terrain around LDTD's content, as any screenshot of the game does |
+| `docs/assets/images/*.jpg` (wiki screenshots) | original | Mica Technologies | In-game screenshots of LDTD, taken in a dev client through MCMCP | MIT (LDTD content) | Wiki only, not in the jar. Like any screenshot of the game, they show vanilla terrain and vanilla screens (the chest screen, the book screen, the boss bar) around LDTD's content |
+| `docs/assets/images/icons/*.png`, `docs/assets/images/hearth-icon.png` | script-generated | Mica Technologies | `tools/gen_wiki_icons.py`, from LDTD's own textures above | MIT | Wiki only. Isometric block renders and upscaled item icons |
+| `docs/assets/images/logo.png` | script-generated | Mica Technologies | Copy of `docs/images/logo.png` (`tools/gen_logo.py`) | MIT | Wiki copy of the logo |
+| `docs/assets/ldtd.css` | original | Mica Technologies | Original | MIT | Wiki theme, colours from `design/ART_DIRECTION.md` |
