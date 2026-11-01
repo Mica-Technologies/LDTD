@@ -9,6 +9,8 @@ that adds it**.
 - **Original work** made for LDTD.
 - **CC0 / public domain.**
 - **CC-BY**, with the credit also added to [CREDITS.md](../CREDITS.md).
+- **AI-generated**, disclosed: Kind is `AI-generated`, Source names the tool and model, and it
+  meets the rules in [design/ART_DIRECTION.md](design/ART_DIRECTION.md#ai-generated-assets-allowed-disclosed-decided-2026-11-01).
 
 ## What is not allowed
 
@@ -22,6 +24,6 @@ parent) is fine and does not need a row: nothing of Mojang's is redistributed in
 
 ## Ledger
 
-| Path (under `assets/ldtd/`) | Kind | Author | Source | License | Notes |
+| Path (under `assets/ldtd/`) | Kind (`original` / `script-generated` / `CC0` / `CC-BY` / `AI-generated`) | Author | Source | License | Notes |
 |---|---|---|---|---|---|
-| `lang/en_us.lang` | Text | Mica Technologies | Original | MIT | |
+| `lang/en_us.lang` | original | Mica Technologies | Original | MIT | |

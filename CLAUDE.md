@@ -10,7 +10,9 @@ construct towers and walls from blueprints using stockpiled materials. Raids fro
 faction come at night (or when called early). World-generated enemy outposts send the raids and
 can be assaulted, leading to a boss.
 
-Background research is in `docs/research/tower-defense-research.md`.
+Background research is in `docs/research/tower-defense-research.md`. **Names come from
+`docs/GLOSSARY.md`** (add a name there, clash-checked, before using it), and the look comes
+from `docs/design/ART_DIRECTION.md`.
 
 ## This is a public, MIT-licensed release: originality rules
 
@@ -26,7 +28,8 @@ Every name, asset and line of code must be original or compatibly licensed. In s
   credited. Third-party source kept for study goes in `example-source/` (gitignored), for ideas
   only.
 - **Every asset gets a row in `docs/ASSET_PROVENANCE.md`** in the same commit that adds it. Allowed:
-  original, CC0, CC-BY (credited in `CREDITS.md`). Not allowed: NC, ND, SA, unknown origin.
+  original, script-generated, CC0, CC-BY (credited in `CREDITS.md`), and AI-generated only if
+  disclosed per `docs/design/ART_DIRECTION.md`. Not allowed: NC, ND, SA, unknown origin.
 - **New dependencies:** check the license and record it in `CREDITS.md`. Prefer soft dependencies.
 - Don't put "Minecraft" in the mod's name or logo. Keep the Mojang disclaimer in the README.
 

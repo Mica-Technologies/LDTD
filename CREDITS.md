@@ -19,3 +19,6 @@ Every texture, model, sound and other asset in this repository is listed in
 Assets by people outside Mica Technologies are credited here as well.
 
 _None yet._
+
+If any shipped assets are AI-generated, the categories that include them are listed here, and
+each such asset is marked in the provenance ledger with the tool used._
