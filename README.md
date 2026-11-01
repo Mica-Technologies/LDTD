@@ -24,6 +24,15 @@ night. Then take the fight to the enemy outposts that send them.
 - **Data-driven:** towers, enemies, waves and upgrades are JSON under `config/ldtd/`, so they can
   be tuned without a rebuild.
 
+## Commands
+
+- `/randomspawn` (or `/rs`): teleports you to a random safe spot, for finding fresh ground for a
+  Hearth. On a world that is already explored, it only picks chunks that have been generated. On a
+  new world, smaller than 1000 blocks from spawn, it may pick anywhere within that radius. Open to all
+  players with a 5-minute cooldown. Operators skip the cooldown and can send others
+  (`/rs <player>`). All of it is configurable under `randomSpawn` in `config/ldtd.cfg`.
+- `/ldtd ...`: operator tools for Hearths, raids and testing.
+
 ## Building
 
 Needs a JDK 17-22 for Gradle (21 recommended). The mod itself targets Java 8.

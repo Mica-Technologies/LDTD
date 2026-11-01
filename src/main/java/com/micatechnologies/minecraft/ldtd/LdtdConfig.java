@@ -21,6 +21,7 @@ public final class LdtdConfig {
     public static final String CATEGORY_HEARTH = "hearth";
     public static final String CATEGORY_GLOAM = "gloam";
     public static final String CATEGORY_CLIENT = "client";
+    public static final String CATEGORY_RANDOM_SPAWN = "randomSpawn";
 
     /** Master switch for raids. Off turns LDTD into a building-only mod. */
     public static boolean raidsEnabled = true;
@@ -79,6 +80,21 @@ public final class LdtdConfig {
     /** Extra gap, in blocks, required between the edges of two territories. */
     public static int territorySpacing = 4;
 
+    /** Whether {@code /randomspawn} ({@code /rs}) is available. */
+    public static boolean randomSpawnEnabled = true;
+
+    /** Permission level {@code /randomspawn} needs: 0 = every player, 2 = operators. */
+    public static int randomSpawnPermissionLevel = 0;
+
+    /** Seconds a player waits between uses. Operators skip it. */
+    public static int randomSpawnCooldownSeconds = 300;
+
+    /**
+     * Below this generated radius (blocks from spawn), {@code /randomspawn} may pick ungenerated
+     * ground within it. At or above it, only already-generated chunks.
+     */
+    public static int randomSpawnFallbackRadius = 1000;
+
     /** When to draw territory borders: {@code holding} (holding a Hearth), {@code always}, {@code never}. */
     public static String showTerritoryBorders = "holding";
 
@@ -133,6 +149,16 @@ public final class LdtdConfig {
             "Whether only a Hearth's owner (and operators) may break it.");
         territorySpacing = c.getInt("territorySpacing", CATEGORY_HEARTH, territorySpacing, 0, 256,
             "Extra gap, in blocks, required between the edges of two territories.");
+
+        randomSpawnEnabled = c.getBoolean("enabled", CATEGORY_RANDOM_SPAWN, randomSpawnEnabled,
+            "Whether /randomspawn (/rs) is available.");
+        randomSpawnPermissionLevel = c.getInt("permissionLevel", CATEGORY_RANDOM_SPAWN, randomSpawnPermissionLevel, 0, 4,
+            "Permission level /randomspawn needs: 0 = every player, 2 = operators.");
+        randomSpawnCooldownSeconds = c.getInt("cooldownSeconds", CATEGORY_RANDOM_SPAWN, randomSpawnCooldownSeconds, 0,
+            86400, "Seconds a player waits between uses. Operators skip the cooldown.");
+        randomSpawnFallbackRadius = c.getInt("fallbackRadius", CATEGORY_RANDOM_SPAWN, randomSpawnFallbackRadius, 64,
+            100000, "If the generated world reaches less than this many blocks from spawn, /randomspawn may pick"
+                + " ungenerated ground within this radius. Otherwise it only picks already-generated chunks.");
 
         showTerritoryBorders = c.getString("showTerritoryBorders", CATEGORY_CLIENT, showTerritoryBorders,
             "When to draw territory borders: holding (while holding a Hearth), always, or never.",

@@ -77,3 +77,11 @@ commands.ldtd.raid.start.usage=/ldtd raid start [called]
 commands.ldtd.raid.stop.usage=/ldtd raid stop
 commands.ldtd.raid.start.refused=That Hearth is cold or already raided.
 commands.ldtd.raid.stop.none=No raid is on here.
+
+commands.ldtd.randomspawn.usage=/randomspawn (or /rs) [player]
+commands.ldtd.randomspawn.disabled=/randomspawn is turned off on this server.
+commands.ldtd.randomspawn.others=Only operators can send other players.
+commands.ldtd.randomspawn.cooldown=You can use /randomspawn again in %s seconds.
+commands.ldtd.randomspawn.dimension=/randomspawn only works in dimensions with a sky.
+commands.ldtd.randomspawn.none=No safe spot found this time. Try again.
+commands.ldtd.randomspawn.ok=Sent %1$s to %2$s, %3$s, %4$s.

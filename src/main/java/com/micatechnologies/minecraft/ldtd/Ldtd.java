@@ -1,6 +1,7 @@
 package com.micatechnologies.minecraft.ldtd;
 
 import com.micatechnologies.minecraft.ldtd.command.CommandLdtd;
+import com.micatechnologies.minecraft.ldtd.command.CommandRandomSpawn;
 import com.micatechnologies.minecraft.ldtd.data.LdtdData;
 import com.micatechnologies.minecraft.ldtd.network.LdtdNetwork;
 import com.micatechnologies.minecraft.ldtd.raid.RaidDirector;
@@ -75,6 +76,7 @@ public class Ldtd {
     @EventHandler
     public void serverStarting(FMLServerStartingEvent event) {
         event.registerServerCommand(new CommandLdtd());
+        event.registerServerCommand(new CommandRandomSpawn());
     }
 
     /** Per-server caches must not leak from one singleplayer world into the next. */
