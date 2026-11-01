@@ -29,6 +29,9 @@ public final class RaidRules {
     /** Duskglass paid into the stockpile for surviving a raid (Phase 7). */
     public Payout payout = new Payout();
 
+    /** Late raids send tougher Gloam rather than ever more of them (Phase 10 balance). */
+    public Toughness toughness = new Toughness();
+
     /** Per-unit raid rules, keyed by the unit id in {@code gloam.json}. */
     public Map<String, Unit> units = new LinkedHashMap<>();
 
@@ -41,6 +44,18 @@ public final class RaidRules {
         public int perLevel = 4;
         /** Hard ceiling, whatever the night. */
         public int max = 400;
+    }
+
+    public static final class Toughness {
+        /** Extra health for each raid the Hearth has already survived, as a fraction (0.03 = +3%). */
+        public double perNight = 0.03D;
+        /** Ceiling on the health multiplier. */
+        public double max = 2.5D;
+    }
+
+    /** The health multiplier for the Gloam of raid {@code night} (counting from 1). */
+    public double healthMultiplier(int night) {
+        return Math.min(toughness.max, 1.0D + toughness.perNight * Math.max(0, night - 1));
     }
 
     public static final class Flame {
@@ -91,6 +106,11 @@ public final class RaidRules {
         if (payout == null) {
             payout = new Payout();
         }
+        if (toughness == null) {
+            toughness = new Toughness();
+        }
+        range("toughness.perNight", toughness.perNight, 0.0D, 10.0D);
+        range("toughness.max", toughness.max, 1.0D, 100.0D);
         range("payout.base", payout.base, 0, 100000);
         range("payout.perRaid", payout.perRaid, 0, 100000);
         range("payout.calledMultiplier", payout.calledMultiplier, 0.0D, 100.0D);

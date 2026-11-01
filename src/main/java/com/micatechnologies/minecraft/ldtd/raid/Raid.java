@@ -196,6 +196,7 @@ final class Raid {
             double y = kind == GloamKind.MOTH_WRAITH ? at.getY() + 4.0D : at.getY();
             mob.setLocationAndAngles(at.getX() + 0.5D, y, at.getZ() + 0.5D, world.rand.nextFloat() * 360.0F, 0.0F);
             mob.onInitialSpawn(world.getDifficultyForLocation(at), null);
+            mob.toughen(LdtdData.raid().healthMultiplier(night));
             world.spawnEntity(mob);
             mob.marchOn(record);
             alive.add(mob.getUniqueID());

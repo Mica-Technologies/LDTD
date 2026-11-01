@@ -16,7 +16,7 @@
       "range": 10,
       "cooldownTicks": 40,
       "damage": 1,
-      "slowAmplifier": 1,
+      "slowAmplifier": 0,
       "slowTicks": 60
     },
     "lantern": {
@@ -38,8 +38,8 @@
     ],
     "damage": [
       1.0,
-      1.5,
-      2.2
+      1.35,
+      1.7
     ],
     "range": [
       1.0,
@@ -48,8 +48,8 @@
     ],
     "cooldown": [
       1.0,
-      0.85,
-      0.7
+      0.9,
+      0.8
     ]
   }
 }

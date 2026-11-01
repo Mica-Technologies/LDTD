@@ -71,7 +71,7 @@ public final class LdtdConfig {
     public static double gloamLitDamageMultiplier = 1.5D;
 
     /** Fraction of speed the Gloam lose while weakened by light. */
-    public static double gloamLitSlowdown = 0.3D;
+    public static double gloamLitSlowdown = 0.15D;
 
     /** Whether the Gloam smoulder and take damage in daylight under the open sky. */
     public static boolean gloamBurnInDaylight = true;

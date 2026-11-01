@@ -173,12 +173,30 @@ public abstract class EntityGloam extends EntityMob {
         }
         IAttributeInstance speed = getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
         boolean slowed = speed.getModifier(LIT_SLOWDOWN_ID) != null;
+        // Light and frost don't stack (Phase 10 balance): a Gloam already slowed by a frost
+        // tower isn't slowed again by light.
+        if (lit && isPotionActive(net.minecraft.init.MobEffects.SLOWNESS)) {
+            lit = false;
+        }
         if (lit && !slowed) {
             speed.applyModifier(new AttributeModifier(LIT_SLOWDOWN_ID, "ldtd light slowdown",
                 -LdtdConfig.gloamLitSlowdown, 2).setSaved(false));
         } else if (!lit && slowed) {
             speed.removeModifier(LIT_SLOWDOWN_ID);
         }
+    }
+
+    private static final UUID TOUGHNESS_ID = UUID.fromString("5d1c2a7e-6b0f-4c1e-9a43-2f7e8d6c0b19");
+
+    /** Late raids send tougher Gloam (raid.json toughness): scales max health, saved with the mob. */
+    public void toughen(double multiplier) {
+        if (multiplier <= 1.0D) {
+            return;
+        }
+        IAttributeInstance health = getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH);
+        health.removeModifier(TOUGHNESS_ID);
+        health.applyModifier(new AttributeModifier(TOUGHNESS_ID, "ldtd raid toughness", multiplier - 1.0D, 1));
+        setHealth(getMaxHealth());
     }
 
     @Override
