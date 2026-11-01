@@ -11,6 +11,11 @@ import com.micatechnologies.minecraft.ldtd.gloam.GloamKind;
 import com.micatechnologies.minecraft.ldtd.hearth.BlockHearth;
 import com.micatechnologies.minecraft.ldtd.hearth.ItemBlockHearth;
 import com.micatechnologies.minecraft.ldtd.hearth.TileEntityHearth;
+import com.micatechnologies.minecraft.ldtd.tower.BlockTowerCore;
+import com.micatechnologies.minecraft.ldtd.tower.EntityCannonShell;
+import com.micatechnologies.minecraft.ldtd.tower.EntityTowerArrow;
+import com.micatechnologies.minecraft.ldtd.tower.ItemBlueprint;
+import com.micatechnologies.minecraft.ldtd.tower.TileEntityTower;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -30,6 +35,8 @@ public final class LdtdRegistry {
 
     public static final BlockHearth BLOCK_HEARTH = new BlockHearth();
     public static final ItemBlockHearth ITEM_HEARTH = new ItemBlockHearth(BLOCK_HEARTH);
+    public static final BlockTowerCore BLOCK_TOWER_CORE = new BlockTowerCore();
+    public static final ItemBlueprint ITEM_BLUEPRINT = new ItemBlueprint();
 
     private LdtdRegistry() {
         throw new AssertionError("No instances.");
@@ -38,6 +45,9 @@ public final class LdtdRegistry {
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         event.getRegistry().register(BLOCK_HEARTH);
+        event.getRegistry().register(BLOCK_TOWER_CORE);
+        GameRegistry.registerTileEntity(TileEntityTower.class,
+            new ResourceLocation(LdtdConstants.MOD_NAMESPACE, "tower"));
         GameRegistry.registerTileEntity(TileEntityHearth.class,
             new ResourceLocation(LdtdConstants.MOD_NAMESPACE, "hearth"));
     }
@@ -45,6 +55,7 @@ public final class LdtdRegistry {
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
         event.getRegistry().register(ITEM_HEARTH);
+        event.getRegistry().register(ITEM_BLUEPRINT);
     }
 
     /**
@@ -63,6 +74,18 @@ public final class LdtdRegistry {
             .entity(EntityDarkBolt.class)
             .id(new ResourceLocation(LdtdConstants.MOD_NAMESPACE, "dark_bolt"), id++)
             .name(LdtdConstants.MOD_NAMESPACE + ".dark_bolt")
+            .tracker(64, 10, true)
+            .build());
+        event.getRegistry().register(EntityEntryBuilder.create()
+            .entity(EntityTowerArrow.class)
+            .id(new ResourceLocation(LdtdConstants.MOD_NAMESPACE, "tower_arrow"), id++)
+            .name(LdtdConstants.MOD_NAMESPACE + ".tower_arrow")
+            .tracker(64, 20, true)
+            .build());
+        event.getRegistry().register(EntityEntryBuilder.create()
+            .entity(EntityCannonShell.class)
+            .id(new ResourceLocation(LdtdConstants.MOD_NAMESPACE, "cannon_shell"), id++)
+            .name(LdtdConstants.MOD_NAMESPACE + ".cannon_shell")
             .tracker(64, 10, true)
             .build());
     }

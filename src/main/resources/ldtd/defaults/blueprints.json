@@ -1,0 +1,58 @@
+{
+  "_comment": "LDTD blueprints. Layers are bottom first; each layer is rows front to back, each row cells left to right. A cell is a palette key, '.' (must be air), ' ' (leave as is) or 'C' (the tower core, exactly one for a tower). Palette values are modid:name or modid:name@meta. A build costs one of each block it places (as its item) plus extraCost. Edit, then run /ldtd reload.",
+  "blueprints": {
+    "archer_tower": {
+      "tower": "archer",
+      "palette": { "S": "minecraft:stonebrick", "L": "minecraft:log", "P": "minecraft:planks", "F": "minecraft:fence" },
+      "layers": [
+        ["SSS", "SSS", "SSS"],
+        ["L.L", "...", "L.L"],
+        ["L.L", "...", "L.L"],
+        ["PPP", "PPP", "PPP"],
+        ["F.F", ".C.", "F.F"]
+      ],
+      "extraCost": { "minecraft:arrow": 16 }
+    },
+    "cannon_tower": {
+      "tower": "cannon",
+      "palette": { "S": "minecraft:stonebrick", "W": "minecraft:cobblestone_wall", "I": "minecraft:iron_bars" },
+      "layers": [
+        ["SSS", "SSS", "SSS"],
+        ["SSS", "SSS", "SSS"],
+        ["W.W", ".S.", "W.W"],
+        ["...", ".C.", "..."]
+      ],
+      "extraCost": { "minecraft:iron_ingot": 4, "minecraft:gunpowder": 8 }
+    },
+    "frost_tower": {
+      "tower": "frost",
+      "palette": { "S": "minecraft:stonebrick", "N": "minecraft:snow", "G": "minecraft:glass" },
+      "layers": [
+        ["SSS", "SSS", "SSS"],
+        ["N.N", ".N.", "N.N"],
+        ["G.G", ".N.", "G.G"],
+        ["...", ".C.", "..."]
+      ],
+      "extraCost": { "minecraft:snowball": 16 }
+    },
+    "lantern_post": {
+      "tower": "lantern",
+      "palette": { "S": "minecraft:stonebrick", "F": "minecraft:fence" },
+      "layers": [
+        ["S"],
+        ["F"],
+        ["F"],
+        ["C"]
+      ],
+      "extraCost": { "minecraft:glowstone_dust": 4 }
+    },
+    "stone_wall": {
+      "palette": { "S": "minecraft:stonebrick" },
+      "layers": [
+        ["SSSSS"],
+        ["SSSSS"],
+        ["SSSSS"]
+      ]
+    }
+  }
+}

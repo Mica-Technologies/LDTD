@@ -38,3 +38,7 @@ parent) is fine and does not need a row: nothing of Mojang's is redistributed in
 | `textures/entity/gloam_moth_wraith.png`, `textures/entity/gloam_moth_wraith_eyes.png` | script-generated | Mica Technologies | `tools/gen_textures.py` | MIT | Atlas matches `client/model/ModelMothWraith.java` |
 | `textures/entity/gloam_dimcaster.png`, `textures/entity/gloam_dimcaster_eyes.png` | script-generated | Mica Technologies | `tools/gen_textures.py` | MIT | Atlas matches `client/model/ModelDimcaster.java` |
 | `textures/entity/dark_bolt.png` | script-generated | Mica Technologies | `tools/gen_textures.py` | MIT | |
+| `textures/blocks/tower_core_{archer,cannon,frost,lantern}_{side,top}.png` | script-generated | Mica Technologies | `tools/gen_textures.py` | MIT | |
+| `textures/items/blueprint.png`, `textures/entity/cannon_shell.png` | script-generated | Mica Technologies | `tools/gen_textures.py` | MIT | |
+| `blockstates/tower_core.json`, `models/block/tower_core_*.json`, `models/item/blueprint.json` | original | Mica Technologies | Original (parents `block/cube_bottom_top`, `item/generated`, referenced) | MIT | |
+| `recipes/blueprint_*.json` | original | Mica Technologies | Original | MIT | |

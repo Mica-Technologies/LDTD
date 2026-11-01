@@ -106,3 +106,35 @@ commands.hearth.trusted.none=%s's Hearth trusts nobody else.
 commands.hearth.trusted.list=%1$s's Hearth trusts: %2$s
 commands.ldtd.hearth.setowner.usage=/ldtd hearth setowner <player>
 commands.ldtd.hearth.setowner.ok=The Hearth now belongs to %s.
+
+tile.ldtd.tower_core.name=Tower Core
+item.ldtd.blueprint.name=Blueprint
+item.ldtd.blueprint.named=Blueprint: %s
+item.ldtd.blueprint.size=Size %1$s x %2$s, %3$s tall
+item.ldtd.blueprint.cost=Costs, from the Hearth's stockpile:
+entity.ldtd.tower_arrow.name=Tower Arrow
+entity.ldtd.cannon_shell.name=Cannon Shell
+death.attack.ldtd_tower=%1$s was struck down by a tower
+
+ldtd.blueprint.archer_tower=Archer Tower
+ldtd.blueprint.cannon_tower=Cannon Tower
+ldtd.blueprint.frost_tower=Frost Tower
+ldtd.blueprint.lantern_post=Lantern Post
+ldtd.blueprint.stone_wall=Stone Wall
+ldtd.blueprint.unknown=This blueprint (%s) isn't known on this server.
+ldtd.blueprint.outside=Blueprints can only be built wholly inside a lit Hearth territory.
+ldtd.blueprint.blocked=Something is in the way at %1$s, %2$s, %3$s.
+ldtd.blueprint.occupied=Someone is standing in the way at %1$s, %2$s, %3$s.
+ldtd.blueprint.missing=The Hearth's stockpile is short of: %s
+ldtd.blueprint.built=%s built.
+
+ldtd.tower.archer=Archer tower
+ldtd.tower.cannon=Cannon tower
+ldtd.tower.frost=Frost tower
+ldtd.tower.lantern=Lantern post
+ldtd.tower.info=%1$s - range %2$s - aims at: %3$s. Sneak-use to change.
+ldtd.tower.info_broken=%1$s - too damaged to work. Repair its blocks.
+ldtd.tower.priority=Now aiming at: %s
+ldtd.tower.priority.first=the one furthest along
+ldtd.tower.priority.strongest=the strongest
+ldtd.tower.priority.closest=the closest

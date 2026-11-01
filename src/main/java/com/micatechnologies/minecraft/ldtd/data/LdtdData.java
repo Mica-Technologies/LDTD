@@ -8,6 +8,9 @@ import com.micatechnologies.minecraft.ldtd.sim.GloamStats;
 import com.micatechnologies.minecraft.ldtd.sim.HearthLevel;
 import com.micatechnologies.minecraft.ldtd.sim.HearthLevelTable;
 import com.micatechnologies.minecraft.ldtd.sim.raid.RaidRules;
+import com.micatechnologies.minecraft.ldtd.sim.tower.Blueprint;
+import com.micatechnologies.minecraft.ldtd.sim.tower.TowerStats;
+import com.micatechnologies.minecraft.ldtd.tower.TowerKind;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,11 +42,15 @@ public final class LdtdData {
     private static final String HEARTH_LEVELS = "hearth_levels.json";
     private static final String GLOAM = "gloam.json";
     private static final String RAID = "raid.json";
+    private static final String TOWERS = "towers.json";
+    private static final String BLUEPRINTS = "blueprints.json";
 
     private static File dataDir;
     private static volatile HearthLevelTable hearthLevels;
     private static volatile Map<String, GloamStats> gloam;
     private static volatile RaidRules raid;
+    private static volatile Map<String, TowerStats> towers;
+    private static volatile Map<String, Blueprint> blueprints;
 
     private LdtdData() {
         throw new AssertionError("No instances.");
@@ -58,9 +65,13 @@ public final class LdtdData {
         copyDefaultIfMissing(HEARTH_LEVELS);
         copyDefaultIfMissing(GLOAM);
         copyDefaultIfMissing(RAID);
+        copyDefaultIfMissing(TOWERS);
+        copyDefaultIfMissing(BLUEPRINTS);
         hearthLevels = HearthLevelTable.validate(readDefault(HEARTH_LEVELS, HearthLevelsFile.class).levels);
         gloam = GloamStats.validate(readDefault(GLOAM, GloamFile.class).units, GloamKind.ids());
         raid = readDefault(RAID, RaidRules.class).validate(GloamKind.ids());
+        towers = TowerStats.validate(readDefault(TOWERS, TowersFile.class).towers, TowerKind.ids());
+        blueprints = validateBlueprints(readDefault(BLUEPRINTS, BlueprintsFile.class).blueprints);
         reload();
     }
 
@@ -100,6 +111,16 @@ public final class LdtdData {
         } catch (IOException | JsonParseException | IllegalArgumentException | IllegalStateException e) {
             problems.add(report(RAID, e));
         }
+        try {
+            towers = TowerStats.validate(readUser(TOWERS, TowersFile.class).towers, TowerKind.ids());
+        } catch (IOException | JsonParseException | IllegalArgumentException | IllegalStateException e) {
+            problems.add(report(TOWERS, e));
+        }
+        try {
+            blueprints = validateBlueprints(readUser(BLUEPRINTS, BlueprintsFile.class).blueprints);
+        } catch (IOException | JsonParseException | IllegalArgumentException | IllegalStateException e) {
+            problems.add(report(BLUEPRINTS, e));
+        }
         return problems;
     }
 
@@ -115,6 +136,30 @@ public final class LdtdData {
     /** How raids are built, and the Hearth's Flame rules. */
     public static RaidRules raid() {
         return raid;
+    }
+
+    /** Stats for one tower kind. Always present: validation guarantees every {@link TowerKind}. */
+    public static TowerStats tower(TowerKind kind) {
+        return towers.get(kind.id());
+    }
+
+    /** Every blueprint, by id, in file order. */
+    public static Map<String, Blueprint> blueprints() {
+        return blueprints;
+    }
+
+    private static Map<String, Blueprint> validateBlueprints(Map<String, Blueprint> raw) {
+        if (raw == null || raw.isEmpty()) {
+            throw new IllegalArgumentException("the file has no blueprints");
+        }
+        Map<String, Blueprint> out = new LinkedHashMap<>();
+        for (Map.Entry<String, Blueprint> e : raw.entrySet()) {
+            if (!e.getKey().matches("[a-z0-9_]+")) {
+                throw new IllegalArgumentException("blueprint id '" + e.getKey() + "' must be lower-case letters, digits and _");
+            }
+            out.put(e.getKey(), e.getValue().validate(e.getKey(), TowerKind.ids()));
+        }
+        return java.util.Collections.unmodifiableMap(out);
     }
 
     private static String report(String file, Exception e) {
@@ -164,6 +209,16 @@ public final class LdtdData {
     /** The shape of {@code hearth_levels.json}. */
     private static final class HearthLevelsFile {
         List<HearthLevel> levels;
+    }
+
+    /** The shape of {@code towers.json}. */
+    private static final class TowersFile {
+        Map<String, TowerStats> towers;
+    }
+
+    /** The shape of {@code blueprints.json}. */
+    private static final class BlueprintsFile {
+        LinkedHashMap<String, Blueprint> blueprints;
     }
 
     /** The shape of {@code gloam.json}. */

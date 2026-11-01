@@ -6,7 +6,11 @@ import com.micatechnologies.minecraft.ldtd.client.model.ModelDimcaster;
 import com.micatechnologies.minecraft.ldtd.client.model.ModelMothWraith;
 import com.micatechnologies.minecraft.ldtd.client.model.ModelShade;
 import com.micatechnologies.minecraft.ldtd.client.model.ModelSmother;
-import com.micatechnologies.minecraft.ldtd.client.render.RenderDarkBolt;
+import com.micatechnologies.minecraft.ldtd.client.GhostPreviewRenderer;
+import com.micatechnologies.minecraft.ldtd.client.render.RenderBillboard;
+import com.micatechnologies.minecraft.ldtd.tower.EntityCannonShell;
+import com.micatechnologies.minecraft.ldtd.tower.EntityTowerArrow;
+import net.minecraft.client.renderer.entity.RenderTippedArrow;
 import com.micatechnologies.minecraft.ldtd.client.render.RenderGloam;
 import com.micatechnologies.minecraft.ldtd.gloam.EntityDarkBolt;
 import com.micatechnologies.minecraft.ldtd.gloam.EntityDimcaster;
@@ -40,7 +44,12 @@ public class LdtdClientProxy extends LdtdCommonProxy {
             m -> new RenderGloam<>(m, new ModelMothWraith(), 0.3F, 1.0F, GloamKind.MOTH_WRAITH.registryPath()));
         RenderingRegistry.registerEntityRenderingHandler(EntityDimcaster.class,
             m -> new RenderGloam<>(m, new ModelDimcaster(), 0.4F, 1.0F, GloamKind.DIMCASTER.registryPath()));
-        RenderingRegistry.registerEntityRenderingHandler(EntityDarkBolt.class, RenderDarkBolt::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityDarkBolt.class,
+            m -> new RenderBillboard<>(m, "dark_bolt", 0.5F));
+        RenderingRegistry.registerEntityRenderingHandler(EntityCannonShell.class,
+            m -> new RenderBillboard<>(m, "cannon_shell", 0.45F));
+        RenderingRegistry.registerEntityRenderingHandler(EntityTowerArrow.class, RenderTippedArrow::new);
+        MinecraftForge.EVENT_BUS.register(new GhostPreviewRenderer());
     }
 
     @Override

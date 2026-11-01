@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item": "minecraft:paper" },
+    { "item": "minecraft:glowstone_dust" }
+  ],
+  "result": { "item": "ldtd:blueprint", "nbt": { "blueprint": "lantern_post" } }
+}

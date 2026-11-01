@@ -1,7 +1,7 @@
 package com.micatechnologies.minecraft.ldtd.client.render;
 
 import com.micatechnologies.minecraft.ldtd.LdtdConstants;
-import com.micatechnologies.minecraft.ldtd.gloam.EntityDarkBolt;
+import net.minecraft.entity.Entity;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -12,24 +12,29 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-/** Draws a darkness bolt as a full-bright, camera-facing sprite. */
-public class RenderDarkBolt extends Render<EntityDarkBolt> {
+/**
+ * Draws a projectile as a full-bright, camera-facing sprite: darkness bolts, cannon shells.
+ */
+public class RenderBillboard<T extends Entity> extends Render<T> {
 
-    private static final ResourceLocation TEXTURE =
-        new ResourceLocation(LdtdConstants.MOD_NAMESPACE, "textures/entity/dark_bolt.png");
+    private final ResourceLocation texture;
+    private final float size;
 
-    public RenderDarkBolt(RenderManager manager) {
+    /** @param name texture file name under {@code textures/entity/}, without {@code .png} */
+    public RenderBillboard(RenderManager manager, String name, float size) {
         super(manager);
+        this.texture = new ResourceLocation(LdtdConstants.MOD_NAMESPACE, "textures/entity/" + name + ".png");
+        this.size = size;
     }
 
     @Override
-    public void doRender(EntityDarkBolt entity, double x, double y, double z, float entityYaw, float partialTicks) {
+    public void doRender(T entity, double x, double y, double z, float entityYaw, float partialTicks) {
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, y + 0.15D, z);
         GlStateManager.rotate(180.0F - renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate((renderManager.options.thirdPersonView == 2 ? -1 : 1) * -renderManager.playerViewX,
             1.0F, 0.0F, 0.0F);
-        GlStateManager.scale(0.5F, 0.5F, 0.5F);
+        GlStateManager.scale(size, size, size);
         GlStateManager.enableRescaleNormal();
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA,
@@ -52,7 +57,7 @@ public class RenderDarkBolt extends Render<EntityDarkBolt> {
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(EntityDarkBolt entity) {
-        return TEXTURE;
+    protected ResourceLocation getEntityTexture(T entity) {
+        return texture;
     }
 }

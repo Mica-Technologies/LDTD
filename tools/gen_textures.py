@@ -330,6 +330,133 @@ def dark_bolt(rng):
     return px
 
 
+# ---------------------------------------------------------------------------------------------
+# Towers (warm Hearth-side palette, plus a cold blue for frost).
+
+WOOD = (0x8A, 0x63, 0x3C)
+IRON = (0x8E, 0x92, 0x96)
+ICE = (0xA9, 0xD8, 0xF0)
+PAPER = (0x3A, 0x6E, 0xB5)
+
+
+def frame(px, c):
+    for i in range(16):
+        px[0][i] = px[15][i] = px[i][0] = px[i][15] = rgba(c)
+
+
+def archer_side(rng):
+    px = [[rgba(shade(WOOD, rng.choice((-1, 0, 0, 1)) - (2 if y % 4 == 3 else 0))) for x in range(16)]
+          for y in range(16)]
+    for y in range(4, 12):          # the arrow slit
+        px[y][7] = px[y][8] = rgba(SOOT)
+    for x in range(16):             # brass bands
+        px[2][x] = px[13][x] = rgba(BRASS)
+    return px
+
+
+def archer_top(rng):
+    px = [[rgba(shade(WOOD, rng.choice((-1, 0, 1)))) for x in range(16)] for y in range(16)]
+    frame(px, BRASS)
+    for i in range(3, 13):          # two crossed arrows
+        px[i][i] = rgba(SOOT)
+        px[i][15 - i] = rgba(SOOT)
+    for (x, y) in ((3, 3), (12, 3)):
+        px[y][x] = rgba(shade(IRON, 4))
+    return px
+
+
+def cannon_side(rng):
+    px = [[rgba(shade(IRON, rng.choice((-2, -1, 0, 0)))) for x in range(16)] for y in range(16)]
+    for y in range(16):
+        px[y][7] = rgba(shade(IRON, -4))
+    for (x, y) in ((2, 2), (12, 2), (2, 12), (12, 12), (5, 7), (10, 7)):
+        px[y][x] = rgba(shade(IRON, 4))   # rivets
+    for x in range(16):
+        px[0][x] = px[15][x] = rgba(SOOT)
+    return px
+
+
+def cannon_top(rng):
+    px = [[rgba(shade(IRON, rng.choice((-1, 0)))) for x in range(16)] for y in range(16)]
+    for y in range(16):
+        for x in range(16):
+            d = ((x - 7.5) ** 2 + (y - 7.5) ** 2) ** 0.5
+            if d < 4.0:
+                px[y][x] = rgba(SOOT)        # the barrel's mouth
+            elif d < 5.5:
+                px[y][x] = rgba(shade(IRON, -4))
+    return px
+
+
+def frost_side(rng):
+    px = [[rgba(shade(ICE, rng.choice((-2, -1, 0, 1)))) for x in range(16)] for y in range(16)]
+    for i in range(16):             # bright facet lines
+        if 0 <= i // 2 + 3 < 16:
+            px[i][(i // 2 + 3) % 16] = rgba((0xF4, 0xFB, 0xFF))
+        px[i][(12 - i // 3) % 16] = rgba((0xE0, 0xF4, 0xFF))
+    return px
+
+
+def frost_top(rng):
+    px = [[rgba(shade(ICE, rng.choice((-1, 0)))) for x in range(16)] for y in range(16)]
+    white = rgba((0xF4, 0xFB, 0xFF))
+    for i in range(2, 14):          # a six-armed flake, near enough
+        px[7][i] = px[8][i] = white
+        px[i][7] = px[i][8] = white
+    for i in range(4, 12):
+        px[i][i] = white
+        px[i][15 - i] = white
+    return px
+
+
+def lantern_side(rng):
+    px = [[rgba(EMBER_HI if rng.random() < 0.4 else EMBER) for x in range(16)] for y in range(16)]
+    frame(px, BRASS)
+    for y in range(16):
+        px[y][7] = px[y][8] = rgba(shade(BRASS, -2))
+    for x in range(16):
+        px[7][x] = px[8][x] = rgba(shade(BRASS, -2))
+    return px
+
+
+def lantern_top(rng):
+    px = [[rgba(shade(BRASS, rng.choice((-1, 0, 1)))) for x in range(16)] for y in range(16)]
+    for y in range(6, 10):
+        for x in range(6, 10):
+            px[y][x] = rgba(EMBER_HI)
+    return px
+
+
+def blueprint_item(rng):
+    px = [[CLEAR] * 16 for _ in range(16)]
+    for y in range(2, 14):
+        for x in range(2, 14):
+            px[y][x] = rgba(shade(PAPER, rng.choice((-1, 0, 0))))
+    for y in range(2, 14):          # rolled ends
+        px[y][1] = px[y][14] = rgba(shade(PAPER, -4))
+    white = rgba((0xDD, 0xE8, 0xF5))
+    for x in range(4, 12):          # a tower drawn in white lines
+        px[11][x] = white
+    for y in range(5, 12):
+        px[y][5] = px[y][10] = white
+    for x in range(5, 11):
+        px[5][x] = white
+    px[4][5] = px[4][7] = px[4][10] = white
+    return px
+
+
+def cannon_shell(rng):
+    px = [[CLEAR] * 16 for _ in range(16)]
+    for y in range(16):
+        for x in range(16):
+            d = ((x - 7.5) ** 2 + (y - 8.5) ** 2) ** 0.5
+            if d < 5.0:
+                px[y][x] = rgba(shade(SOOT, 1 if d < 2.5 and x < 8 and y < 8 else 0))
+    px[2][9] = px[3][9] = rgba(EMBER)     # the lit fuse
+    px[1][10] = rgba(EMBER_HI)
+    return px
+
+
 TEXTURES = {
     "blocks/hearth_side.png": hearth_side,
     "blocks/hearth_top.png": hearth_top,
@@ -345,6 +472,16 @@ TEXTURES = {
     "entity/gloam_dimcaster.png": dimcaster_atlas,
     "entity/gloam_dimcaster_eyes.png": lambda rng: dimcaster_atlas(rng, eyes=True),
     "entity/dark_bolt.png": dark_bolt,
+    "entity/cannon_shell.png": cannon_shell,
+    "blocks/tower_core_archer_side.png": archer_side,
+    "blocks/tower_core_archer_top.png": archer_top,
+    "blocks/tower_core_cannon_side.png": cannon_side,
+    "blocks/tower_core_cannon_top.png": cannon_top,
+    "blocks/tower_core_frost_side.png": frost_side,
+    "blocks/tower_core_frost_top.png": frost_top,
+    "blocks/tower_core_lantern_side.png": lantern_side,
+    "blocks/tower_core_lantern_top.png": lantern_top,
+    "items/blueprint.png": blueprint_item,
 }
 
 

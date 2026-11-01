@@ -336,6 +336,7 @@ public final class CommandLdtd extends CommandTreeBase {
         @Override
         public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
             List<String> problems = LdtdData.reload();
+            com.micatechnologies.minecraft.ldtd.tower.BlockSpec.clear();
             for (WorldServer world : server.worlds) {
                 for (HearthRecord r : HearthRegistry.get(world).all()) {
                     if (world.isBlockLoaded(r.pos)) {

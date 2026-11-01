@@ -125,6 +125,12 @@ public abstract class EntityGloam extends EntityMob {
         return r == null || r.dormant ? null : r;
     }
 
+    /** The Hearth this Gloam was sent against, or null. */
+    @Nullable
+    public BlockPos marchTargetPos() {
+        return marchTarget;
+    }
+
     /** Whether this Gloam was sent against the Hearth at {@code hearth}. */
     public boolean isMarchingOn(BlockPos hearth) {
         return hearth.equals(marchTarget);

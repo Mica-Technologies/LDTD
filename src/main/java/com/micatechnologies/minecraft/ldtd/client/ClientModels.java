@@ -21,6 +21,8 @@ public final class ClientModels {
     @SubscribeEvent
     public static void registerModels(ModelRegistryEvent event) {
         bind(LdtdRegistry.ITEM_HEARTH);
+        // One model for every blueprint; the NBT only says which structure it builds.
+        bind(LdtdRegistry.ITEM_BLUEPRINT);
     }
 
     private static void bind(Item item) {

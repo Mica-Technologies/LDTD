@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item": "minecraft:paper" },
+    { "item": "minecraft:snowball" }
+  ],
+  "result": { "item": "ldtd:blueprint", "nbt": { "blueprint": "frost_tower" } }
+}

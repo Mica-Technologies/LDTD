@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item": "minecraft:paper" },
+    { "item": "minecraft:stonebrick" }
+  ],
+  "result": { "item": "ldtd:blueprint", "nbt": { "blueprint": "stone_wall" } }
+}

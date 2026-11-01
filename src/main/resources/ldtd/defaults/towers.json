@@ -1,0 +1,9 @@
+{
+  "_comment": "LDTD tower stats. range in blocks, cooldownTicks between shots (20 = 1 s), damage in half-hearts per hit. Cannon: splashRadius. Frost: slowAmplifier (0 = Slowness I) for slowTicks, hitting everything in range. Lantern: no shots; its core gives off full light, which weakens the Gloam. Edit, then run /ldtd reload.",
+  "towers": {
+    "archer":  { "range": 20, "cooldownTicks": 20, "damage": 4 },
+    "cannon":  { "range": 16, "cooldownTicks": 60, "damage": 8, "splashRadius": 2.5 },
+    "frost":   { "range": 10, "cooldownTicks": 40, "damage": 1, "slowAmplifier": 1, "slowTicks": 60 },
+    "lantern": { "range": 0,  "cooldownTicks": 20, "damage": 0 }
+  }
+}
