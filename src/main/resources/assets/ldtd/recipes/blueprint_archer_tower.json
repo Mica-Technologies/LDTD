@@ -1,8 +1,18 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    { "item": "minecraft:paper" },
-    { "item": "minecraft:bow" }
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "minecraft:bow"
+    }
   ],
-  "result": { "item": "ldtd:blueprint", "nbt": { "blueprint": "archer_tower" } }
+  "result": {
+    "item": "ldtd:blueprint",
+    "nbt": {
+      "blueprint": "archer_tower"
+    },
+    "data": 0
+  }
 }

@@ -95,5 +95,10 @@ Pure logic gets JUnit tests in `ldtd.sim`. For in-world behaviour, drive a dev d
   route's length and breach count.
 - `setworldspawn 0 100 0` keeps the chunks around the origin loaded for a test arena.
 
+- After any change to recipes, models or data files, grep `run/logs/latest.log` for
+  `Parsing error loading recipe`, `JsonParseException`, `Exception loading model` and
+  `Unable to resolve texture`. These failures don't stop the game and are easy to miss. (A
+  sub-typed result such as `ldtd:blueprint` needs `"data": 0` in its recipe.)
+
 Rendering, GUIs and anything a player does with their hands still need the client. Drive it
 through MCMCP when it is connected.

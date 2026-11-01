@@ -1,9 +1,21 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    { "item": "minecraft:paper" },
-    { "item": "minecraft:iron_ingot" },
-    { "item": "minecraft:gunpowder" }
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "item": "minecraft:gunpowder"
+    }
   ],
-  "result": { "item": "ldtd:blueprint", "nbt": { "blueprint": "cannon_tower" } }
+  "result": {
+    "item": "ldtd:blueprint",
+    "nbt": {
+      "blueprint": "cannon_tower"
+    },
+    "data": 0
+  }
 }
