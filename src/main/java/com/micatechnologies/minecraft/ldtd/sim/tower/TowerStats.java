@@ -28,6 +28,9 @@ public final class TowerStats {
     /** Frost: how long the slow lasts, in ticks. */
     public int slowTicks = 0;
 
+    /** Guard post: how many Ember Guards it keeps. cooldownTicks is then the time to replace one. */
+    public int units = 0;
+
     /**
      * @throws IllegalArgumentException with a human-readable reason
      */
@@ -47,6 +50,7 @@ public final class TowerStats {
             check(id, "splashRadius", s.splashRadius, 0.0D, 8.0D);
             check(id, "slowAmplifier", s.slowAmplifier, 0.0D, 5.0D);
             check(id, "slowTicks", s.slowTicks, 0.0D, 1200.0D);
+            check(id, "units", s.units, 0.0D, 16.0D);
             out.put(id, s);
         }
         return Collections.unmodifiableMap(out);

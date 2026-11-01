@@ -13,7 +13,9 @@ public enum TowerKind implements IStringSerializable {
     ARCHER("archer"),
     CANNON("cannon"),
     FROST("frost"),
-    LANTERN("lantern");
+    LANTERN("lantern"),
+    /** Keeps a squad of Ember Guards (Phase 8). */
+    GUARDPOST("guardpost");
 
     private final String id;
 

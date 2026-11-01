@@ -35,6 +35,15 @@
     },
     "kind=lantern,tier=3": {
       "model": "ldtd:tower_core_lantern"
+    },
+    "kind=guardpost,tier=1": {
+      "model": "ldtd:tower_core_guardpost"
+    },
+    "kind=guardpost,tier=2": {
+      "model": "ldtd:tower_core_guardpost_t2"
+    },
+    "kind=guardpost,tier=3": {
+      "model": "ldtd:tower_core_guardpost_t3"
     }
   }
 }

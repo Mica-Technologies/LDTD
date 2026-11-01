@@ -506,6 +506,71 @@ def duskglass(rng):
     return px
 
 
+STONE = (0x8A, 0x86, 0x80)
+
+
+def guardpost_side(rng):
+    px = [[rgba(shade(STONE, rng.choice((-1, 0, 0, 1)) - (2 if y % 5 == 4 else 0))) for x in range(16)]
+          for y in range(16)]
+    for y in range(3, 13):                 # a crossed sword and shield, in brass
+        px[y][7] = px[y][8] = rgba(BRASS)
+    for x in range(4, 12):
+        px[5][x] = rgba(BRASS)
+    for y in range(8, 13):
+        for x in range(5, 11):
+            if abs(x - 7.5) + (y - 8) * 0.6 < 3.5:
+                px[y][x] = rgba(EMBER if (x + y) % 2 else EMBER_HI)
+    return px
+
+
+def guardpost_top(rng):
+    px = [[rgba(shade(STONE, rng.choice((-1, 0, 1)))) for x in range(16)] for y in range(16)]
+    frame(px, BRASS)
+    for y in range(6, 10):
+        for x in range(6, 10):
+            px[y][x] = rgba(EMBER_HI)
+    return px
+
+
+def ember_guard_atlas(rng):
+    """The Shade's layout (client/model/ModelShade.java), dressed as a stone warrior with an ember heart."""
+    img = blank(64, 64)
+
+    def stone(face, x, y, fw, fh):
+        return rgba(shade(STONE, rng.choice((-2, -1, 0, 0, 1))))
+
+    def head(face, x, y, fw, fh):
+        if face == "front" and y == 3 and x in (1, 2, 5, 6):
+            return rgba(EMBER_HI)              # glowing eye-slits
+        if face == "front" and y == 0:
+            return rgba(BRASS)
+        return stone(face, x, y, fw, fh)
+
+    def body(face, x, y, fw, fh):
+        if face == "front" and 3 <= y <= 6 and 2 <= x <= 5:
+            return rgba(EMBER if (x + y) % 2 else EMBER_HI)   # the ember heart
+        if y in (0, fh - 1):
+            return rgba(BRASS)
+        return stone(face, x, y, fw, fh)
+    paint_box(img, 0, 0, 8, 8, 8, head)
+    paint_box(img, 16, 16, 8, 12, 4, body)
+    paint_box(img, 40, 16, 3, 14, 3, lambda f, x, y, fw, fh: rgba(BRASS) if y == fh - 1 else stone(f, x, y, fw, fh))
+    paint_box(img, 0, 16, 4, 12, 4, stone)
+    return img
+
+
+def command_brand(rng):
+    px = [[CLEAR] * 16 for _ in range(16)]
+    for i in range(3, 14):                 # a wooden baton, diagonal
+        px[16 - i][i - 1] = rgba(WOOD)
+        px[16 - i][i] = rgba(shade(WOOD, -2))
+    for (x, y) in ((12, 2), (13, 2), (12, 3), (13, 3), (13, 1), (14, 2)):
+        px[y][x] = rgba(EMBER_HI if (x + y) % 2 else EMBER)     # the smouldering tip
+    for (x, y) in ((10, 5), (11, 5), (10, 6)):
+        px[y][x] = rgba(BRASS)
+    return px
+
+
 TEXTURES = {
     "blocks/hearth_side.png": hearth_side,
     "blocks/hearth_top.png": hearth_top,
@@ -533,6 +598,12 @@ TEXTURES = {
     "items/blueprint.png": blueprint_item,
     "entity/hearth_sprite.png": sprite_atlas,
     "items/duskglass.png": duskglass,
+    "items/command_brand.png": command_brand,
+    "entity/ember_guard.png": ember_guard_atlas,
+    "blocks/tower_core_guardpost_side.png": guardpost_side,
+    "blocks/tower_core_guardpost_top.png": guardpost_top,
+    "blocks/tower_core_guardpost_side_t2.png": tiered(guardpost_side, 2),
+    "blocks/tower_core_guardpost_side_t3.png": tiered(guardpost_side, 3),
 }
 for _kind, _fn in (("archer", archer_side), ("cannon", cannon_side), ("frost", frost_side)):
     for _tier in (2, 3):

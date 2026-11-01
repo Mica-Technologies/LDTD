@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "minecraft:iron_sword",
+      "data": 0
+    }
+  ],
+  "result": {
+    "item": "ldtd:blueprint",
+    "nbt": {
+      "blueprint": "guard_post"
+    },
+    "data": 0
+  }
+}

@@ -56,6 +56,8 @@ public class TileEntityTower extends TileEntity implements ITickable {
     private Priority priority = Priority.FIRST;
     /** Tier I-III (Phase 7). Synced, so the core can show it. */
     private int tier = 1;
+    /** A guard post's Ember Guards (Phase 8). */
+    private final List<java.util.UUID> guards = new ArrayList<>();
 
     private int cooldown;
     private boolean intact = true;
@@ -92,6 +94,7 @@ public class TileEntityTower extends TileEntity implements ITickable {
         s.splashRadius = base.splashRadius;
         s.slowAmplifier = base.slowAmplifier;
         s.slowTicks = base.slowTicks;
+        s.units = base.units;
         return s;
     }
 
@@ -173,10 +176,14 @@ public class TileEntityTower extends TileEntity implements ITickable {
         if ((t + phase) % 100 == 0) {
             intact = checkIntact();
         }
+        TowerKind kind = kind();
+        if (kind == TowerKind.GUARDPOST) {
+            tendGuards(t + phase);
+            return;
+        }
         if (--cooldown > 0 || !intact) {
             return;
         }
-        TowerKind kind = kind();
         if (kind == TowerKind.LANTERN) {
             return;
         }
@@ -202,6 +209,39 @@ public class TileEntityTower extends TileEntity implements ITickable {
                 break;
             default:
                 break;
+        }
+    }
+
+    /** Whether this post keeps the Guard with this id (a Guard whose post forgot it fades). */
+    public boolean keeps(java.util.UUID id) {
+        return guards.contains(id);
+    }
+
+    /** A guard post's upkeep: forget fallen Guards, bring out a new one every cooldown. */
+    private void tendGuards(long phasedTime) {
+        --cooldown;
+        if (phasedTime % 20 != 0) {
+            return;
+        }
+        boolean changed = guards.removeIf(id -> {
+            net.minecraft.entity.Entity e = ((WorldServer) world).getEntityFromUuid(id);
+            return e == null || !e.isEntityAlive();
+        });
+        TowerStats stats = effective(TowerKind.GUARDPOST);
+        if (intact && cooldown <= 0 && guards.size() < stats.units) {
+            EntityEmberGuard guard = new EntityEmberGuard(world);
+            guard.setLocationAndAngles(pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D,
+                world.rand.nextFloat() * 360.0F, 0.0F);
+            guard.assign(pos, (float) stats.damage);
+            world.spawnEntity(guard);
+            guards.add(guard.getUniqueID());
+            cooldown = stats.cooldownTicks;
+            changed = true;
+            ((WorldServer) world).spawnParticle(EnumParticleTypes.FLAME, guard.posX, guard.posY + 1.0D, guard.posZ,
+                20, 0.3D, 0.6D, 0.3D, 0.02D);
+        }
+        if (changed) {
+            markDirty();
         }
     }
 
@@ -347,6 +387,13 @@ public class TileEntityTower extends TileEntity implements ITickable {
         nbt.setInteger("rotation", rotation);
         nbt.setString("priority", priority.name());
         nbt.setInteger("tier", tier);
+        net.minecraft.nbt.NBTTagList g = new net.minecraft.nbt.NBTTagList();
+        for (java.util.UUID id : guards) {
+            NBTTagCompound t = new NBTTagCompound();
+            t.setUniqueId("id", id);
+            g.appendTag(t);
+        }
+        nbt.setTag("guards", g);
         return nbt;
     }
 
@@ -383,6 +430,11 @@ public class TileEntityTower extends TileEntity implements ITickable {
         anchor = nbt.hasKey("anchor") ? BlockPos.fromLong(nbt.getLong("anchor")) : null;
         rotation = nbt.getInteger("rotation");
         tier = Math.max(1, nbt.getInteger("tier"));
+        guards.clear();
+        net.minecraft.nbt.NBTTagList g = nbt.getTagList("guards", net.minecraftforge.common.util.Constants.NBT.TAG_COMPOUND);
+        for (int i = 0; i < g.tagCount(); i++) {
+            guards.add(g.getCompoundTagAt(i).getUniqueId("id"));
+        }
         try {
             priority = Priority.valueOf(nbt.getString("priority"));
         } catch (IllegalArgumentException e) {

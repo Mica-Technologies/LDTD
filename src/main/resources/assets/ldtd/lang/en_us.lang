@@ -154,3 +154,13 @@ ldtd.tower.max_tier=This tower is already at tier III.
 ldtd.tower.upgrade_missing=You need %1$s more %2$s.
 ldtd.tower.upgraded=Upgraded to tier %s.
 ldtd.tower.salvaged=Half of the tower's cost goes back to the Hearth's stockpile.
+
+entity.ldtd.ember_guard.name=Ember Guard
+item.ldtd.command_brand.name=Command Brand
+ldtd.blueprint.guard_post=Guard Post
+ldtd.tower.guardpost=Guard post
+ldtd.brand.none=No Ember Guards of yours within reach.
+ldtd.brand.hold=%s Ember Guards will hold that spot.
+ldtd.brand.follow=%s Ember Guards will follow you.
+ldtd.brand.return=%s Ember Guards are going back to their posts.
+ldtd.brand.attack=%s Ember Guards are going for it.

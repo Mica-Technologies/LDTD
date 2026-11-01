@@ -131,6 +131,35 @@
         "minecraft:glowstone_dust": 4
       }
     },
+    "guard_post": {
+      "tower": "guardpost",
+      "palette": {
+        "S": "minecraft:stonebrick",
+        "F": "minecraft:fence",
+        "B": "minecraft:stone_slab@5"
+      },
+      "layers": [
+        [
+          "SSS",
+          "SSS",
+          "SSS"
+        ],
+        [
+          "F.F",
+          ".C.",
+          "F.F"
+        ],
+        [
+          "B B",
+          "   ",
+          "B B"
+        ]
+      ],
+      "extraCost": {
+        "minecraft:iron_ingot": 6,
+        "minecraft:iron_sword": 1
+      }
+    },
     "stone_wall": {
       "palette": {
         "S": "minecraft:stonebrick"

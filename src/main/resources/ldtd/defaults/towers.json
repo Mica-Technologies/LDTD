@@ -1,5 +1,5 @@
 {
-  "_comment": "LDTD tower stats. range in blocks, cooldownTicks between shots (20 = 1 s), damage in half-hearts per hit. Cannon: splashRadius. Frost: slowAmplifier (0 = Slowness I) for slowTicks, hitting everything in range. Lantern: no shots; its core gives off full light, which weakens the Gloam. Edit, then run /ldtd reload. upgrade: tiers II and III, bought with Duskglass at a tower's core (sneak-use holding Duskglass); cost is per step, the rest are multipliers per tier.",
+  "_comment": "LDTD tower stats. range in blocks, cooldownTicks between shots (20 = 1 s), damage in half-hearts per hit. Cannon: splashRadius. Frost: slowAmplifier (0 = Slowness I) for slowTicks, hitting everything in range. Lantern: no shots; its core gives off full light, which weakens the Gloam. Edit, then run /ldtd reload. upgrade: tiers II and III, bought with Duskglass at a tower's core (sneak-use holding Duskglass); cost is per step, the rest are multipliers per tier. Guard post: keeps 'units' Ember Guards, replaces a fallen one every cooldownTicks, guards within range of the post; damage is each Guard's blow.",
   "towers": {
     "archer": {
       "range": 20,
@@ -23,6 +23,12 @@
       "range": 0,
       "cooldownTicks": 20,
       "damage": 0
+    },
+    "guardpost": {
+      "range": 12,
+      "cooldownTicks": 600,
+      "damage": 6,
+      "units": 3
     }
   },
   "upgrade": {

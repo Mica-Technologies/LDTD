@@ -52,6 +52,24 @@ public class LdtdClientProxy extends LdtdCommonProxy {
             m -> new RenderBillboard<>(m, "cannon_shell", 0.45F));
         RenderingRegistry.registerEntityRenderingHandler(EntityTowerArrow.class, RenderTippedArrow::new);
         MinecraftForge.EVENT_BUS.register(new GhostPreviewRenderer());
+        RenderingRegistry.registerEntityRenderingHandler(com.micatechnologies.minecraft.ldtd.tower.EntityEmberGuard.class,
+            m -> new net.minecraft.client.renderer.entity.RenderLiving<com.micatechnologies.minecraft.ldtd.tower.EntityEmberGuard>(
+                m, new ModelShade(), 0.5F) {
+                private final net.minecraft.util.ResourceLocation tex = new net.minecraft.util.ResourceLocation(
+                    LdtdConstants.MOD_NAMESPACE, "textures/entity/ember_guard.png");
+
+                @Override
+                protected net.minecraft.util.ResourceLocation getEntityTexture(
+                    com.micatechnologies.minecraft.ldtd.tower.EntityEmberGuard entity) {
+                    return tex;
+                }
+
+                @Override
+                protected void preRenderCallback(com.micatechnologies.minecraft.ldtd.tower.EntityEmberGuard entity,
+                                                 float partialTicks) {
+                    net.minecraft.client.renderer.GlStateManager.scale(1.05F, 1.05F, 1.05F);
+                }
+            });
         RenderingRegistry.registerEntityRenderingHandler(EntityHearthSprite.class,
             m -> new net.minecraft.client.renderer.entity.RenderLiving<EntityHearthSprite>(m, new ModelHearthSprite(), 0.15F) {
                 private final net.minecraft.util.ResourceLocation tex = new net.minecraft.util.ResourceLocation(

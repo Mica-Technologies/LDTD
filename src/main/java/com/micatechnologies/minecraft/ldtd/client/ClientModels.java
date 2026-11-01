@@ -24,6 +24,7 @@ public final class ClientModels {
         // One model for every blueprint; the NBT only says which structure it builds.
         bind(LdtdRegistry.ITEM_BLUEPRINT);
         bind(LdtdRegistry.ITEM_DUSKGLASS);
+        bind(LdtdRegistry.ITEM_COMMAND_BRAND);
     }
 
     private static void bind(Item item) {

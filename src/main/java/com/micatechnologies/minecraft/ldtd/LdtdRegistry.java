@@ -15,6 +15,8 @@ import com.micatechnologies.minecraft.ldtd.hearth.ItemBlockHearth;
 import com.micatechnologies.minecraft.ldtd.hearth.TileEntityHearth;
 import com.micatechnologies.minecraft.ldtd.tower.BlockTowerCore;
 import com.micatechnologies.minecraft.ldtd.tower.EntityCannonShell;
+import com.micatechnologies.minecraft.ldtd.tower.EntityEmberGuard;
+import com.micatechnologies.minecraft.ldtd.tower.ItemCommandBrand;
 import com.micatechnologies.minecraft.ldtd.tower.EntityTowerArrow;
 import com.micatechnologies.minecraft.ldtd.tower.ItemBlueprint;
 import com.micatechnologies.minecraft.ldtd.tower.TileEntityTower;
@@ -41,6 +43,7 @@ public final class LdtdRegistry {
     public static final ItemBlueprint ITEM_BLUEPRINT = new ItemBlueprint();
     /** The raid currency (design decision D5, Phase 7). */
     public static final ItemDuskglass ITEM_DUSKGLASS = new ItemDuskglass();
+    public static final ItemCommandBrand ITEM_COMMAND_BRAND = new ItemCommandBrand();
 
     private LdtdRegistry() {
         throw new AssertionError("No instances.");
@@ -61,6 +64,7 @@ public final class LdtdRegistry {
         event.getRegistry().register(ITEM_HEARTH);
         event.getRegistry().register(ITEM_BLUEPRINT);
         event.getRegistry().register(ITEM_DUSKGLASS);
+        event.getRegistry().register(ITEM_COMMAND_BRAND);
     }
 
     /**
@@ -98,6 +102,12 @@ public final class LdtdRegistry {
             .id(new ResourceLocation(LdtdConstants.MOD_NAMESPACE, "hearth_sprite"), id++)
             .name(LdtdConstants.MOD_NAMESPACE + ".hearth_sprite")
             .tracker(64, 3, true)
+            .build());
+        event.getRegistry().register(EntityEntryBuilder.create()
+            .entity(EntityEmberGuard.class)
+            .id(new ResourceLocation(LdtdConstants.MOD_NAMESPACE, "ember_guard"), id++)
+            .name(LdtdConstants.MOD_NAMESPACE + ".ember_guard")
+            .tracker(80, 3, true)
             .build());
     }
 

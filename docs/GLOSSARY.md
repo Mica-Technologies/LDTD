@@ -52,7 +52,15 @@ with a generic word that another mod also registers.
 | Cannon tower | Splash | `ldtd:tower_cannon` |
 | Frost tower | Slow | `ldtd:tower_frost` |
 | Lantern tower | Support. Light aura that weakens the Gloam | `ldtd:tower_lantern` |
-| Wall / gate | Barrier | `ldtd:wall_*`, `ldtd:gate_*` |
+| Guard post | Keeps a squad of Ember Guards | `ldtd:tower_core` (kind `guardpost`), blueprint `guard_post` |
+| Stone wall | Barrier | blueprint `stone_wall` |
+
+## Defenders (Phase 8)
+
+| Name | What it is | Registry id |
+|---|---|---|
+| Ember Guard | A stone-and-ember warrior kept by a guard post. Holds a spot, follows, attacks on command | `ldtd:ember_guard` |
+| Command Brand | A smouldering baton that gives Ember Guards their orders | `ldtd:command_brand` |
 
 Generic genre terms ("archer tower", "cannon") are fine and deliberately plain.
 
