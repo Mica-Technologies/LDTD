@@ -34,3 +34,7 @@ parent) is fine and does not need a row: nothing of Mojang's is redistributed in
 | `recipes/hearth.json` | original | Mica Technologies | Original | MIT | |
 | `textures/entity/gloam_shade.png`, `textures/entity/gloam_shade_eyes.png` | script-generated | Mica Technologies | `tools/gen_textures.py` | MIT | Atlas matches `client/model/ModelShade.java` |
 | `textures/entity/gloam_smother.png`, `textures/entity/gloam_smother_eyes.png` | script-generated | Mica Technologies | `tools/gen_textures.py` | MIT | Atlas matches `client/model/ModelSmother.java` |
+| `textures/entity/gloam_flicker.png`, `textures/entity/gloam_flicker_eyes.png` | script-generated | Mica Technologies | `tools/gen_textures.py` | MIT | Shade layout (`client/model/ModelShade.java`) |
+| `textures/entity/gloam_moth_wraith.png`, `textures/entity/gloam_moth_wraith_eyes.png` | script-generated | Mica Technologies | `tools/gen_textures.py` | MIT | Atlas matches `client/model/ModelMothWraith.java` |
+| `textures/entity/gloam_dimcaster.png`, `textures/entity/gloam_dimcaster_eyes.png` | script-generated | Mica Technologies | `tools/gen_textures.py` | MIT | Atlas matches `client/model/ModelDimcaster.java` |
+| `textures/entity/dark_bolt.png` | script-generated | Mica Technologies | `tools/gen_textures.py` | MIT | |

@@ -28,6 +28,10 @@ commands.ldtd.hearth.setlevel.ok=Hearth set to level %1$s (territory radius %2$s
 
 entity.ldtd.gloam_shade.name=Shade
 entity.ldtd.gloam_smother.name=Smother
+entity.ldtd.gloam_flicker.name=Flicker
+entity.ldtd.gloam_moth_wraith.name=Moth-wraith
+entity.ldtd.gloam_dimcaster.name=Dimcaster
+entity.ldtd.dark_bolt.name=Darkness Bolt
 death.attack.ldtd_daylight=%1$s faded in the daylight
 
 commands.ldtd.spawn.usage=/ldtd spawn <unit> [count]

@@ -10,7 +10,10 @@ import java.util.List;
  */
 public enum GloamKind {
     SHADE("shade"),
-    SMOTHER("smother");
+    SMOTHER("smother"),
+    FLICKER("flicker"),
+    MOTH_WRAITH("moth_wraith"),
+    DIMCASTER("dimcaster");
 
     private final String id;
 

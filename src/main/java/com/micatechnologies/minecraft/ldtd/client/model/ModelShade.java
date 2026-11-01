@@ -12,12 +12,12 @@ import net.minecraft.util.math.MathHelper;
  */
 public class ModelShade extends ModelBase {
 
-    private final ModelRenderer head;
-    private final ModelRenderer body;
-    private final ModelRenderer rightArm;
-    private final ModelRenderer leftArm;
-    private final ModelRenderer rightLeg;
-    private final ModelRenderer leftLeg;
+    protected final ModelRenderer head;
+    protected final ModelRenderer body;
+    protected final ModelRenderer rightArm;
+    protected final ModelRenderer leftArm;
+    protected final ModelRenderer rightLeg;
+    protected final ModelRenderer leftLeg;
 
     public ModelShade() {
         textureWidth = 64;

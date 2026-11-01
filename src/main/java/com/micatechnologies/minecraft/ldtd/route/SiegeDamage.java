@@ -43,6 +43,16 @@ public final class SiegeDamage {
     }
 
     /**
+     * Whether a Smother may snuff out the light source at {@code pos}. The same rules as breaking
+     * a wall, but for blocks you can walk through, like torches.
+     */
+    public static boolean maySnuff(World world, BlockPos pos) {
+        IBlockState state = world.getBlockState(pos);
+        return !state.getBlock().isAir(state, world, pos)
+            && WorldRouteTerrain.SiegeRules.mayBreak(world, HearthRegistry.get(world), pos, state);
+    }
+
+    /**
      * Hits the block at {@code pos} with {@code power}.
      *
      * @return true if the block broke (or was already gone), false if it still stands or may not be

@@ -172,6 +172,37 @@ final class GloamMarch extends EntityAIBase {
         return breaches.contains(pos) && mob.world.getBlockState(pos).getMaterial().blocksMovement();
     }
 
+    /**
+     * Jumps the mob up to {@code steps} waypoints ahead along its route (the Flicker's blink). Never
+     * past a breach that still stands, never into a solid block, and never while it is fighting.
+     *
+     * @return the position it left, or null if it didn't blink
+     */
+    @Nullable
+    BlockPos blink(int steps) {
+        if (route == null || index >= route.points.size() || mob.getAttackTarget() != null) {
+            return null;
+        }
+        int blocked = firstBlocked();
+        int limit = blocked >= 0 ? blocked - 1 : route.points.size() - 1;
+        int target = Math.min(index + steps, limit);
+        if (target <= index) {
+            return null;
+        }
+        RoutePoint p = route.points.get(target);
+        BlockPos feet = new BlockPos(p.x, p.y, p.z);
+        if (mob.world.getBlockState(feet).getMaterial().blocksMovement()
+            || mob.world.getBlockState(feet.up()).getMaterial().blocksMovement()) {
+            return null;
+        }
+        BlockPos from = mob.getPosition();
+        mob.getNavigator().clearPath();
+        mob.setPositionAndUpdate(p.x + 0.5D, p.y, p.z + 0.5D);
+        index = target;
+        navTarget = null;
+        return from;
+    }
+
     private void dig(RoutePoint p) {
         digging = true;
         mob.getNavigator().clearPath();

@@ -2,9 +2,16 @@ package com.micatechnologies.minecraft.ldtd;
 
 import com.micatechnologies.minecraft.ldtd.client.ClientHearths;
 import com.micatechnologies.minecraft.ldtd.client.TerritoryBorderRenderer;
+import com.micatechnologies.minecraft.ldtd.client.model.ModelDimcaster;
+import com.micatechnologies.minecraft.ldtd.client.model.ModelMothWraith;
 import com.micatechnologies.minecraft.ldtd.client.model.ModelShade;
 import com.micatechnologies.minecraft.ldtd.client.model.ModelSmother;
+import com.micatechnologies.minecraft.ldtd.client.render.RenderDarkBolt;
 import com.micatechnologies.minecraft.ldtd.client.render.RenderGloam;
+import com.micatechnologies.minecraft.ldtd.gloam.EntityDarkBolt;
+import com.micatechnologies.minecraft.ldtd.gloam.EntityDimcaster;
+import com.micatechnologies.minecraft.ldtd.gloam.EntityFlicker;
+import com.micatechnologies.minecraft.ldtd.gloam.EntityMothWraith;
 import com.micatechnologies.minecraft.ldtd.gloam.EntityShade;
 import com.micatechnologies.minecraft.ldtd.gloam.EntitySmother;
 import com.micatechnologies.minecraft.ldtd.gloam.GloamKind;
@@ -27,6 +34,13 @@ public class LdtdClientProxy extends LdtdCommonProxy {
             m -> new RenderGloam<>(m, new ModelShade(), 0.4F, 1.05F, GloamKind.SHADE.registryPath()));
         RenderingRegistry.registerEntityRenderingHandler(EntitySmother.class,
             m -> new RenderGloam<>(m, new ModelSmother(), 0.8F, 1.3F, GloamKind.SMOTHER.registryPath()));
+        RenderingRegistry.registerEntityRenderingHandler(EntityFlicker.class,
+            m -> new RenderGloam<>(m, new ModelShade(), 0.35F, 0.85F, 15.0F, GloamKind.FLICKER.registryPath()));
+        RenderingRegistry.registerEntityRenderingHandler(EntityMothWraith.class,
+            m -> new RenderGloam<>(m, new ModelMothWraith(), 0.3F, 1.0F, GloamKind.MOTH_WRAITH.registryPath()));
+        RenderingRegistry.registerEntityRenderingHandler(EntityDimcaster.class,
+            m -> new RenderGloam<>(m, new ModelDimcaster(), 0.4F, 1.0F, GloamKind.DIMCASTER.registryPath()));
+        RenderingRegistry.registerEntityRenderingHandler(EntityDarkBolt.class, RenderDarkBolt::new);
     }
 
     @Override

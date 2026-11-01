@@ -1,6 +1,10 @@
 package com.micatechnologies.minecraft.ldtd;
 
+import com.micatechnologies.minecraft.ldtd.gloam.EntityDarkBolt;
+import com.micatechnologies.minecraft.ldtd.gloam.EntityDimcaster;
+import com.micatechnologies.minecraft.ldtd.gloam.EntityFlicker;
 import com.micatechnologies.minecraft.ldtd.gloam.EntityGloam;
+import com.micatechnologies.minecraft.ldtd.gloam.EntityMothWraith;
 import com.micatechnologies.minecraft.ldtd.gloam.EntityShade;
 import com.micatechnologies.minecraft.ldtd.gloam.EntitySmother;
 import com.micatechnologies.minecraft.ldtd.gloam.GloamKind;
@@ -52,6 +56,15 @@ public final class LdtdRegistry {
         int id = 0;
         event.getRegistry().register(gloam(EntityShade.class, GloamKind.SHADE, id++, 0x141019, 0x5CF2E6));
         event.getRegistry().register(gloam(EntitySmother.class, GloamKind.SMOTHER, id++, 0x4B2E6F, 0xE9E4D8));
+        event.getRegistry().register(gloam(EntityFlicker.class, GloamKind.FLICKER, id++, 0x2E2440, 0x5CF2E6));
+        event.getRegistry().register(gloam(EntityMothWraith.class, GloamKind.MOTH_WRAITH, id++, 0x141019, 0xE9E4D8));
+        event.getRegistry().register(gloam(EntityDimcaster.class, GloamKind.DIMCASTER, id++, 0x4B2E6F, 0x5CF2E6));
+        event.getRegistry().register(EntityEntryBuilder.create()
+            .entity(EntityDarkBolt.class)
+            .id(new ResourceLocation(LdtdConstants.MOD_NAMESPACE, "dark_bolt"), id++)
+            .name(LdtdConstants.MOD_NAMESPACE + ".dark_bolt")
+            .tracker(64, 10, true)
+            .build());
     }
 
     private static EntityEntry gloam(Class<? extends EntityGloam> type, GloamKind kind, int id, int egg, int spots) {

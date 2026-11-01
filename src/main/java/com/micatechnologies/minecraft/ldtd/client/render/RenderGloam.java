@@ -19,10 +19,17 @@ public class RenderGloam<T extends EntityGloam> extends RenderLiving<T> {
 
     private final ResourceLocation texture;
     private final float scale;
+    private final float lean;
 
     public RenderGloam(RenderManager manager, ModelBase model, float shadow, float scale, String name) {
+        this(manager, model, shadow, scale, 0.0F, name);
+    }
+
+    /** @param lean degrees the whole model tips forward, for a hunched, running silhouette */
+    public RenderGloam(RenderManager manager, ModelBase model, float shadow, float scale, float lean, String name) {
         super(manager, model, shadow);
         this.scale = scale;
+        this.lean = lean;
         this.texture = new ResourceLocation(LdtdConstants.MOD_NAMESPACE, "textures/entity/" + name + ".png");
         addLayer(new EyesLayer(new ResourceLocation(LdtdConstants.MOD_NAMESPACE,
             "textures/entity/" + name + "_eyes.png")));
@@ -36,6 +43,9 @@ public class RenderGloam<T extends EntityGloam> extends RenderLiving<T> {
     @Override
     protected void preRenderCallback(T entity, float partialTickTime) {
         GlStateManager.scale(scale, scale, scale);
+        if (lean != 0.0F) {
+            GlStateManager.rotate(lean, 1.0F, 0.0F, 0.0F);
+        }
     }
 
     /** Full-bright, additive eye glow. Dimmed while the Gloam is weakened by light. */

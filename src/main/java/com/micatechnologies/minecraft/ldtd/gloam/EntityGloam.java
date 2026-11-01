@@ -48,7 +48,7 @@ public abstract class EntityGloam extends EntityMob {
         DataSerializers.BOOLEAN);
 
     /** How close a player must come before a marching Gloam turns to fight them. */
-    private static final double AGGRO_RANGE = 10.0D;
+    protected static final double AGGRO_RANGE = 10.0D;
 
     @Nullable
     private BlockPos marchTarget;
@@ -108,7 +108,10 @@ public abstract class EntityGloam extends EntityMob {
     public void marchOn(HearthRecord hearth) {
         marchTarget = hearth.pos;
         enablePersistence();
-        march.replan(true);
+        if (march != null) {
+            // Flyers have no march: they find their own way (EntityMothWraith).
+            march.replan(true);
+        }
     }
 
     /** The Hearth this Gloam is marching on, if it still exists. */
@@ -220,7 +223,7 @@ public abstract class EntityGloam extends EntityMob {
     }
 
     /** Targets players only when they come close, so a march isn't pulled across the map. */
-    private static final class NearbyPlayerTarget extends EntityAINearestAttackableTarget<EntityPlayer> {
+    protected static final class NearbyPlayerTarget extends EntityAINearestAttackableTarget<EntityPlayer> {
 
         NearbyPlayerTarget(EntityCreature creature) {
             super(creature, EntityPlayer.class, true);

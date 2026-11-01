@@ -247,6 +247,89 @@ def smother_atlas(rng, eyes=False):
     return img
 
 
+def flicker_atlas(rng, eyes=False):
+    """The Shade's layout, in thinner, smokier cloth with more violet: a quicker, fainter thing."""
+    img = blank(64, 64)
+    eye_cols, eye_row = (2, 5), 3
+    if eyes:
+        paint_box(img, 0, 0, 8, 8, 8, eyes_only(eye_cols, eye_row))
+        return img
+    wisp = cloth(rng, base=SMOKE, fold=VIOLET, edge=shade(VIOLET, 3))
+    paint_box(img, 0, 0, 8, 8, 8, mask_face(rng, eye_cols, eye_row, wisp))             # head
+    paint_box(img, 16, 16, 8, 12, 4, ragged(rng, wisp, rows=5))                        # body
+    paint_box(img, 40, 16, 3, 14, 3, ragged(rng, wisp, rows=4))                        # arm
+    paint_box(img, 0, 16, 4, 12, 4, ragged(rng, wisp, rows=6))                         # leg
+    return img
+
+
+def dimcaster_atlas(rng, eyes=False):
+    """The Shade's layout plus a hood at (0, 40) 9x3x9 and an orb at (40, 40) 4x4x4."""
+    img = blank(64, 64)
+    eye_cols, eye_row = (1, 2, 5, 6), 3
+    if eyes:
+        paint_box(img, 0, 0, 8, 8, 8, eyes_only(eye_cols, eye_row))
+        # The orb glows all over: a ball of cold light.
+        paint_box(img, 40, 40, 4, 4, 4,
+                  lambda face, x, y, fw, fh: rgba(EYE) if (x + y) % 2 == 0 else rgba(shade(EYE, -6)))
+        return img
+    robe = cloth(rng, base=INK, fold=VIOLET, edge=VIOLET)
+    paint_box(img, 0, 0, 8, 8, 8, mask_face(rng, eye_cols, eye_row, robe))             # head
+    paint_box(img, 16, 16, 8, 12, 4, ragged(rng, robe, rows=2))                        # body
+    paint_box(img, 40, 16, 3, 14, 3, robe)                                             # arm
+    paint_box(img, 0, 16, 4, 12, 4, cloth(rng, base=shade(INK, -1)))                   # leg
+    paint_box(img, 0, 40, 9, 3, 9, cloth(rng, base=VIOLET, fold=shade(VIOLET, -2), edge=shade(VIOLET, 2)))  # hood
+    paint_box(img, 40, 40, 4, 4, 4, lambda face, x, y, fw, fh: rgba(shade(INK, 1)))  # orb (lit by the eye layer)
+    return img
+
+
+def moth_atlas(rng, eyes=False):
+    """Body (0, 0) 4x6x3, mask (16, 0) 6x6x2, wing (0, 16) 14x1x10."""
+    img = blank(64, 64)
+    eye_cols, eye_row = (1, 4), 2
+    if eyes:
+        paint_box(img, 16, 0, 6, 6, 2, eyes_only(eye_cols, eye_row))
+        return img
+    paint_box(img, 0, 0, 4, 6, 3, cloth(rng))                                          # body
+
+    def mask(face, x, y, fw, fh):
+        if face == "front":
+            if y == eye_row and x in eye_cols:
+                return rgba(INK)
+            return rgba(shade(BONE, rng.choice((-1, 0, 0))))
+        return rgba(VIOLET)
+    paint_box(img, 16, 0, 6, 6, 2, mask)                                               # mask
+
+    def wing(face, x, y, fw, fh):
+        # Dusty violet membrane with dark veins and a frayed outer edge.
+        if face in ("top", "bottom"):
+            if x >= fw - 2 and rng.random() < 0.5:
+                return CLEAR
+            if x % 4 == 0 or y == fh // 2:
+                return rgba(INK)
+            return rgba(shade(SMOKE, rng.choice((0, 1, 2))))
+        return rgba(INK)
+    paint_box(img, 0, 16, 14, 1, 10, wing)                                             # wing
+    return img
+
+
+def dark_bolt(rng):
+    """A 16x16 orb of darkness with a cold glint, for the billboard renderer."""
+    px = [[CLEAR] * 16 for _ in range(16)]
+    for y in range(16):
+        for x in range(16):
+            d = ((x - 7.5) ** 2 + (y - 7.5) ** 2) ** 0.5
+            if d < 3.5:
+                px[y][x] = rgba(INK)
+            elif d < 5.5:
+                px[y][x] = rgba(VIOLET, 230)
+            elif d < 7.0 and rng.random() < 0.5:
+                px[y][x] = rgba(SMOKE, 140)
+    px[6][6] = rgba(EYE)
+    px[6][7] = rgba(EYE)
+    px[7][6] = rgba(EYE)
+    return px
+
+
 TEXTURES = {
     "blocks/hearth_side.png": hearth_side,
     "blocks/hearth_top.png": hearth_top,
@@ -255,6 +338,13 @@ TEXTURES = {
     "entity/gloam_shade_eyes.png": lambda rng: shade_atlas(rng, eyes=True),
     "entity/gloam_smother.png": smother_atlas,
     "entity/gloam_smother_eyes.png": lambda rng: smother_atlas(rng, eyes=True),
+    "entity/gloam_flicker.png": flicker_atlas,
+    "entity/gloam_flicker_eyes.png": lambda rng: flicker_atlas(rng, eyes=True),
+    "entity/gloam_moth_wraith.png": moth_atlas,
+    "entity/gloam_moth_wraith_eyes.png": lambda rng: moth_atlas(rng, eyes=True),
+    "entity/gloam_dimcaster.png": dimcaster_atlas,
+    "entity/gloam_dimcaster_eyes.png": lambda rng: dimcaster_atlas(rng, eyes=True),
+    "entity/dark_bolt.png": dark_bolt,
 }
 
 

@@ -36,8 +36,8 @@ which a Hearth can burn to grow stronger.
 | Shade | Grunt | `ldtd:gloam_shade` | Masked footsoldier. Countered by anything |
 | Flicker | Runner | `ldtd:gloam_flicker` | Blinks short distances. Countered by slows and area light |
 | Smother | Siege | `ldtd:gloam_smother` | Hulking. Snuffs light sources and claws walls. Countered by single-target DPS |
-| Moth-wraith | Flyer | `ldtd:gloam_moth_wraith` | Ignores the ground route and dives at light sources. Countered by anti-air |
-| Dimcaster | Ranged | `ldtd:gloam_dimcaster` | Throws darkness bolts at towers. Countered by range and walls |
+| Moth-wraith | Flyer | `ldtd:gloam_moth_wraith` | Ignores the ground route and walls, steering towards the brightest light nearby. Lanterns can lure it into a kill zone. Countered by anti-air |
+| Dimcaster | Ranged | `ldtd:gloam_dimcaster` | Throws darkness bolts (`ldtd:dark_bolt`, "Darkness Bolt") that hurt and weaken. Countered by range and walls |
 | The Eclipse | Boss | `ldtd:gloam_eclipse` | Dims the whole territory while it lives |
 | Dusk Spire | Outpost | `ldtd:dusk_spire` (structure) | Black obelisk that spreads a dimming zone. Raid source (D6) |
 

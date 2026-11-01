@@ -1,7 +1,10 @@
 {
-  "_comment": "LDTD Gloam unit stats. health/attack in half-hearts, speed is the movement attribute (vanilla zombie 0.23), digPower is how hard it hits walls (1 = a bare-handed player, 0 = never digs), budgetCost is what the unit costs a raid. Edit, then run /ldtd reload (applies to newly spawned Gloam).",
+  "_comment": "LDTD Gloam unit stats. health/attack in half-hearts, speed is the movement attribute (vanilla zombie 0.23; for the flying Moth-wraith it scales its flight), digPower is how hard it hits walls (1 = a bare-handed player, 0 = never digs), budgetCost is what the unit costs a raid. The Dimcaster's attack is the damage of its darkness bolt. Edit, then run /ldtd reload (applies to newly spawned Gloam).",
   "units": {
-    "shade":   { "health": 20, "speed": 0.25, "attack": 3, "armor": 0, "digPower": 1.0, "budgetCost": 1 },
-    "smother": { "health": 60, "speed": 0.19, "attack": 6, "armor": 6, "digPower": 6.0, "budgetCost": 5 }
+    "shade":       { "health": 20, "speed": 0.25, "attack": 3, "armor": 0, "digPower": 1.0, "budgetCost": 1 },
+    "smother":     { "health": 60, "speed": 0.19, "attack": 6, "armor": 6, "digPower": 6.0, "budgetCost": 5 },
+    "flicker":     { "health": 12, "speed": 0.33, "attack": 2, "armor": 0, "digPower": 0.5, "budgetCost": 2 },
+    "moth_wraith": { "health": 10, "speed": 0.30, "attack": 2, "armor": 0, "digPower": 0.0, "budgetCost": 2 },
+    "dimcaster":   { "health": 16, "speed": 0.23, "attack": 4, "armor": 0, "digPower": 0.5, "budgetCost": 3 }
   }
 }
