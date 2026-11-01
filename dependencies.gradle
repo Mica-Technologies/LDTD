@@ -1,0 +1,14 @@
+//file:noinspection DependencyNotationArgument
+/*
+ * Add your dependencies here. See the GTCEu buildscript docs for the supported configurations:
+ * https://github.com/GregTechCEu/Buildscripts
+ *
+ * To add a mod with CurseMaven: rfg.deobf("curse.maven:project_slug-project_id:file_id")
+ */
+dependencies {
+    // LDTD has no third-party mod dependencies, on purpose. It is a public MIT release, so every
+    // dependency's license must be checked and recorded in CREDITS.md before it is added, and
+    // runtime dependencies should be optional (soft) wherever possible.
+    //
+    // JEI and TheOneProbe are on the dev classpath via includeCommonDevEnvMods.
+}

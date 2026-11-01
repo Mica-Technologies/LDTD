@@ -1,0 +1,18 @@
+[
+  {
+    "modid": "${modid}",
+    "name": "${modname}",
+    "description": "Survival tower defense for Minecraft 1.12.2. Claim territory with a Hearth, have builders raise towers and walls from blueprints, hold off night raids, and take the fight back to the enemy's outposts.",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "credits": "Mica Technologies",
+    "logoFile": "",
+    "url": "https://github.com/Mica-Technologies/LDTD",
+    "updateUrl": "",
+    "authorList": ["Mica Technologies"],
+    "dependencies": [],
+    "dependants": [],
+    "requiredMods": [],
+    "useDependencyInformation": "true"
+  }
+]

@@ -57,3 +57,10 @@ example-source/
 *.env
 .env.*
 *credentials*
+
+# Output of .github/scripts/server-smoke-test.sh when run locally. An untracked file here makes
+# the next local build's version "-dirty".
+server-smoke.log
+
+# x86_64 LWJGL2 natives for the `runClient -Prosetta` Apple Silicon path (see addon.gradle).
+.rosetta-natives/

@@ -1,0 +1,78 @@
+// Additional Gradle configuration for LDTD. build.gradle is the upstream GTCEu buildscript and
+// must stay as close to verbatim as possible, so project-specific build logic goes here.
+
+// TOOLS FOR GITHUB ACTIONS
+// The release workflow reads these with `gradlew -q printX | tail -n 1`.
+task printModVersion {
+    doLast {
+        println project.version
+    }
+}
+
+task printArchivesBaseName {
+    doLast {
+        println project.findProperty('archivesBaseName')
+    }
+}
+
+task printModName {
+    doLast {
+        println project.findProperty('modName')
+    }
+}
+
+task printMinecraftVersion {
+    doLast {
+        println project.findProperty('minecraftVersion')
+    }
+}
+
+// Mixin config discovery: add the MixinConfigs MANIFEST attribute so MixinBooter loads our
+// config even when it doesn't auto-scan for filename patterns. Inert while usesMixins = false.
+// Kept here, guarded, so that turning mixins on in buildscript.properties is the only edit
+// needed. When you do, also restore the reobfJar manifest guard the sibling RCMC/SUM mods carry
+// (it fails the build if the shipped jar declares a TweakClass or is missing
+// FMLCorePlugin/MixinConfigs).
+if (project.hasProperty('usesMixins') && usesMixins.toBoolean()) {
+    afterEvaluate {
+        tasks.named('jar').configure {
+            manifest {
+                attributes 'MixinConfigs': "mixins.${project.modId}.json"
+            }
+        }
+    }
+}
+
+// ARM macOS (Apple Silicon) support for runClient17/runClient21:
+// MC 1.12.2 bundles JNA 4.4.0 and java-objc-bridge 1.0.0, both x86_64-only.
+// Override with arm64-compatible versions via java17PatchDependencies
+// (loaded before MC's bundled libs on the classpath).
+if (project.hasProperty('enableJava17RunTasks') && enableJava17RunTasks.toBoolean()) {
+    dependencies {
+        java17PatchDependencies('net.java.dev.jna:jna:5.13.0') { transitive = false }
+        java17PatchDependencies('net.java.dev.jna:jna-platform:5.13.0') { transitive = false }
+        java17PatchDependencies('ca.weblite:java-objc-bridge:1.1') { transitive = false }
+    }
+}
+
+// Apple-Silicon fallback: run the LWJGL2 client under x86_64 (Rosetta 2).
+// Usage:  ./gradlew runClient -Prosetta
+// Requires Rosetta 2 and an x86_64 Java 8 JDK (Adoptium) in a Gradle-auto-detected location.
+// Populate the x86_64 LWJGL2 natives once with:
+//   curl -sSL -o /tmp/n.jar https://libraries.minecraft.net/org/lwjgl/lwjgl/lwjgl-platform/2.9.4-nightly-20150209/lwjgl-platform-2.9.4-nightly-20150209-natives-osx.jar
+//   unzip -o -j /tmp/n.jar '*.dylib' -d .rosetta-natives/lwjgl2
+// The full rationale is in the sibling LDIB repo's addon.gradle.
+if (project.hasProperty('rosetta')) {
+    def rosettaLauncher = javaToolchains.launcherFor {
+        languageVersion.set(JavaLanguageVersion.of(8))
+        vendor.set(JvmVendorSpec.ADOPTIUM)
+    }
+    def rosettaNatives = file("${project.rootDir}/.rosetta-natives/lwjgl2")
+    tasks.matching { it.name == 'runClient' }.configureEach {
+        it.javaLauncher.set(rosettaLauncher)
+        it.getExtraJvmArgs().add("-Dorg.lwjgl.librarypath=${rosettaNatives.absolutePath}".toString())
+    }
+    tasks.matching { it.name == 'runServer' }.configureEach {
+        it.javaLauncher.set(rosettaLauncher)
+    }
+}
