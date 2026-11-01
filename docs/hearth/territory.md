@@ -47,8 +47,9 @@ Operators ignore protection by default (`protection.opsBypass`).
 **What protection doesn't do:**
 
 - It never affects the Gloam. Their sieges follow their own rule: inside a lit territory only.
-- It doesn't stop players from fighting, opening doors, using chests other than the stockpile, or
-  using tower cores (looking, changing a tower's aim and upgrading it are open to anyone).
+- It doesn't stop players from fighting, opening doors, or using chests other than the stockpile.
+  Anyone can *read* a tower's core, but only the owner and trusted players can re-aim or upgrade
+  it (even while the Hearth is cold).
 - **Unclaimed** village territories aren't protected. Anyone can build there until someone claims
   the Hearth.
 
@@ -60,7 +61,7 @@ Stand in your territory and use:
 
 | Command | What it does |
 | --- | --- |
-| `/hearth trust <player>` | Lets them build, use the stockpile, level the Hearth, order blueprints and command your Ember Guards |
+| `/hearth trust <player>` | Lets them build, use the stockpile, level the Hearth, order blueprints, re-aim and upgrade your towers and command your Ember Guards |
 | `/hearth untrust <player>` | Takes it away |
 | `/hearth trusted` | Lists who's trusted (anyone in the territory can see the list) |
 

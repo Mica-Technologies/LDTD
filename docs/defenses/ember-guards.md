@@ -14,7 +14,7 @@ and fight them hand to hand, and you can tell them where to stand.
 | Armour | 6 |
 | Blow | The post's damage: 3 hearts at tier I, 4.05 at II, 5.1 at III |
 | Reach | About 2.5 blocks |
-| Fights | The nearest Gloam it can see within **14 blocks of the spot it holds**, and anything that hurts it |
+| Fights | The nearest Gloam it can see within **its post's range of the spot it holds** (12 blocks at tier I, 13.8 at II, 15.6 at III), and anything that hurts it |
 
 - A Guard Post keeps **three**. One comes out every 30 seconds (less at higher tiers) until it
   has them all, and fallen guards are replaced the same way.
@@ -45,8 +45,8 @@ Ember Guards within 32 blocks of you. Craft it from a Duskglass on top of two st
 
 - The Brand reaches guards whose post is in a territory where **you're allowed to build**: your
   own, or one whose owner [trusts you](../hearth/territory.md#trusting-friends).
-- A guard still only fights within 14 blocks of the spot it holds. To fight further out, send it
-  there first.
+- A guard still only fights within its reach (12 to 15.6 blocks) of the spot it holds. To fight
+  further out, send it there first.
 - A guard following you holds wherever you are, so you can bring the squad along to a
   [Dusk Spire](../offense/dusk-spires.md).
 

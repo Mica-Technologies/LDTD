@@ -56,6 +56,33 @@ class JsonMergeTest {
     }
 
     @Test
+    void addsBlueprintsNewSinceTheFirstRelease() {
+        // A 1.0 file, with no record of what it has seen, that dropped the cannon on purpose.
+        JsonElement user = json("{\"blueprints\":{\"stone_wall\":{}}}");
+        JsonElement def = json("{\"blueprints\":{\"stone_wall\":{},\"cannon_tower\":{\"tower\":\"cannon\"},"
+            + "\"flare_tower\":{\"tower\":\"flare\"}}}");
+        List<String> added = new ArrayList<>();
+        JsonMerge.merge(user, def, "", added);
+        JsonObject bps = user.getAsJsonObject().getAsJsonObject("blueprints");
+        assertFalse(bps.has("cannon_tower"), "a 1.0 blueprint the owner removed stays removed");
+        assertTrue(bps.has("flare_tower"), "a blueprint new since 1.0 arrives");
+        assertTrue(user.getAsJsonObject().getAsJsonArray(JsonMerge.SEEN).toString().contains("flare_tower"),
+            "and is recorded as seen");
+    }
+
+    @Test
+    void aSeenBlueprintTheOwnerDeletesStaysDeleted() {
+        JsonElement user = json("{\"_defaultsSeen\":[\"stone_wall\",\"flare_tower\"],\"blueprints\":{\"stone_wall\":{}}}");
+        JsonElement def = json("{\"blueprints\":{\"stone_wall\":{},\"flare_tower\":{\"tower\":\"flare\"},"
+            + "\"sky_tower\":{\"tower\":\"archer\"}}}");
+        List<String> added = new ArrayList<>();
+        JsonMerge.merge(user, def, "", added);
+        JsonObject bps = user.getAsJsonObject().getAsJsonObject("blueprints");
+        assertFalse(bps.has("flare_tower"), "deleted after being seen: stays deleted");
+        assertTrue(bps.has("sky_tower"), "never seen: arrives");
+    }
+
+    @Test
     void refreshesCommentsWithoutCountingThem() {
         JsonElement user = json("{\"_comment\":\"old\",\"a\":1}");
         JsonElement def = json("{\"_comment\":\"new\",\"a\":2}");

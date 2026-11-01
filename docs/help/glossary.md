@@ -41,6 +41,9 @@ Ember Guard
 Flame
 :   A Hearth's life, 0 to 100. The Gloam at the Hearth drain it. At 0 the Hearth falls.
 
+Flare Tower
+:   LDTD's anti-air tower. Shoots only flying Gloam, and leaves each one it hits lit.
+
 Gloam, the
 :   LDTD's enemy faction: shadow raiders who hunt light.
 

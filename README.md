@@ -40,9 +40,10 @@ Gloam unit, raids, commands, configuration and the data files.
 - **Hearths:** they claim a territory, hold a stockpile, keep Hearth-sprites and grow through
   five levels, raising a bigger hall as they go. Villages may have an unclaimed Hearth in a
   Hearth Square, ready to be taken up.
-- **Five towers, three tiers each:** Archer (steady shots), Cannon (splash), Frost (slows
-  everything in reach), Lantern (light that weakens the Gloam) and Guard Post (Ember Guards you
-  command with a Command Brand). Walls too. Every tower is real blocks the Gloam have to get
+- **Six towers, three tiers each:** Archer (steady shots), Cannon (splash), Frost (slows
+  everything in reach), Lantern (light that weakens the Gloam, and an aura at higher tiers), Guard
+  Post (Ember Guards you command with a Command Brand) and Flare (anti-air: downs fliers and lights
+  them up). Walls too. Every tower is real blocks the Gloam have to get
   through.
 - **The Gloam:** an original night faction of six units, from the common Shade to the
   light-snuffing Smother, the blinking Flicker, the flying Moth-wraith, the ranged Dimcaster, and
@@ -52,8 +53,8 @@ Gloam unit, raids, commands, configuration and the data files.
 - **Raids that scale:** each raid is bought from a budget that grows with every night survived
   and every level gained, and late raids send tougher Gloam. The balance is checked by an offline
   simulator in the test suite.
-- **Dusk Spires and the Eclipse:** enemy outposts generate in the world, guarded at night. Raze
-  them to weaken the raids, and to call out the boss.
+- **Dusk Spires and the Eclipse:** enemy outposts generate in the world, guarded at night, and
+  smother the light around them. Raze them to weaken the raids, and to call out the boss.
 - **Territory protection:** players the owner hasn't trusted can't build, break or open the
   stockpile in a territory.
 - **Data-driven:** towers, Gloam, raids, Hearth levels and blueprints are JSON under

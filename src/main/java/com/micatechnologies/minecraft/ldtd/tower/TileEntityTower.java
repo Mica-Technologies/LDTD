@@ -32,7 +32,9 @@ import net.minecraft.world.WorldServer;
  *   <li><b>Archer</b>: one arrow at one target. Arrows pass through anything that isn't Gloam.</li>
  *   <li><b>Cannon</b>: a lobbed shell that bursts on impact, hurting every Gloam nearby.</li>
  *   <li><b>Frost</b>: chills every Gloam it can see in range: a little damage and a strong slow.</li>
- *   <li><b>Lantern</b>: doesn't shoot. Its core's full light weakens the Gloam around it.</li>
+ *   <li><b>Lantern</b>: doesn't shoot. Its core's full light weakens the Gloam around it, and at
+ *   tiers II and III an aura lights every Gloam within its radius whatever the block light.</li>
+ *   <li><b>Flare</b>: anti-air. Fires a flare at a flying Gloam: damage, and the target stays lit.</li>
  * </ul>
  *
  * <p>A tower whose structure is mostly gone (under 75% of its blueprint's blocks) stops working
@@ -95,6 +97,8 @@ public class TileEntityTower extends TileEntity implements ITickable {
         s.slowAmplifier = base.slowAmplifier;
         s.slowTicks = base.slowTicks;
         s.units = base.units;
+        s.aura = base.aura;
+        s.litTicks = base.litTicks;
         return s;
     }
 
@@ -104,9 +108,6 @@ public class TileEntityTower extends TileEntity implements ITickable {
      * @return the message for the player
      */
     private net.minecraft.util.text.ITextComponent upgrade(EntityPlayer player, net.minecraft.item.ItemStack held) {
-        if (kind() == TowerKind.LANTERN) {
-            return new TextComponentTranslation("ldtd.tower.no_upgrade");
-        }
         int cost = LdtdData.upgrade().costFrom(tier);
         if (cost < 0) {
             return new TextComponentTranslation("ldtd.tower.max_tier");
@@ -185,6 +186,9 @@ public class TileEntityTower extends TileEntity implements ITickable {
             return;
         }
         if (kind == TowerKind.LANTERN) {
+            if ((t + phase) % 10 == 0) {
+                glow(effective(kind));
+            }
             return;
         }
         // Look for targets every 5 ticks at most, staggered by position.
@@ -193,6 +197,9 @@ public class TileEntityTower extends TileEntity implements ITickable {
         }
         TowerStats stats = effective(kind);
         List<EntityGloam> targets = targets(stats.range);
+        if (kind == TowerKind.FLARE) {
+            targets.removeIf(g -> !g.isFlier());
+        }
         if (targets.isEmpty()) {
             return;
         }
@@ -206,6 +213,9 @@ public class TileEntityTower extends TileEntity implements ITickable {
                 break;
             case FROST:
                 chill(targets, stats);
+                break;
+            case FLARE:
+                flare(targets.get(0), stats);
                 break;
             default:
                 break;
@@ -228,11 +238,18 @@ public class TileEntityTower extends TileEntity implements ITickable {
             return e == null || !e.isEntityAlive();
         });
         TowerStats stats = effective(TowerKind.GUARDPOST);
+        // Keep the guards already out in step with the post's tier (and any /ldtd reload).
+        for (java.util.UUID id : guards) {
+            net.minecraft.entity.Entity e = ((WorldServer) world).getEntityFromUuid(id);
+            if (e instanceof EntityEmberGuard) {
+                ((EntityEmberGuard) e).setStats((float) stats.damage, stats.range);
+            }
+        }
         if (intact && cooldown <= 0 && guards.size() < stats.units) {
             EntityEmberGuard guard = new EntityEmberGuard(world);
             guard.setLocationAndAngles(pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D,
                 world.rand.nextFloat() * 360.0F, 0.0F);
-            guard.assign(pos, (float) stats.damage);
+            guard.assign(pos, (float) stats.damage, stats.range);
             world.spawnEntity(guard);
             guards.add(guard.getUniqueID());
             cooldown = stats.cooldownTicks;
@@ -333,6 +350,59 @@ public class TileEntityTower extends TileEntity implements ITickable {
         world.playSound(null, pos, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 0.4F, 1.8F);
     }
 
+    /** A tier II+ lantern's aura: every Gloam within its radius counts as lit for the next second. */
+    private void glow(TowerStats stats) {
+        double radius = stats.auraAt(tier);
+        if (radius <= 0.0D) {
+            return;
+        }
+        Vec3d c = new Vec3d(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
+        AxisAlignedBB box = new AxisAlignedBB(pos).grow(radius);
+        for (EntityGloam g : world.getEntitiesWithinAABB(EntityGloam.class, box)) {
+            if (g.isEntityAlive() && g.getDistanceSq(c.x, c.y, c.z) <= radius * radius) {
+                g.illuminate(20);
+            }
+        }
+        if (world.rand.nextInt(4) == 0) {
+            ((WorldServer) world).spawnParticle(EnumParticleTypes.FLAME, c.x, c.y + 0.6D, c.z, 2, radius * 0.3D,
+                0.3D, radius * 0.3D, 0.0D);
+        }
+    }
+
+    /**
+     * A flare: a bright streak to one flying Gloam. It hits at once (flares are fast), and the
+     * target burns lit for {@code litTicks}, so every other tower hits it harder too.
+     */
+    private void flare(EntityGloam target, TowerStats stats) {
+        Vec3d from = muzzle();
+        Vec3d to = new Vec3d(target.posX, target.posY + target.height * 0.5D, target.posZ);
+        WorldServer ws = (WorldServer) world;
+        int steps = Math.max(4, (int) (from.distanceTo(to) * 2.0D));
+        for (int i = 1; i <= steps; i++) {
+            double f = i / (double) steps;
+            ws.spawnParticle(EnumParticleTypes.FIREWORKS_SPARK, from.x + (to.x - from.x) * f,
+                from.y + (to.y - from.y) * f, from.z + (to.z - from.z) * f, 1, 0.02D, 0.02D, 0.02D, 0.0D);
+        }
+        ws.spawnParticle(EnumParticleTypes.FLAME, to.x, to.y, to.z, 12, 0.3D, 0.3D, 0.3D, 0.03D);
+        target.illuminate(stats.litTicks);
+        if (stats.damage > 0.0D) {
+            target.attackEntityFrom(TOWER, (float) stats.damage);
+        }
+        world.playSound(null, pos, SoundEvents.ENTITY_FIREWORK_LAUNCH, SoundCategory.BLOCKS, 0.8F, 1.0F);
+        world.playSound(null, target.posX, target.posY, target.posZ, SoundEvents.ENTITY_FIREWORK_BLAST,
+            SoundCategory.BLOCKS, 0.7F, 1.2F);
+    }
+
+    /**
+     * Whether {@code player} may change this tower (aim, tier): the owner of the claimed territory it
+     * stands in, anyone they trust, or an operator. A tower outside any claimed territory is open.
+     */
+    private boolean mayChange(EntityPlayer player) {
+        com.micatechnologies.minecraft.ldtd.hearth.HearthRegistry.HearthRecord r =
+            com.micatechnologies.minecraft.ldtd.hearth.HearthRegistry.get(world).claimAt(pos.getX(), pos.getZ());
+        return r == null || r.owner == null || r.mayBuild(player.getUniqueID()) || player.canUseCommand(2, "");
+    }
+
     /** Whether enough of the tower's blueprint still stands for it to work. */
     private boolean checkIntact() {
         Blueprint bp = LdtdData.blueprints().get(blueprint);
@@ -359,6 +429,13 @@ public class TileEntityTower extends TileEntity implements ITickable {
 
     void interact(EntityPlayer player) {
         net.minecraft.item.ItemStack held = player.getHeldItemMainhand();
+        if (player.isSneaking() && !mayChange(player)) {
+            com.micatechnologies.minecraft.ldtd.hearth.HearthRegistry.HearthRecord r =
+                com.micatechnologies.minecraft.ldtd.hearth.HearthRegistry.get(world).claimAt(pos.getX(), pos.getZ());
+            player.sendStatusMessage(new TextComponentTranslation("ldtd.tower.not_yours",
+                r == null ? "-" : r.ownerName), true);
+            return;
+        }
         if (player.isSneaking() && held.getItem() == com.micatechnologies.minecraft.ldtd.LdtdRegistry.ITEM_DUSKGLASS) {
             player.sendStatusMessage(upgrade(player, held), true);
             return;
@@ -372,8 +449,10 @@ public class TileEntityTower extends TileEntity implements ITickable {
         }
         TowerKind kind = kind();
         TowerStats s = effective(kind);
+        // A lantern's reach is its aura (0 at tier I: just its light).
+        double reach = kind == TowerKind.LANTERN ? s.auraAt(tier) : s.range;
         player.sendStatusMessage(new TextComponentTranslation(intact ? "ldtd.tower.info" : "ldtd.tower.info_broken",
-            new TextComponentTranslation("ldtd.tower." + kind.id()), tier, (int) s.range,
+            new TextComponentTranslation("ldtd.tower." + kind.id()), tier, (int) reach,
             new TextComponentTranslation("ldtd.tower.priority." + priority.name().toLowerCase())), true);
     }
 

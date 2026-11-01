@@ -29,6 +29,8 @@ Hearth, preferring to walk around walls rather than break them. Operators can se
 - **Archer Towers** (range 20) go where they can see the most of the route.
 - **Cannon Towers** hit everything within 2.5 blocks of where the shell lands, so put them
   where the Gloam bunch up: at a gap in a wall, or where the route turns.
+- **Flare Towers** only shoot fliers. Once Moth-wraiths appear (raid 4), one Flare Tower near the
+  Hearth saves a lot of Flame.
 - **Frost Towers** slow *everything* in their 10-block reach. Put one where your other towers
   overlap, so slowed Gloam spend longer under fire.
 - Towers need **line of sight**. A tower behind a wall it can't see over is wasted.
@@ -50,7 +52,8 @@ roughly a free tier of upgrade on every tower that covers the area.
 
 - Torches give light 14 at the torch and 10 four blocks away, so a torch every 8 blocks
   along the approach keeps it lit.
-- A **Lantern Post** is light 15 and costs almost nothing.
+- A **Lantern Post** is light 15 and costs almost nothing. Upgraded, its aura lights every Gloam
+  within 8 (tier II) or 12 (tier III) blocks, torches or not, and Smothers can't snuff an aura.
 - **Smothers** snuff light sources around them (torches, glowstone and the like). The sprites
   repair them after the raid, but a lit approach can go dark mid-raid. Kill Smothers early, and
   don't rely on torches alone.

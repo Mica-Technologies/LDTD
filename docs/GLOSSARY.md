@@ -36,7 +36,7 @@ which a Hearth can burn to grow stronger.
 | Shade | Grunt | `ldtd:gloam_shade` | Masked footsoldier. Countered by anything |
 | Flicker | Runner | `ldtd:gloam_flicker` | Blinks short distances. Countered by slows and area light |
 | Smother | Siege | `ldtd:gloam_smother` | Hulking. Snuffs light sources and claws walls. Countered by single-target DPS |
-| Moth-wraith | Flyer | `ldtd:gloam_moth_wraith` | Ignores the ground route and walls, steering towards the brightest light nearby. Lanterns can lure it into a kill zone. Countered by anti-air |
+| Moth-wraith | Flyer | `ldtd:gloam_moth_wraith` | Ignores the ground route and walls, steering towards the brightest light nearby. Lanterns can lure it into a kill zone. Countered by the Flare tower (anti-air) |
 | Dimcaster | Ranged | `ldtd:gloam_dimcaster` | Throws darkness bolts (`ldtd:dark_bolt`, "Darkness Bolt") that hurt and weaken. Countered by range and walls |
 | The Eclipse | Boss | `ldtd:gloam_eclipse` | Dims the whole territory while it lives |
 | Dusk Spire | Outpost | structure of `ldtd:dusk_stone` around a `ldtd:spire_core` | Generates in the world, guarded at night; feeds and aims nearby raids. Breaking the core razes it |
@@ -44,15 +44,18 @@ which a Hearth can burn to grow stronger.
 Registry ids carry a `gloam_` prefix so the faction's entities sort together and can't collide
 with a generic word that another mod also registers.
 
-## Defenses (starting set)
+## Defenses
 
-| Name | Role | Registry id |
+Every tower is a `ldtd:tower_core` block of the given kind, inside the structure its blueprint builds.
+
+| Name | Role | Core kind / blueprint |
 |---|---|---|
-| Archer tower | Single target | `ldtd:tower_archer` |
-| Cannon tower | Splash | `ldtd:tower_cannon` |
-| Frost tower | Slow | `ldtd:tower_frost` |
-| Lantern tower | Support. Light aura that weakens the Gloam | `ldtd:tower_lantern` |
-| Guard post | Keeps a squad of Ember Guards | `ldtd:tower_core` (kind `guardpost`), blueprint `guard_post` |
+| Archer tower | Single target | `archer` / `archer_tower` |
+| Cannon tower | Splash | `cannon` / `cannon_tower` |
+| Frost tower | Slow | `frost` / `frost_tower` |
+| Lantern post | Support. Light weakens the Gloam; tiers II and III add an aura that lights every Gloam near it | `lantern` / `lantern_post` |
+| Guard post | Keeps a squad of Ember Guards | `guardpost` / `guard_post` |
+| Flare tower | Anti-air. Fires flares at flying Gloam; a hit leaves the target lit | `flare` / `flare_tower` |
 | Stone wall | Barrier | blueprint `stone_wall` |
 
 ## Villages (Phase 9)
@@ -80,7 +83,10 @@ The Gloam's defining trait, and the reason the faction fits night raids:
 - **They hunt light.** Smothers snuff light sources inside a territory (they are blocks, so the D4
   territory rule applies). Moth-wraiths dive at them.
 - **Light is a defense.** Lanterns, the Lantern tower and a lit-up base are real defensive choices.
-- **Darkness spreads from Dusk Spires.** The land around a spire is dimmer, and raids from a
+- **Light can be carried.** A Flare tower's hit, and a tier II+ Lantern post's aura, light a Gloam
+  whatever the block light around it.
+- **Darkness spreads from Dusk Spires.** No Gloam near a standing spire counts as lit, however
+  bright it is (`spires.darknessRadius`, 32 blocks), and raids from a
   stronger spire are bigger.
 
 ## Clash notes (2026-11-01)
@@ -89,6 +95,9 @@ The Gloam's defining trait, and the reason the faction fits night raids:
   an adjective on Daedra names (Gloam Knight, Gloam Hag, Gloam Crone, Gloam Wolf, Gloam Strider,
   Gloam Minotaur). **Never name a unit "Gloam &lt;creature&gt;"**, and none of ours are. No Minecraft
   mod with a "Gloam" mob was found.
+- **Flare tower** (checked 2026-11-01): no game, franchise or Minecraft mod with a "Flare Tower" was
+  found. *Tower Defense Simulator* (Roblox) had an *enemy* called Flare in a removed event, and a
+  Minecraft mod adds flare guns; neither is a tower, and "flare" is an ordinary word.
 - **Hexer** was rejected for the ranged unit (too close to *The Witcher*). It is now Dimcaster.
 - **Duskglass, Dusk Spire, Hearth-sprite:** no matches in any game found.
 - **Hearth:** a generic word. Never pair it with "-stone" (Hearthstone is a Blizzard trademark).

@@ -20,6 +20,7 @@ Every blueprint is a shapeless recipe: **a paper plus one item** that hints at w
 | Lantern Post | Glowstone dust |
 | Guard Post | Iron sword (undamaged) |
 | Stone Wall | Stone bricks |
+| Flare Tower | Gunpowder and a torch |
 
 ## Ordering a build
 
@@ -80,6 +81,7 @@ for.
 | Frost Tower | 3 × 3, 4 tall | 9 stone bricks, 6 snow blocks, 4 glass | 16 snowballs |
 | Lantern Post | 1 × 1, 4 tall | 1 stone brick, 2 oak fences | 4 glowstone dust |
 | Guard Post | 3 × 3, 3 tall | 9 stone bricks, 4 oak fences, 4 stone brick slabs | 6 iron ingots, 1 iron sword |
+| Flare Tower | 3 × 3, 5 tall | 10 stone bricks, 8 cobblestone walls, 8 stone brick slabs, 4 oak fences | 8 gunpowder, 4 glowstone dust |
 | Stone Wall | 5 × 1, 3 tall | 15 stone bricks | - |
 
 The tower's **core** is never charged for. It's placed by the sprites when they reach it.

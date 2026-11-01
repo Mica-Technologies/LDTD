@@ -32,8 +32,11 @@ import net.minecraft.world.World;
  */
 public class EntityEmberGuard extends EntityCreature {
 
-    /** How far from the spot it holds a Guard will chase a Gloam. */
-    private static final double LEASH = 14.0D;
+    /**
+     * How far from the spot it holds a Guard will chase a Gloam, until its post tells it otherwise.
+     * The post sets it from its tier-scaled {@code range} in towers.json.
+     */
+    private static final double DEFAULT_LEASH = 12.0D;
 
     /** Melee reach, squared (2.5 blocks). */
     private static final double REACH_SQ = 6.25D;
@@ -45,6 +48,7 @@ public class EntityEmberGuard extends EntityCreature {
     @Nullable
     private UUID follow;
     private float blow = 6.0F;
+    private double leash = DEFAULT_LEASH;
 
     public EntityEmberGuard(World world) {
         super(world);
@@ -52,11 +56,17 @@ public class EntityEmberGuard extends EntityCreature {
     }
 
     /** Called by the guard post that brings it out. */
-    void assign(BlockPos postPos, float damage) {
+    void assign(BlockPos postPos, float damage, double leashRange) {
         post = postPos.toImmutable();
         hold = postPos.toImmutable();
-        blow = damage;
+        setStats(damage, leashRange);
         enablePersistence();
+    }
+
+    /** The post's current tier-scaled blow and reach. Re-sent by the post, so upgrades reach guards already out. */
+    void setStats(float damage, double leashRange) {
+        blow = damage;
+        leash = Math.max(1.0D, leashRange);
     }
 
     // ----------------------------------------------------------------------------------------
@@ -132,7 +142,7 @@ public class EntityEmberGuard extends EntityCreature {
 
     private boolean withinLeash(Entity e) {
         BlockPos a = anchor();
-        return a == null || e.getDistanceSq(a) <= LEASH * LEASH;
+        return a == null || e.getDistanceSq(a) <= leash * leash;
     }
 
     @Override
@@ -201,6 +211,7 @@ public class EntityEmberGuard extends EntityCreature {
             nbt.setLong("ldtdHold", hold.toLong());
         }
         nbt.setFloat("ldtdBlow", blow);
+        nbt.setDouble("ldtdLeash", leash);
     }
 
     @Override
@@ -209,6 +220,7 @@ public class EntityEmberGuard extends EntityCreature {
         post = nbt.hasKey("ldtdPost") ? BlockPos.fromLong(nbt.getLong("ldtdPost")) : null;
         hold = nbt.hasKey("ldtdHold") ? BlockPos.fromLong(nbt.getLong("ldtdHold")) : post;
         blow = nbt.hasKey("ldtdBlow") ? nbt.getFloat("ldtdBlow") : 6.0F;
+        leash = nbt.hasKey("ldtdLeash") ? nbt.getDouble("ldtdLeash") : DEFAULT_LEASH;
     }
 
     /** Walk back to the anchor (held spot or followed player) when there's nothing to fight. */

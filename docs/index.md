@@ -42,7 +42,7 @@ Spires that send them, and face the Eclipse.
     ---
 
     Hold a blueprint to see a ghost of the build, use it, and the Hearth-sprites build it from the
-    stockpile. Five towers with three tiers each, and walls.
+    stockpile. Six towers with three tiers each, and walls.
 
     [:octicons-arrow-right-24: Defenses](defenses/index.md)
 
@@ -83,10 +83,11 @@ Spires that send them, and face the Eclipse.
 
 - **Hearths** claim a territory, hold a stockpile, keep Hearth-sprites and grow through five
   levels. Villages may have an unclaimed Hearth in a **Hearth Square**, ready to be taken up.
-- **Five towers, three tiers each:** [Archer](defenses/towers.md#archer-tower) (steady shots),
+- **Six towers, three tiers each:** [Archer](defenses/towers.md#archer-tower) (steady shots),
   [Cannon](defenses/towers.md#cannon-tower) (splash), [Frost](defenses/towers.md#frost-tower)
   (slows everything in reach), [Lantern](defenses/towers.md#lantern-post) (light that weakens the
-  Gloam) and [Guard Post](defenses/towers.md#guard-post) (Ember Guards you command). Walls too.
+  Gloam), [Guard Post](defenses/towers.md#guard-post) (Ember Guards you command) and
+  [Flare](defenses/towers.md#flare-tower) (anti-air). Walls too.
   Every tower is real blocks the Gloam have to get through.
 - **The Gloam:** an original night faction of six units, from the common
   [Shade](gloam/bestiary.md#shade) to the light-snuffing [Smother](gloam/bestiary.md#smother),

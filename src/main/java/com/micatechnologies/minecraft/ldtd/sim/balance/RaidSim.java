@@ -14,8 +14,9 @@ import java.util.Map;
  * one, {@code spacingTicks} apart, and walk it at their real ground speed. Towers stand beside the
  * route ({@code offset} blocks off it) at fixed distances along it and shoot the way the real ones
  * do: an archer or cannon fires at the unit furthest along within range, the cannon also hits
- * everything within its splash, the frost tower hits and slows everything in range, and the lantern
- * lights a stretch of the route. A lit Gloam takes more damage and walks slower (design decision
+ * everything within its splash, the frost tower hits and slows everything in range, the lantern
+ * lights a stretch of the route (wider at tiers II and III, through its aura), and the flare tower
+ * shoots only fliers and leaves each one it hits lit for a while. A lit Gloam takes more damage and walks slower (design decision
  * D15). Armor reduces each hit the way vanilla does.</p>
  *
  * <p>It leaves out players, Ember Guards, walls and the siege, so it measures what towers alone hold
@@ -30,7 +31,7 @@ public final class RaidSim {
         final double at;
 
         /**
-         * @param kind tower id in towers.json (archer, cannon, frost, lantern)
+         * @param kind tower id in towers.json (archer, cannon, frost, lantern, flare)
          * @param tier 1-3
          * @param at   distance along the route, in blocks from the entrance
          */
@@ -63,6 +64,8 @@ public final class RaidSim {
     /** Raid toughness: every unit's health is multiplied by this. */
     public double healthMultiplier = 1.0D;
     public double litSlowdown = 0.15D;
+    /** Units that fly: the only ones a flare tower shoots. */
+    public java.util.Set<String> fliers = new java.util.HashSet<>(java.util.Collections.singleton("moth_wraith"));
 
     private final Map<String, GloamStats> gloam;
     private final Map<String, TowerStats> towers;
@@ -94,6 +97,8 @@ public final class RaidSim {
         double[] armor = new double[n];
         int[] slowUntil = new int[n];
         int[] slowLevel = new int[n];
+        int[] litUntil = new int[n];
+        boolean[] flier = new boolean[n];
         boolean[] done = new boolean[n];
         Result r = new Result();
         r.units = n;
@@ -103,6 +108,7 @@ public final class RaidSim {
             hp[i] = s.health * healthMultiplier;
             speed[i] = s.speed;
             armor[i] = s.armor;
+            flier[i] = fliers.contains(units.get(i));
             r.hpTotal += hp[i];
         }
         int[] cooldown = new int[defense.size()];
@@ -114,7 +120,7 @@ public final class RaidSim {
                     continue;
                 }
                 // Light and frost don't stack: only the stronger slow applies (as in game).
-                double slow = lit(pos[i], defense) ? litSlowdown : 0.0D;
+                double slow = lit(pos[i], defense) || tick < litUntil[i] ? litSlowdown : 0.0D;
                 if (tick < slowUntil[i]) {
                     slow = Math.max(slow, 0.15D * (slowLevel[i] + 1));
                 }
@@ -142,7 +148,11 @@ public final class RaidSim {
                 double damage = base.damage * upgrade.damage(tw.tier);
                 List<Integer> inRange = new ArrayList<>();
                 int target = -1;
+                boolean antiAir = base.litTicks > 0;
                 for (int i = 0; i < n; i++) {
+                    if (antiAir && !flier[i]) {
+                        continue;
+                    }
                     if (!done[i] && pos[i] >= 0.0D && Math.abs(pos[i] - tw.at) <= reach) {
                         inRange.add(i);
                         if (target < 0 || pos[i] > pos[target]) {
@@ -171,7 +181,11 @@ public final class RaidSim {
                     hit.add(target);
                 }
                 for (int i : hit) {
-                    double d = damage * (lit(pos[i], defense) ? litDamageMultiplier : 1.0D);
+                    boolean wasLit = lit(pos[i], defense) || tick < litUntil[i];
+                    if (antiAir) {
+                        litUntil[i] = Math.max(litUntil[i], tick + base.litTicks);
+                    }
+                    double d = damage * (wasLit ? litDamageMultiplier : 1.0D);
                     d = afterArmor(d, armor[i]);
                     double dealt = Math.min(d, hp[i]);
                     hp[i] -= dealt;
@@ -201,10 +215,18 @@ public final class RaidSim {
 
     private boolean lit(double p, List<Tower> defense) {
         for (Tower t : defense) {
-            if ("lantern".equals(t.kind) && Math.abs(p - t.at) <= lanternReach) {
+            if ("lantern".equals(t.kind) && Math.abs(p - t.at) <= lanternReachAt(t.tier)) {
                 return true;
             }
         }
         return false;
+    }
+
+    /** How far along the route either side a lantern lights: its light, or its aura if wider. */
+    double lanternReachAt(int tier) {
+        TowerStats lantern = towers.get("lantern");
+        double aura = lantern == null ? 0.0D : lantern.auraAt(tier);
+        double auraReach = aura > offset ? Math.sqrt(aura * aura - offset * offset) : 0.0D;
+        return Math.max(lanternReach, auraReach);
     }
 }

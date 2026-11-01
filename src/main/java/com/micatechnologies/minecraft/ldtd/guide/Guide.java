@@ -27,7 +27,7 @@ public final class Guide {
      * {@code ldtd.guide.<n>.<1..k>}. Paragraphs are joined with a blank line, except the tower list
      * (page 5), one line each. Lang files can't hold line breaks, so the book adds them.
      */
-    private static final int[] PARAGRAPHS = {2, 2, 2, 2, 5, 2, 2, 2, 2, 2};
+    private static final int[] PARAGRAPHS = {2, 2, 2, 2, 6, 2, 2, 2, 2, 2};
 
     /** The last page's last paragraph is a link to the wiki, opened in the browser when clicked. */
     private static final String WIKI_URL = "https://mica-technologies.github.io/LDTD/";

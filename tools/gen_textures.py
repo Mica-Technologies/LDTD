@@ -337,6 +337,7 @@ WOOD = (0x8A, 0x63, 0x3C)
 IRON = (0x8E, 0x92, 0x96)
 ICE = (0xA9, 0xD8, 0xF0)
 PAPER = (0x3A, 0x6E, 0xB5)
+ASH = (0x8C, 0x86, 0x80)
 
 
 def frame(px, c):
@@ -424,6 +425,70 @@ def lantern_top(rng):
     for y in range(6, 10):
         for x in range(6, 10):
             px[y][x] = rgba(EMBER_HI)
+    return px
+
+
+def hearth_cold_side(rng):
+    """A fallen Hearth: the same masonry and arch, but the fire is out. Ash and dead coals."""
+    px = hearth_side(random.Random("blocks/hearth_side.png"))
+    for y in range(6, 15):
+        for x in range(4, 12):
+            if y == 6 and not 5 <= x <= 10:
+                continue
+            if y >= 12:
+                c = shade(ASH, rng.choice((-1, 0, 1))) if rng.random() < 0.8 else shade(SOOT, 1)
+            else:
+                c = shade(SOOT, rng.choice((-1, 0, 0, 1)))
+            px[y][x] = rgba(c)
+    for x in range(3, 13):
+        px[15][x] = rgba(shade(BRASS, -5) if x not in (3, 12) else shade(BRASS, -7))
+    return px
+
+
+def hearth_cold_top(rng):
+    """The grate over a dead fire: tarnished rim, grey ash between the bars."""
+    px = hearth_top(random.Random("blocks/hearth_top.png"))
+    for y in range(16):
+        for x in range(16):
+            edge = x in (0, 15) or y in (0, 15)
+            rim = x in (1, 14) or y in (1, 14)
+            if edge or rim:
+                px[y][x] = rgba(shade(BRASS, -6 if edge else -4))
+            elif not (x % 3 == 0 or y % 3 == 0):
+                px[y][x] = rgba(shade(ASH, rng.choice((-2, -1, 0, 1))))
+    return px
+
+
+def flare_side(rng):
+    """The Flare Tower's core: dark iron, a tall brass-rimmed launch tube with an ember tip."""
+    px = [[rgba(shade(SOOT, rng.choice((0, 1, 1, 2)))) for x in range(16)] for y in range(16)]
+    frame(px, shade(BRASS, -2))
+    for y in range(2, 14):
+        for x in (6, 9):
+            px[y][x] = rgba(BRASS)
+        for x in (7, 8):
+            px[y][x] = rgba(shade(IRON, -3))
+    for x in (6, 7, 8, 9):
+        px[1][x] = rgba(EMBER_HI)
+        px[2][x] = rgba(EMBER)
+    for (x, y) in ((3, 5), (12, 5), (3, 10), (12, 10)):
+        px[y][x] = rgba(shade(IRON, 3))   # rivets
+    return px
+
+
+def flare_top(rng):
+    """Looking down the launch tube: a ring of brass around a glowing flare."""
+    px = [[rgba(shade(SOOT, rng.choice((0, 1)))) for x in range(16)] for y in range(16)]
+    frame(px, shade(BRASS, -2))
+    for y in range(16):
+        for x in range(16):
+            d = ((x - 7.5) ** 2 + (y - 7.5) ** 2) ** 0.5
+            if d < 2.2:
+                px[y][x] = rgba(EMBER_HI)
+            elif d < 3.6:
+                px[y][x] = rgba(EMBER)
+            elif d < 5.0:
+                px[y][x] = rgba(BRASS)
     return px
 
 
@@ -655,7 +720,14 @@ TEXTURES = {
     "blocks/tower_core_guardpost_side_t2.png": tiered(guardpost_side, 2),
     "blocks/tower_core_guardpost_side_t3.png": tiered(guardpost_side, 3),
 }
-for _kind, _fn in (("archer", archer_side), ("cannon", cannon_side), ("frost", frost_side)):
+TEXTURES.update({
+    "blocks/hearth_cold_side.png": hearth_cold_side,
+    "blocks/hearth_cold_top.png": hearth_cold_top,
+    "blocks/tower_core_flare_side.png": flare_side,
+    "blocks/tower_core_flare_top.png": flare_top,
+})
+for _kind, _fn in (("archer", archer_side), ("cannon", cannon_side), ("frost", frost_side),
+                   ("lantern", lantern_side), ("flare", flare_side)):
     for _tier in (2, 3):
         TEXTURES["blocks/tower_core_%s_side_t%d.png" % (_kind, _tier)] = tiered(_fn, _tier)
 

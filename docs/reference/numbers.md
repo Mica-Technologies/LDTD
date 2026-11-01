@@ -51,8 +51,9 @@ within 3.5 blocks of the Hearth. Between raids, Flame += 5 per minute, up to 100
 **Damage against armour** is vanilla's: `damage × (1 − min(20, max(armour / 5, armour − damage
 / 2)) / 25)`. A tier-I Cannon's 8 half-hearts does 7.36 against a Smother's 6 armour, and 6.08 against the Eclipse's 10.
 
-**Light:** at block light ≥ 10, damage taken × 1.5 and speed × 0.85 (light's slowdown doesn't
-apply while the Gloam is already slowed by frost).
+**Light:** at block light ≥ 10 (or inside a tier II+ Lantern aura, or for 4 s after a Flare hit),
+damage taken × 1.5 and speed × 0.85 (light's slowdown doesn't apply while the Gloam is already
+slowed by frost). Never while the Eclipse lives, or within 32 blocks of a standing Dusk Spire.
 
 ### Tower stats by tier
 
@@ -67,9 +68,15 @@ apply while the Gloam is already slowed by frost).
 | Frost | I | 10 | 1 (all) | 40 | 0.5 per target |
 | | II | 11.5 | 1.35 | 36 | 0.75 |
 | | III | 13 | 1.7 | 32 | 1.06 |
-| Guard Post | I | 14 (leash) | 6 per guard | 600 (replacement) | - |
-| | II | 14 | 8.1 | 540 | - |
-| | III | 14 | 10.2 | 480 | - |
+| Guard Post | I | 12 (leash) | 6 per guard | 600 (replacement) | - |
+| | II | 13.8 | 8.1 | 540 | - |
+| | III | 15.6 | 10.2 | 480 | - |
+| Flare | I | 24 | 6 (fliers, ×1.5 lit) | 30 | 6.0 lit |
+| | II | 27.6 | 8.1 | 27 | 9.0 lit |
+| | III | 31.2 | 10.2 | 24 | 12.75 lit |
+| Lantern | I | (light 15) | - | - | aura 0 |
+| | II | (light 15) | - | - | aura 8 |
+| | III | (light 15) | - | - | aura 12 |
 
 ## Sieges
 

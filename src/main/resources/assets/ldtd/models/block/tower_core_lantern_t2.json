@@ -1,0 +1,8 @@
+{
+  "parent": "block/cube_bottom_top",
+  "textures": {
+    "top": "ldtd:blocks/tower_core_lantern_top",
+    "bottom": "ldtd:blocks/tower_core_lantern_side_t2",
+    "side": "ldtd:blocks/tower_core_lantern_side_t2"
+  }
+}

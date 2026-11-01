@@ -17,6 +17,12 @@ import net.minecraft.world.World;
  */
 public class EntityMothWraith extends EntityGloam {
 
+    @Override
+    public boolean isFlier() {
+        return true;
+    }
+
+
     /** Height above its target it cruises at before diving. */
     private static final double CRUISE_HEIGHT = 5.0D;
 

@@ -105,6 +105,7 @@ public final class LdtdConfig {
     public static int spireBudgetPerTier = 3;
     /** Spires a Hearth's region must lose before the Eclipse comes for it. */
     public static int eclipseAfterSpires = 3;
+    public static int spireDarknessRadius = 32;
 
     /** Master switch for territory protection (Phase 4b). The Gloam's siege is never affected. */
     public static boolean protectionEnabled = true;
@@ -220,6 +221,9 @@ public final class LdtdConfig {
             "Spires within this many blocks of a Hearth make its raids bigger and send them from their side.");
         spireBudgetPerTier = c.getInt("budgetPerTier", CATEGORY_SPIRES, spireBudgetPerTier, 0, 1000,
             "Extra raid budget per spire tier within reach of a Hearth.");
+        spireDarknessRadius = c.getInt("darknessRadius", CATEGORY_SPIRES, spireDarknessRadius, 0, 1024,
+            "Darkness around a standing Dusk Spire: no Gloam within this many blocks of one counts as lit, however"
+                + " bright it is. 0 turns it off.");
         eclipseAfterSpires = c.getInt("eclipseAfterSpires", CATEGORY_SPIRES, eclipseAfterSpires, 1, 1000,
             "Spires destroyed near a Hearth before the Eclipse comes for it in every raid until defeated.");
 

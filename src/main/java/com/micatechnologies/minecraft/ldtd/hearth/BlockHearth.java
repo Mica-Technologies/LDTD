@@ -28,11 +28,18 @@ import net.minecraft.world.World;
 /**
  * The Hearth: the block that claims a territory and holds its stockpile.
  *
+ * <p>A fallen Hearth is cold: its {@code lit} state (read from the tile entity, never stored in
+ * metadata) switches it to an ash-filled texture, and it gives off no light until relit.</p>
+ *
  * <p>It glows at full light level on purpose. Light is what the Gloam hunt and what weakens them
  * (design decision D15), so the Hearth is both the goal of every raid and the brightest thing in
  * its territory.</p>
  */
 public class BlockHearth extends Block {
+
+    /** Whether the fire burns. False for a fallen (dormant) Hearth. Read from the tile entity. */
+    public static final net.minecraft.block.properties.PropertyBool LIT =
+        net.minecraft.block.properties.PropertyBool.create("lit");
 
     public BlockHearth() {
         super(Material.ROCK);
@@ -42,9 +49,44 @@ public class BlockHearth extends Block {
         setHardness(5.0F);
         // Blast-proof: a creeper or a TNT trap must not end a territory.
         setResistance(6000.0F);
-        setLightLevel(1.0F);
+        setDefaultState(blockState.getBaseState().withProperty(LIT, true));
         setSoundType(SoundType.STONE);
         setHarvestLevel("pickaxe", 1);
+    }
+
+    @Override
+    protected net.minecraft.block.state.BlockStateContainer createBlockState() {
+        return new net.minecraft.block.state.BlockStateContainer(this, LIT);
+    }
+
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return 0;
+    }
+
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
+        return getDefaultState();
+    }
+
+    @Override
+    public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+        return state.withProperty(LIT, !isCold(world, pos));
+    }
+
+    /** Full light while the fire burns; none once the Hearth has fallen. */
+    @Override
+    public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
+        return isCold(world, pos) ? 0 : 15;
+    }
+
+    /** Whether the Hearth here has fallen. Safe from render threads (never creates a tile entity). */
+    private static boolean isCold(IBlockAccess world, BlockPos pos) {
+        TileEntity te = world instanceof net.minecraft.world.ChunkCache
+            ? ((net.minecraft.world.ChunkCache) world).getTileEntity(pos,
+                net.minecraft.world.chunk.Chunk.EnumCreateEntityType.CHECK)
+            : world.getTileEntity(pos);
+        return te instanceof TileEntityHearth && ((TileEntityHearth) te).isDormant();
     }
 
     @Override

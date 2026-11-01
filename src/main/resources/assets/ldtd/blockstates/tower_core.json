@@ -31,10 +31,10 @@
       "model": "ldtd:tower_core_lantern"
     },
     "kind=lantern,tier=2": {
-      "model": "ldtd:tower_core_lantern"
+      "model": "ldtd:tower_core_lantern_t2"
     },
     "kind=lantern,tier=3": {
-      "model": "ldtd:tower_core_lantern"
+      "model": "ldtd:tower_core_lantern_t3"
     },
     "kind=guardpost,tier=1": {
       "model": "ldtd:tower_core_guardpost"
@@ -44,6 +44,15 @@
     },
     "kind=guardpost,tier=3": {
       "model": "ldtd:tower_core_guardpost_t3"
+    },
+    "kind=flare,tier=1": {
+      "model": "ldtd:tower_core_flare"
+    },
+    "kind=flare,tier=2": {
+      "model": "ldtd:tower_core_flare_t2"
+    },
+    "kind=flare,tier=3": {
+      "model": "ldtd:tower_core_flare_t3"
     }
   }
 }

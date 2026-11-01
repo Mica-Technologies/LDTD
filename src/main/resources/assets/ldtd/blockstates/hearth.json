@@ -1,5 +1,10 @@
 {
   "variants": {
-    "normal": { "model": "ldtd:hearth" }
+    "lit=true": {
+      "model": "ldtd:hearth"
+    },
+    "lit=false": {
+      "model": "ldtd:hearth_cold"
+    }
   }
 }

@@ -1,6 +1,6 @@
 # Crafting
 
-LDTD has eight recipes. Everything else (towers, walls, the Hearth's hall) is built by the
+LDTD has nine recipes. Everything else (towers, walls, the Hearth's hall) is built by the
 Hearth-sprites from blueprints.
 
 ## Hearth
@@ -35,6 +35,7 @@ All shapeless: **one paper** and the item listed.
 | Lantern Post | Glowstone dust |
 | Guard Post | Iron sword (undamaged) |
 | Stone Wall | Stone bricks |
+| Flare Tower | Gunpowder + torch |
 
 ## What builds cost
 
@@ -47,6 +48,7 @@ Builds aren't crafted, but here's what each takes from the stockpile, for planni
 | Frost Tower | 9 stone bricks, 6 snow blocks, 4 glass, 16 snowballs |
 | Lantern Post | 1 stone brick, 2 oak fences, 4 glowstone dust |
 | Guard Post | 9 stone bricks, 4 oak fences, 4 stone brick slabs, 6 iron ingots, 1 iron sword |
+| Flare Tower | 10 stone bricks, 8 cobblestone walls, 8 stone brick slabs, 4 oak fences, 8 gunpowder, 4 glowstone dust |
 | Stone Wall | 15 stone bricks |
 | Hearth stage 1 | 12 stone brick slabs, 4 oak fences, 4 torches |
 | Hearth stage 3 | 64 stone bricks, 49 stone brick slabs |

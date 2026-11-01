@@ -97,7 +97,11 @@ def main():
         for suffix, tier in (("", 1), ("_t2", 2), ("_t3", 3)):
             block(f"blocks/tower_core_{kind}_top.png", f"blocks/tower_core_{kind}_side{suffix}.png",
                   f"tower_core_{kind}_t{tier}")
-    block("blocks/tower_core_lantern_top.png", "blocks/tower_core_lantern_side.png", "tower_core_lantern")
+    for kind in ("lantern", "flare"):
+        for suffix, tier in (("", 1), ("_t2", 2), ("_t3", 3)):
+            block(f"blocks/tower_core_{kind}_top.png", f"blocks/tower_core_{kind}_side{suffix}.png",
+                  f"tower_core_{kind}_t{tier}")
+    block("blocks/hearth_cold_top.png", "blocks/hearth_cold_side.png", "hearth_cold")
 
     # The site logo and favicon: the Hearth block, small.
     iso_cube(load("blocks/hearth_top.png"), load("blocks/hearth_side.png"), load("blocks/hearth_side.png")) \

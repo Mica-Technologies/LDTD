@@ -37,8 +37,8 @@ Craft a [blueprint](../defenses/blueprints.md), hold it to see a ghost of the bu
 inside your territory. The order goes to the Hearth, and its [Hearth-sprites](../hearth/sprites.md),
 small floating ember-spirits, fetch the materials from the stockpile and build it block by block.
 
-There are five [towers](../defenses/towers.md) (Archer, Cannon, Frost, Lantern Post and Guard Post)
-and a Stone Wall. Every tower is made of real blocks.
+There are six [towers](../defenses/towers.md) (Archer, Cannon, Frost, Lantern Post, Guard Post and
+Flare) and a Stone Wall. Every tower is made of real blocks.
 
 ### 4. Hold the night
 

@@ -109,6 +109,26 @@ class BalanceTest {
     }
 
     @Test
+    void flareTowerDownsFliersOnly() {
+        RaidSim sim = new RaidSim(gloam, towers, upgrade);
+        List<String> moths = Arrays.asList("moth_wraith", "moth_wraith", "moth_wraith", "moth_wraith");
+        List<String> shades = Arrays.asList("shade", "shade", "shade", "shade");
+        List<Tower> flare = Arrays.asList(new Tower("flare", 1, 24));
+        // Against fliers it holds the line; against walkers it never fires.
+        assertTrue(sim.run(moths, flare, PATH).leakRate() < sim.run(moths, new ArrayList<>(), PATH).leakRate(),
+            "a flare tower should stop some Moth-wraiths");
+        assertEquals(1.0D, sim.run(shades, flare, PATH).leakRate(), 1e-9, "a flare tower must ignore walkers");
+    }
+
+    @Test
+    void lanternTiersWidenTheLight() {
+        RaidSim sim = new RaidSim(gloam, towers, upgrade);
+        assertEquals(sim.lanternReach, sim.lanternReachAt(1), 1e-9, "tier I is just the core's light");
+        assertTrue(sim.lanternReachAt(2) > sim.lanternReachAt(1), "tier II's aura reaches further");
+        assertTrue(sim.lanternReachAt(3) > sim.lanternReachAt(2), "tier III's aura reaches further still");
+    }
+
+    @Test
     void difficultyCurve() {
         StringBuilder table = new StringBuilder("night lvl budget | leak% own-level | leak% one-level-behind\n");
         List<Double> onPace = new ArrayList<>();

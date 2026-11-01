@@ -34,6 +34,9 @@ spot one from a long way off.
   survived.
 - **Aimed raids:** if any spire stands within 384 blocks, the raids come from the side of the
   **nearest** one. You know where to build your defenses, and where to go hunting.
+- **Darkness:** no Gloam within **32 blocks** of a standing spire counts as lit, however bright it
+  is: torches, Lantern auras and flares don't weaken them there. The spire's night guards fight at
+  full strength.
 
 ## Night guards
 

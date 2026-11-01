@@ -22,7 +22,8 @@ It's Minecraft-free, so it runs in milliseconds on a plain JVM:
   second).
 - **Towers** stand 4 blocks off the route, with their real tier-scaled range, damage and fire
   rate. Archers and Cannons aim at the Gloam furthest along. Cannon splash is measured along the
-  route. Frost slows everything in reach. A Lantern lights 5 blocks of route either side.
+  route. Frost slows everything in reach. A Lantern lights 5 blocks of route either side, or its
+  aura's reach if wider (tiers II and III). A Flare shoots only fliers and leaves them lit.
 - **Light**: lit Gloam take ×1.5 damage and lose 15% speed, and only the stronger of light and
   frost slows apply, as in the game.
 - **Armour** uses vanilla's formula (checked: 8 damage into 10 armour is 6.08).

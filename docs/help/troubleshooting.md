@@ -83,6 +83,11 @@
       yourself.
     - **Lantern Posts** never shoot. They give off light.
 
+??? question "Someone says they can't re-aim or upgrade my tower"
+
+    Only the territory's owner, players they trust and operators can change a tower. Trust them
+    with `/hearth trust <player>`.
+
 ??? question "How do I tell a tower's tier?"
 
     The core's texture: plain for I, brass bands for II, brass and a cyan glint for III. Or use the
@@ -95,10 +100,10 @@
     Hearths must be at least 136 blocks apart (centre to centre), so two fully grown territories
     never overlap. The message names the other Hearth's owner and position.
 
-??? question "Is there a way to tell a fallen Hearth from a lit one?"
+??? question "How do I tell a fallen Hearth from a lit one?"
 
-    The block looks the same. Sneak-use it: a cold Hearth says *This Hearth has fallen and gone
-    cold*. A cold Hearth also has no territory border, and its sprites sit still over it.
+    A fallen Hearth is **cold**: its fire is out, the grate is full of grey ash, and it gives off no
+    light. Sneak-use it and it says *This Hearth has fallen and gone cold*. Relight it with 8 coal.
 
 ??? question "Someone else's Hearth is in my way"
 

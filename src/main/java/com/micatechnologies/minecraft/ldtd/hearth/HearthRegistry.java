@@ -89,6 +89,20 @@ public final class HearthRegistry extends WorldSavedData {
         return null;
     }
 
+    /**
+     * The Hearth whose claim covers block column {@code (x, z)}, lit or fallen. Ownership doesn't
+     * lapse while a Hearth is cold, so this is what "whose is this?" questions ask (tower cores).
+     */
+    @Nullable
+    public HearthRecord claimAt(int x, int z) {
+        for (HearthRecord r : hearths.values()) {
+            if (TerritoryMath.contains(r.pos.getX(), r.pos.getZ(), r.radius(), x, z)) {
+                return r;
+            }
+        }
+        return null;
+    }
+
     /** The Hearth nearest to block column {@code (x, z)}, or null if there are none. */
     @Nullable
     public HearthRecord nearest(int x, int z) {

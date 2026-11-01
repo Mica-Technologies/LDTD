@@ -32,6 +32,7 @@ Raid sounds play for every player within the territory's radius plus 64 blocks, 
 | Cannon Tower fires | A short, high explosion |
 | A cannon shell bursts | An explosion |
 | Frost Tower pulses | Breaking glass, high |
+| Flare Tower fires / the flare bursts | A firework launch / a firework blast |
 | A tower is upgraded | An anvil |
 | Ember Guard hurt / falls | An iron golem's hurt and death |
 

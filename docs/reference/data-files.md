@@ -45,8 +45,9 @@ To go back to the defaults for a file, delete it. It's recreated on the next sta
     "archer":    { "range": 20, "cooldownTicks": 20, "damage": 4 },
     "cannon":    { "range": 16, "cooldownTicks": 60, "damage": 8, "splashRadius": 2.5 },
     "frost":     { "range": 10, "cooldownTicks": 40, "damage": 1, "slowAmplifier": 0, "slowTicks": 60 },
-    "lantern":   { "range": 0,  "cooldownTicks": 20, "damage": 0 },
-    "guardpost": { "range": 12, "cooldownTicks": 600, "damage": 6, "units": 3 }
+    "lantern":   { "range": 0,  "cooldownTicks": 20, "damage": 0, "aura": [0, 8, 12] },
+    "guardpost": { "range": 12, "cooldownTicks": 600, "damage": 6, "units": 3 },
+    "flare":     { "range": 24, "cooldownTicks": 30, "damage": 6, "litTicks": 80 }
   },
   "upgrade": {
     "cost":     [10, 25],
@@ -64,7 +65,9 @@ To go back to the defaults for a file, delete it. It's recreated on the next sta
 | `damage` | Half-hearts per hit. For a Guard Post: each guard's blow |
 | `splashRadius` | Cannon only: radius of the burst |
 | `slowAmplifier`, `slowTicks` | Frost only: Slowness level (0 = Slowness I) and duration |
-| `units` | Guard Post only: guards kept |
+| `units` | Guard Post only: guards kept. Its `range` is how far from the spot they hold the guards will fight |
+| `aura` | Lantern only: aura radius at tiers I, II and III (0 = none). Every Gloam inside counts as lit |
+| `litTicks` | Flare only: how long a hit keeps its target lit |
 | `upgrade.cost` | Duskglass for tier I→II and II→III |
 | `upgrade.damage` / `range` / `cooldown` | Multipliers at tiers I, II and III |
 
@@ -194,6 +197,13 @@ back, and each row a string of **cells**, left to right.
 
 Limits: a footprint of 1–9 × 1–9, at most 16 layers, ids of lowercase letters, digits and
 underscores.
+
+### New blueprints in updates
+
+The file keeps a `_defaultsSeen` list of every default blueprint it has been offered. When an LDTD
+update adds a blueprint (the Flare Tower, for example), it's added to your file once and recorded
+there. If you then delete it, it stays deleted. Files from the first release are treated as having
+seen that release's blueprints, so blueprints you removed then stay removed too.
 
 ### Adding a blueprint
 

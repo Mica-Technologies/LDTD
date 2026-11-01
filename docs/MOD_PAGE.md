@@ -22,8 +22,8 @@ Tower defense, played in your survival world.
 and build whatever you order.
 
 **Build your defenses.** Hold a blueprint to see a ghost of the build, then let the sprites raise
-it block by block: Archer, Cannon, Frost and Lantern towers, Guard Posts with Ember Guards you
-command, and stone walls. Upgrade towers through three tiers.
+it block by block: Archer, Cannon, Frost, Lantern and Flare towers, Guard Posts with Ember Guards
+you command, and stone walls. Upgrade towers through three tiers.
 
 **Survive the night.** When you're near, the Gloam gather at your border and march on your
 Hearth's flame. They route around your walls, and break through them when they must, but only
@@ -35,7 +35,7 @@ comes for you.
 
 Features:
 - Six original enemy units and a boss
-- Five tower types, three tiers each, plus walls
+- Six tower types, three tiers each, plus walls
 - Raids that scale with every night survived
 - Villages with unclaimed Hearths to take up
 - Territory protection, with trust for friends

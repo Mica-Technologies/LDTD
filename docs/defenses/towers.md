@@ -38,8 +38,7 @@ tower.
 
 ### Upgrading
 
-Every tower except the Lantern Post has **three tiers**. Sneak-use the core while holding the
-Duskglass:
+Every tower has **three tiers**. Sneak-use the core while holding the Duskglass:
 
 | | Tier I → II | Tier II → III |
 | --- | :---: | :---: |
@@ -56,10 +55,12 @@ can tell a tower's tier at a glance:
 | Archer | ![](../assets/images/icons/tower_core_archer_t1.png){ width=48 } | ![](../assets/images/icons/tower_core_archer_t2.png){ width=48 } | ![](../assets/images/icons/tower_core_archer_t3.png){ width=48 } |
 | Cannon | ![](../assets/images/icons/tower_core_cannon_t1.png){ width=48 } | ![](../assets/images/icons/tower_core_cannon_t2.png){ width=48 } | ![](../assets/images/icons/tower_core_cannon_t3.png){ width=48 } |
 | Frost | ![](../assets/images/icons/tower_core_frost_t1.png){ width=48 } | ![](../assets/images/icons/tower_core_frost_t2.png){ width=48 } | ![](../assets/images/icons/tower_core_frost_t3.png){ width=48 } |
+| Lantern Post | ![](../assets/images/icons/tower_core_lantern_t1.png){ width=48 } | ![](../assets/images/icons/tower_core_lantern_t2.png){ width=48 } | ![](../assets/images/icons/tower_core_lantern_t3.png){ width=48 } |
 | Guard Post | ![](../assets/images/icons/tower_core_guardpost_t1.png){ width=48 } | ![](../assets/images/icons/tower_core_guardpost_t2.png){ width=48 } | ![](../assets/images/icons/tower_core_guardpost_t3.png){ width=48 } |
+| Flare | ![](../assets/images/icons/tower_core_flare_t1.png){ width=48 } | ![](../assets/images/icons/tower_core_flare_t2.png){ width=48 } | ![](../assets/images/icons/tower_core_flare_t3.png){ width=48 } |
 
-Upgrades don't change a Cannon's splash radius, a Frost Tower's slow, or the number of Ember
-Guards.
+Upgrades don't change a Cannon's splash radius, a Frost Tower's slow, a Flare's lit time, or the
+number of Ember Guards. A Lantern Post's upgrade is its aura (below).
 
 ### Salvaging
 
@@ -68,10 +69,12 @@ tower's cost goes back into the Hearth's stockpile: half of each material, round
 of any Duskglass spent upgrading it. The core itself drops nothing. The tower's other blocks stay
 where they are, so you can mine those too.
 
-!!! info "Anyone can aim and upgrade"
+!!! info "Who can change a tower"
 
-    Using, re-aiming and upgrading a tower's core aren't protected, so a friend (or a stranger)
-    can spend their own Duskglass on your towers. Salvaging is protected like any other block.
+    Anyone can **use** a core to read it. Changing its **aim** or **upgrading** it needs the owner of
+    the territory it stands in, a player they [trust](../hearth/territory.md#trusting-friends), or an
+    operator, even while the Hearth is cold. Anyone else gets *Only &lt;owner&gt; and those they trust
+    can change this tower.* Towers outside any claimed territory are open to all.
 
 ---
 
@@ -139,8 +142,15 @@ reach.
 A tall fence post topped with a glowing lantern core. It doesn't attack at all: its core gives off
 **light level 15**, and [light weakens the Gloam](light.md).
 
+| | Tier I | Tier II | Tier III |
+| --- | :---: | :---: | :---: |
+| Core light | 15 | 15 | 15 |
+| Aura radius (blocks) | - | 8 | 12 |
+
+- **The aura** lights every Gloam within its radius, whatever the block light there. A tier III
+  post covers a whole kill zone on its own. (The Eclipse, and the darkness around a Dusk Spire,
+  still win over it.)
 - The cheapest defense in the mod: a stone brick, two fences and four glowstone dust.
-- It doesn't upgrade (*Lantern posts don't upgrade.*).
 - Smothers can't snuff it: the core is too tough for them.
 - Put them where your other towers do their killing. A lit Gloam takes **50% more damage** from
   everything.
@@ -156,9 +166,32 @@ A stone platform with a fence rail and an iron-banded core. It keeps a squad of
 | --- | :---: | :---: | :---: |
 | Guards | 3 | 3 | 3 |
 | Guard's blow (hearts) | 3 | 4.05 | 5.1 |
-| Guards fight within (blocks of the spot they hold) | 14 | 14 | 14 |
+| Guards fight within (blocks of the spot they hold) | 12 | 13.8 | 15.6 |
 | Time to replace a fallen guard (s) | 30 | 27 | 24 |
 
 - The post brings out one guard at a time until it has three, and replaces any that fall.
+- Upgrading the post reaches the guards already out: their blow and reach change at once.
 - A broken (too damaged) Guard Post doesn't replace guards.
 - See [Ember Guards](ember-guards.md) for how they fight and how to give them orders.
+
+## Flare Tower
+
+![Flare Tower](../assets/images/tower-flare.jpg)
+
+A raised stone platform on cobblestone-wall legs, with a brass-rimmed launch tube for a core. It's
+LDTD's **anti-air**: it only fires at **flying** Gloam (Moth-wraiths), and ignores everything on
+the ground.
+
+| | Tier I | Tier II | Tier III |
+| --- | :---: | :---: | :---: |
+| Range (blocks) | 24 | 27.6 | 31.2 |
+| Damage per flare (hearts) | 3 | 4.05 | 5.1 |
+| Lit after a hit (s) | 4 | 4 | 4 |
+| Time between shots (s) | 1.5 | 1.35 | 1.2 |
+
+- A flare hits at once, in a streak of sparks, and the target **burns lit** for 4 seconds: 50%
+  more damage from *every* tower, and 15% slower. The flare itself counts, so its own hit lands
+  lit: 4.5 hearts at tier I.
+- A tier I Flare Tower downs a Moth-wraith (5 hearts) in two shots.
+- Pair it with Archers: a lit Moth-wraith dies to almost anything.
+- Like every lit effect, it does nothing while the Eclipse lives, or near a standing Dusk Spire.

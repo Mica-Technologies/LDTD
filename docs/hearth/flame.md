@@ -31,13 +31,14 @@ If the Flame reaches 0, the Hearth **falls**:
 
 - The raid ends at once. The remaining Gloam vanish in smoke.
 - **A quarter of every stack** in the stockpile is lost (rounded to the nearest item).
-- The Hearth goes **cold**. A cold Hearth claims no territory: no protection, no blueprints, no
-  raids and no border. Its sprites huddle over it and do nothing.
+- The Hearth goes **cold**: its fire goes out, its texture turns to grey ash, and it gives off no
+  light. A cold Hearth claims no territory: no protection, no blueprints, no raids and no border.
+  Its sprites huddle over it and do nothing.
 - There's no Duskglass for the raid.
 
 > *The Hearth of Steve has fallen. Its fire is out.*
 
-![A fallen Hearth after a raid, cold and dark](../assets/images/hearth-fallen.jpg)
+![A fallen Hearth: the fire is out and the grate is full of ash](../assets/images/hearth-cold.jpg)
 
 **Nothing else is lost.** Your towers keep standing (and keep shooting), your walls stay, your
 level and your count of raids survived are kept.

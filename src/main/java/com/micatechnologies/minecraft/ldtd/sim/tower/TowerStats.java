@@ -32,6 +32,23 @@ public final class TowerStats {
     public int units = 0;
 
     /**
+     * Lantern: the radius, at tiers I, II and III, within which every Gloam counts as lit whatever
+     * the block light. 0 for no aura. Null (any other tower) means no aura at any tier.
+     */
+    public double[] aura;
+
+    /** Flare: how long a hit keeps its target lit, in ticks. */
+    public int litTicks = 0;
+
+    /** The aura radius at a tier (1-3), or 0. */
+    public double auraAt(int tier) {
+        if (aura == null || aura.length == 0) {
+            return 0.0D;
+        }
+        return aura[Math.max(0, Math.min(tier, aura.length) - 1)];
+    }
+
+    /**
      * @throws IllegalArgumentException with a human-readable reason
      */
     public static Map<String, TowerStats> validate(Map<String, TowerStats> raw, Iterable<String> required) {
@@ -51,6 +68,16 @@ public final class TowerStats {
             check(id, "slowAmplifier", s.slowAmplifier, 0.0D, 5.0D);
             check(id, "slowTicks", s.slowTicks, 0.0D, 1200.0D);
             check(id, "units", s.units, 0.0D, 16.0D);
+            check(id, "litTicks", s.litTicks, 0.0D, 1200.0D);
+            if (s.aura != null) {
+                if (s.aura.length != 3) {
+                    throw new IllegalArgumentException("tower '" + id + "' has " + s.aura.length
+                        + " aura values; it needs one per tier (3)");
+                }
+                for (double a : s.aura) {
+                    check(id, "aura", a, 0.0D, 32.0D);
+                }
+            }
             out.put(id, s);
         }
         return Collections.unmodifiableMap(out);

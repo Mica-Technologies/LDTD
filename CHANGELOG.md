@@ -2,6 +2,28 @@
 
 LDTD versions are dated (`YYYY.MM.DD`). Every push to `main` also makes a pre-release.
 
+## Unreleased
+
+### New
+- **Flare Tower** (anti-air): fires flares at flying Gloam only. A hit also leaves the target lit
+  for 4 seconds, so every other tower hits it harder. Blueprint: paper, gunpowder and a torch.
+- **Lantern Post tiers:** Lantern Posts now upgrade like other towers. Tiers II and III add an aura
+  (8 and 12 blocks) that lights every Gloam inside it, whatever the block light.
+- **Darkness around Dusk Spires:** no Gloam within 32 blocks of a standing spire counts as lit
+  (`spires.darknessRadius`). Assaults on a spire are fought at the Gloam's full strength.
+- **A fallen Hearth looks cold:** an ash-filled texture, and it gives off no light until relit.
+
+### Changed
+- **Guard Post range now works:** Ember Guards fight within their post's tier-scaled range (12,
+  13.8, 15.6 blocks) instead of a fixed 14, and guards already out pick up an upgrade at once.
+- **Tower cores are protected:** only the territory's owner, players they trust and operators can
+  change a tower's aim or upgrade it. Relighting a fallen Hearth is still open to anyone.
+
+### Fixed
+- **New blueprints reach existing servers.** `blueprints.json` now records the default blueprints
+  it has seen (`_defaultsSeen`). A blueprint added by an update is added to the file once; one an
+  owner deletes stays deleted. Files from the first release are treated as having seen its set.
+
 ## First full release
 
 The first full release of LDTD for Minecraft 1.12.2 (Forge).

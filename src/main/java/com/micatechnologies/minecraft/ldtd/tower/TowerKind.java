@@ -15,7 +15,9 @@ public enum TowerKind implements IStringSerializable {
     FROST("frost"),
     LANTERN("lantern"),
     /** Keeps a squad of Ember Guards (Phase 8). */
-    GUARDPOST("guardpost");
+    GUARDPOST("guardpost"),
+    /** Anti-air: fires flares at flying Gloam, leaving them lit (post-1.0). */
+    FLARE("flare");
 
     private final String id;
 

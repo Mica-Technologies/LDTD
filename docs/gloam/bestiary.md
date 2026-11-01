@@ -122,8 +122,10 @@ it detours towards it. Over bright light (12+) it flutters about aimlessly.
 
 **Charges:** when it has a target, it dives straight at it.
 
-**Counter:** your ordinary towers hit fliers too. Use its love of light: a bright spot, covered by
-Archer Towers, away from the Hearth can hold Moth-wraiths where you want them.
+**Counter:** the **[Flare Tower](../defenses/towers.md#flare-tower)**, LDTD's anti-air, which
+downs one in two shots and leaves it lit for your other towers. Archers and Cannons hit fliers too.
+Use its love of light: a bright spot, covered by towers, away from the Hearth can hold Moth-wraiths
+where you want them.
 
 <div style="clear: both"></div>
 

@@ -6,7 +6,7 @@ Everything LDTD adds is in the **LDTD: Tower Defense** creative tab.
 
 | | Name | Registry name | What it is |
 | :---: | --- | --- | --- |
-| ![](../assets/images/icons/hearth.png){ width=48 } | **Hearth** | `ldtd:hearth` | Claims a territory, holds the stockpile, keeps the sprites. Light 15. Hardness 5, blast resistance 6000, stone pickaxe. Immune to the Gloam, withers and the dragon. [More](../hearth/index.md) |
+| ![](../assets/images/icons/hearth.png){ width=48 } ![](../assets/images/icons/hearth_cold.png){ width=48 } | **Hearth** | `ldtd:hearth` | Claims a territory, holds the stockpile, keeps the sprites. Light 15 while lit; cold (ash texture, no light) once it has fallen. Hardness 5, blast resistance 6000, stone pickaxe. Immune to the Gloam, withers and the dragon. [More](../hearth/index.md) |
 | ![](../assets/images/icons/tower_core_archer_t1.png){ width=48 } | **Tower Core** | `ldtd:tower_core` | The heart of every tower, placed by the sprites when they build a tower blueprint. Its texture shows the tower's kind and tier. Hardness 3.5. Drops nothing (break it to [salvage](../defenses/towers.md#salvaging)). Lantern cores give light 15, Frost cores 6. [More](../defenses/towers.md) |
 | ![](../assets/images/icons/dusk_stone.png){ width=48 } | **Dusk Stone** | `ldtd:dusk_stone` | The violet-veined black stone of the Dusk Spires. Hardness 3, stone pickaxe |
 | ![](../assets/images/icons/spire_core.png){ width=48 } | **Spire Core** | `ldtd:spire_core` | A Dusk Spire's heart. Hardness 25, **iron pickaxe**. Breaking it razes the spire and drops Duskglass. Drops nothing itself. [More](../offense/dusk-spires.md) |

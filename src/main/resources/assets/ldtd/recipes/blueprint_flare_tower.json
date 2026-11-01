@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "minecraft:gunpowder"
+    },
+    {
+      "item": "minecraft:torch"
+    }
+  ],
+  "result": {
+    "item": "ldtd:blueprint",
+    "nbt": {
+      "blueprint": "flare_tower"
+    },
+    "data": 0
+  }
+}

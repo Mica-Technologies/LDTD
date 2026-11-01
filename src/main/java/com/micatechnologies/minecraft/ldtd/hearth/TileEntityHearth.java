@@ -134,6 +134,8 @@ public class TileEntityHearth extends TileEntity {
         dormant = true;
         flame = 0.0D;
         markDirtyAndSync();
+        // The fire is out: no more light, and the block re-renders cold.
+        world.checkLight(pos);
     }
 
     /** The Hearth is relit, at half Flame. Server only. */
@@ -141,6 +143,7 @@ public class TileEntityHearth extends TileEntity {
         dormant = false;
         flame = LdtdData.raid().flame.max * 0.5D;
         markDirtyAndSync();
+        world.checkLight(pos);
     }
 
     public int raidsSurvived() {
@@ -558,7 +561,13 @@ public class TileEntityHearth extends TileEntity {
 
     @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        boolean wasDormant = dormant;
         handleUpdateTag(pkt.getNbtCompound());
+        if (wasDormant != dormant && world != null) {
+            // Lit or cold: redraw the block and relight around it.
+            world.markBlockRangeForRenderUpdate(pos, pos);
+            world.checkLight(pos);
+        }
     }
 
     // ----------------------------------------------------------------------------------------

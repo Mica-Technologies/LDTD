@@ -26,12 +26,20 @@ Block light falls by one for every block of distance:
 | --- | :---: | --- |
 | Torch | 14 | About 4 blocks around it |
 | Glowstone, Sea Lantern, Jack o'Lantern | 15 | About 5 blocks around it |
-| **Lantern Post** (LDTD) | 15 | About 5 blocks around it |
+| **Lantern Post** (LDTD) | 15 | About 5 blocks around it, plus an 8 / 12-block aura at tiers II / III |
 | Frost Tower core | 6 | Never reaches 10 on its own |
 | The Hearth | 15 | About 5 blocks around it |
 
 A torch every 8 blocks along the approach keeps the whole route lit. Press ++f3++ and read
 `Light: ... (... block)` to check a spot.
+
+## Light you can carry
+
+Two defenses light the Gloam directly, whatever the block light around them:
+
+- A **[Lantern Post](towers.md#lantern-post)** at tier II or III lights every Gloam within its aura
+  (8 or 12 blocks).
+- A **[Flare Tower](towers.md#flare-tower)** lights each flier it hits for 4 seconds.
 
 ## The Gloam fight back
 
@@ -44,6 +52,8 @@ A torch every 8 blocks along the approach keeps the whole route lit. Press ++f3+
   bright light away from the Hearth, covered by towers, can lure them in.
 - **The Eclipse smothers all of it.** While the Eclipse lives, no Gloam marching on your Hearth
   counts as lit, however bright it is.
+- **Darkness spreads from the Dusk Spires.** No Gloam within 32 blocks of a standing spire counts
+  as lit either: not by torches, auras or flares. Spire assaults are fought in the dark.
 
 ## Daylight
 

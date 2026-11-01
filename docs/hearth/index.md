@@ -53,6 +53,9 @@ Breaking it:
 
 Towers, walls and buildings stay where they are.
 
+While it burns, the Hearth gives off light level 15. A [fallen](flame.md) Hearth turns cold and dark
+until relit.
+
 The Hearth is otherwise very tough: hardness 5, blast resistance 6000, and immune to withers, the
 Ender Dragon and **the Gloam**. A siege can break everything around it, but never the Hearth
 itself.

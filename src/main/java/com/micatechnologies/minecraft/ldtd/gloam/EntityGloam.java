@@ -54,6 +54,12 @@ public abstract class EntityGloam extends EntityMob {
     private BlockPos marchTarget;
 
     /**
+     * World time until which this Gloam counts as lit whatever the block light: set by a Flare
+     * Tower's hit and kept topped up by a tier II+ Lantern Post's aura. Not saved: it is seconds long.
+     */
+    private long illuminatedUntil;
+
+    /**
      * Created in {@link #initEntityAI()}, which vanilla calls from the superclass constructor,
      * before field initializers run. So it must have no initializer here: one would replace the
      * instance the task list already holds.
@@ -140,6 +146,30 @@ public abstract class EntityGloam extends EntityMob {
     // Light (design decision D15)
 
     /** Whether this Gloam is standing in enough light to be weakened. Synced to clients. */
+    /**
+     * Lights this Gloam for {@code ticks}, whatever the block light around it (Flare hits, Lantern
+     * auras). Server only. Darkness still wins: near a standing Dusk Spire, or while the Eclipse
+     * shields the Hearth this Gloam marches on, it stays unlit.
+     */
+    public void illuminate(int ticks) {
+        if (world.isRemote || ticks <= 0) {
+            return;
+        }
+        long until = world.getTotalWorldTime() + ticks;
+        if (until > illuminatedUntil) {
+            boolean wasForced = world.getTotalWorldTime() < illuminatedUntil;
+            illuminatedUntil = until;
+            if (!wasForced) {
+                updateLight();
+            }
+        }
+    }
+
+    /** Whether this unit flies, and so is what a Flare Tower shoots at. */
+    public boolean isFlier() {
+        return false;
+    }
+
     public boolean isLit() {
         return dataManager.get(LIT);
     }
@@ -166,8 +196,11 @@ public abstract class EntityGloam extends EntityMob {
     private void updateLight() {
         BlockPos eyes = new BlockPos(posX, posY + getEyeHeight(), posZ);
         // While the Eclipse lives, light weakens none of the Gloam marching on its Hearth (Phase 9).
-        boolean lit = world.getLightFor(EnumSkyBlock.BLOCK, eyes) >= LdtdConfig.gloamLightThreshold
-            && (marchTarget == null || !EntityEclipse.dims(world, marchTarget));
+        boolean bright = world.getLightFor(EnumSkyBlock.BLOCK, eyes) >= LdtdConfig.gloamLightThreshold
+            || world.getTotalWorldTime() < illuminatedUntil;
+        boolean lit = bright
+            && (marchTarget == null || !EntityEclipse.dims(world, marchTarget))
+            && !nearStandingSpire();
         if (lit != isLit()) {
             dataManager.set(LIT, lit);
         }
@@ -184,6 +217,17 @@ public abstract class EntityGloam extends EntityMob {
         } else if (!lit && slowed) {
             speed.removeModifier(LIT_SLOWDOWN_ID);
         }
+    }
+
+    /**
+     * Darkness spreads from the Dusk Spires: no Gloam within {@code spires.darknessRadius} blocks of
+     * a standing spire counts as lit, so an assault on one is fought at the Gloam's full strength.
+     */
+    private boolean nearStandingSpire() {
+        int radius = LdtdConfig.spireDarknessRadius;
+        return radius > 0 && LdtdConfig.spiresEnabled
+            && com.micatechnologies.minecraft.ldtd.spire.SpireRegistry.get(world)
+                .nearest((int) Math.floor(posX), (int) Math.floor(posZ), radius) != null;
     }
 
     private static final UUID TOUGHNESS_ID = UUID.fromString("5d1c2a7e-6b0f-4c1e-9a43-2f7e8d6c0b19");

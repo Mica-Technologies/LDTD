@@ -67,6 +67,7 @@ the JSON files instead. See [Data files](data-files.md).
 | `spacing` | `384` | No two spires closer than this |
 | `influence` | `384` | Spires within this many blocks of a Hearth make its raids bigger and aim them |
 | `budgetPerTier` | `3` | Extra raid budget per tier of each spire in range |
+| `darknessRadius` | `32` | No Gloam within this many blocks of a standing spire counts as lit. 0 turns it off |
 | `eclipseAfterSpires` | `3` | Spires razed near a Hearth before the Eclipse comes for it |
 
 ## randomSpawn
