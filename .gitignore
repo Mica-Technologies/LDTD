@@ -1,0 +1,59 @@
+### OS ###
+thumbs.db
+*.db
+.DS_Store
+*~
+
+### Java / Gradle ###
+*.class
+hs_err_pid*
+.gradle
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+local.properties
+/classes/
+/out/
+/build/
+
+### Eclipse ###
+.metadata
+.settings/
+.loadpath
+/eclipse
+.project
+.classpath
+.factorypath
+*.launch
+
+### IntelliJ IDEA ###
+*.iml
+*.ipr
+*.iws
+.idea/
+.idea_modules/
+
+### Minecraft dev run directory ###
+run/*
+!run/config/
+run/config/*
+logs/
+crash-reports/
+
+### Claude Code local state ###
+.claude/settings.local.json
+.claude/worktrees/
+
+# Agent working docs (plans, session logs). Local only, never tracked.
+docs/agent-plans/
+
+# Local reference only: third-party source cloned or decompiled for study. Never committed
+# (license reasons: LDTD is a public release and must contain only original or properly licensed work).
+example-source/
+
+### Secrets ###
+*.env
+.env.*
+*credentials*
