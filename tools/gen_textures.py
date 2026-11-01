@@ -457,6 +457,21 @@ def cannon_shell(rng):
     return px
 
 
+def sprite_atlas(rng):
+    """Body (0, 0) 4x4x4, cap (0, 8) 6x2x6, arm (24, 0) 1x3x1, on a 32x32 atlas."""
+    img = blank(32, 32)
+
+    def ember(face, x, y, fw, fh):
+        hot = (x + y) % 3 == 0 or rng.random() < 0.3
+        if face == "front" and y == 1 and x in (1, 2):
+            return rgba(SOOT)                                  # two little eyes
+        return rgba(EMBER_HI if hot else EMBER)
+    paint_box(img, 0, 0, 4, 4, 4, ember)
+    paint_box(img, 0, 8, 6, 2, 6, lambda face, x, y, fw, fh: rgba(shade(SOOT, rng.choice((0, 1, 2)))))
+    paint_box(img, 24, 0, 1, 3, 1, lambda face, x, y, fw, fh: rgba(BRASS if y < 2 else shade(BRASS, -3)))
+    return img
+
+
 TEXTURES = {
     "blocks/hearth_side.png": hearth_side,
     "blocks/hearth_top.png": hearth_top,
@@ -482,6 +497,7 @@ TEXTURES = {
     "blocks/tower_core_lantern_side.png": lantern_side,
     "blocks/tower_core_lantern_top.png": lantern_top,
     "items/blueprint.png": blueprint_item,
+    "entity/hearth_sprite.png": sprite_atlas,
 }
 
 

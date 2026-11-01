@@ -1,57 +1,353 @@
 {
-  "_comment": "LDTD blueprints. Layers are bottom first; each layer is rows front to back, each row cells left to right. A cell is a palette key, '.' (must be air), ' ' (leave as is) or 'C' (the tower core, exactly one for a tower). Palette values are modid:name or modid:name@meta. A build costs one of each block it places (as its item) plus extraCost. Edit, then run /ldtd reload.",
+  "_comment": "LDTD blueprints. Layers are bottom first; each layer is rows front to back, each row cells left to right. A cell is a palette key, '.' (must be air), ' ' (leave as is) or 'C' (the tower core, exactly one for a tower). Palette values are modid:name or modid:name@meta. A build costs one of each block it places (as its item) plus extraCost. Edit, then run /ldtd reload. Blueprints marked internal are a Hearth's growth stages (hearth_stage_<level>), anchored on the Hearth itself and built by its sprites when it reaches that level; they are never offered to players.",
   "blueprints": {
     "archer_tower": {
       "tower": "archer",
-      "palette": { "S": "minecraft:stonebrick", "L": "minecraft:log", "P": "minecraft:planks", "F": "minecraft:fence" },
+      "palette": {
+        "S": "minecraft:stonebrick",
+        "L": "minecraft:log",
+        "P": "minecraft:planks",
+        "F": "minecraft:fence"
+      },
       "layers": [
-        ["SSS", "SSS", "SSS"],
-        ["L.L", "...", "L.L"],
-        ["L.L", "...", "L.L"],
-        ["PPP", "PPP", "PPP"],
-        ["F.F", ".C.", "F.F"]
+        [
+          "SSS",
+          "SSS",
+          "SSS"
+        ],
+        [
+          "L.L",
+          "...",
+          "L.L"
+        ],
+        [
+          "L.L",
+          "...",
+          "L.L"
+        ],
+        [
+          "PPP",
+          "PPP",
+          "PPP"
+        ],
+        [
+          "F.F",
+          ".C.",
+          "F.F"
+        ]
       ],
-      "extraCost": { "minecraft:arrow": 16 }
+      "extraCost": {
+        "minecraft:arrow": 16
+      }
     },
     "cannon_tower": {
       "tower": "cannon",
-      "palette": { "S": "minecraft:stonebrick", "W": "minecraft:cobblestone_wall", "I": "minecraft:iron_bars" },
+      "palette": {
+        "S": "minecraft:stonebrick",
+        "W": "minecraft:cobblestone_wall",
+        "I": "minecraft:iron_bars"
+      },
       "layers": [
-        ["SSS", "SSS", "SSS"],
-        ["SSS", "SSS", "SSS"],
-        ["W.W", ".S.", "W.W"],
-        ["...", ".C.", "..."]
+        [
+          "SSS",
+          "SSS",
+          "SSS"
+        ],
+        [
+          "SSS",
+          "SSS",
+          "SSS"
+        ],
+        [
+          "W.W",
+          ".S.",
+          "W.W"
+        ],
+        [
+          "...",
+          ".C.",
+          "..."
+        ]
       ],
-      "extraCost": { "minecraft:iron_ingot": 4, "minecraft:gunpowder": 8 }
+      "extraCost": {
+        "minecraft:iron_ingot": 4,
+        "minecraft:gunpowder": 8
+      }
     },
     "frost_tower": {
       "tower": "frost",
-      "palette": { "S": "minecraft:stonebrick", "N": "minecraft:snow", "G": "minecraft:glass" },
+      "palette": {
+        "S": "minecraft:stonebrick",
+        "N": "minecraft:snow",
+        "G": "minecraft:glass"
+      },
       "layers": [
-        ["SSS", "SSS", "SSS"],
-        ["N.N", ".N.", "N.N"],
-        ["G.G", ".N.", "G.G"],
-        ["...", ".C.", "..."]
+        [
+          "SSS",
+          "SSS",
+          "SSS"
+        ],
+        [
+          "N.N",
+          ".N.",
+          "N.N"
+        ],
+        [
+          "G.G",
+          ".N.",
+          "G.G"
+        ],
+        [
+          "...",
+          ".C.",
+          "..."
+        ]
       ],
-      "extraCost": { "minecraft:snowball": 16 }
+      "extraCost": {
+        "minecraft:snowball": 16
+      }
     },
     "lantern_post": {
       "tower": "lantern",
-      "palette": { "S": "minecraft:stonebrick", "F": "minecraft:fence" },
+      "palette": {
+        "S": "minecraft:stonebrick",
+        "F": "minecraft:fence"
+      },
       "layers": [
-        ["S"],
-        ["F"],
-        ["F"],
-        ["C"]
+        [
+          "S"
+        ],
+        [
+          "F"
+        ],
+        [
+          "F"
+        ],
+        [
+          "C"
+        ]
       ],
-      "extraCost": { "minecraft:glowstone_dust": 4 }
+      "extraCost": {
+        "minecraft:glowstone_dust": 4
+      }
     },
     "stone_wall": {
-      "palette": { "S": "minecraft:stonebrick" },
+      "palette": {
+        "S": "minecraft:stonebrick"
+      },
       "layers": [
-        ["SSSSS"],
-        ["SSSSS"],
-        ["SSSSS"]
+        [
+          "SSSSS"
+        ],
+        [
+          "SSSSS"
+        ],
+        [
+          "SSSSS"
+        ]
+      ]
+    },
+    "hearth_stage_1": {
+      "internal": true,
+      "palette": {
+        "S": "minecraft:stone_slab@5",
+        "F": "minecraft:fence",
+        "T": "minecraft:torch@5"
+      },
+      "layers": [
+        [
+          "FSSSF",
+          "S   S",
+          "S   S",
+          "S   S",
+          "FSSSF"
+        ],
+        [
+          "T   T",
+          "     ",
+          "     ",
+          "     ",
+          "T   T"
+        ]
+      ]
+    },
+    "hearth_stage_3": {
+      "internal": true,
+      "palette": {
+        "W": "minecraft:stonebrick",
+        "R": "minecraft:stone_slab@5"
+      },
+      "layers": [
+        [
+          "WWW WWW",
+          "W     W",
+          "W     W",
+          "       ",
+          "W     W",
+          "W     W",
+          "WWW WWW"
+        ],
+        [
+          "WWW WWW",
+          "W     W",
+          "W     W",
+          "       ",
+          "W     W",
+          "W     W",
+          "WWW WWW"
+        ],
+        [
+          "WWWWWWW",
+          "W     W",
+          "W     W",
+          "W     W",
+          "W     W",
+          "W     W",
+          "WWWWWWW"
+        ],
+        [
+          "RRRRRRR",
+          "RRRRRRR",
+          "RRRRRRR",
+          "RRRRRRR",
+          "RRRRRRR",
+          "RRRRRRR",
+          "RRRRRRR"
+        ]
+      ]
+    },
+    "hearth_stage_5": {
+      "internal": true,
+      "palette": {
+        "P": "minecraft:stonebrick",
+        "S": "minecraft:stonebrick",
+        "G": "minecraft:glass",
+        "L": "minecraft:glowstone",
+        "R": "minecraft:stone_slab@5",
+        "T": "minecraft:torch@5"
+      },
+      "layers": [
+        [
+          "P       P",
+          "         ",
+          "         ",
+          "         ",
+          "         ",
+          "         ",
+          "         ",
+          "         ",
+          "P       P"
+        ],
+        [
+          "P       P",
+          "         ",
+          "         ",
+          "         ",
+          "         ",
+          "         ",
+          "         ",
+          "         ",
+          "P       P"
+        ],
+        [
+          "P       P",
+          "         ",
+          "         ",
+          "         ",
+          "         ",
+          "         ",
+          "         ",
+          "         ",
+          "P       P"
+        ],
+        [
+          "P       P",
+          "         ",
+          "         ",
+          "         ",
+          "         ",
+          "         ",
+          "         ",
+          "         ",
+          "P       P"
+        ],
+        [
+          "T       T",
+          "         ",
+          "         ",
+          "   SSS   ",
+          "   S S   ",
+          "   SSS   ",
+          "         ",
+          "         ",
+          "T       T"
+        ],
+        [
+          "         ",
+          "         ",
+          "         ",
+          "   SSS   ",
+          "   S S   ",
+          "   SSS   ",
+          "         ",
+          "         ",
+          "         "
+        ],
+        [
+          "         ",
+          "         ",
+          "         ",
+          "   SSS   ",
+          "   S S   ",
+          "   SSS   ",
+          "         ",
+          "         ",
+          "         "
+        ],
+        [
+          "         ",
+          "         ",
+          "         ",
+          "   SSS   ",
+          "   S S   ",
+          "   SSS   ",
+          "         ",
+          "         ",
+          "         "
+        ],
+        [
+          "         ",
+          "         ",
+          "         ",
+          "   SSS   ",
+          "   S S   ",
+          "   SSS   ",
+          "         ",
+          "         ",
+          "         "
+        ],
+        [
+          "         ",
+          "         ",
+          "         ",
+          "   GGG   ",
+          "   GLG   ",
+          "   GGG   ",
+          "         ",
+          "         ",
+          "         "
+        ],
+        [
+          "         ",
+          "         ",
+          "         ",
+          "   RRR   ",
+          "   RRR   ",
+          "   RRR   ",
+          "         ",
+          "         ",
+          "         "
+        ]
       ]
     }
   }

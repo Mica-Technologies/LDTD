@@ -33,6 +33,12 @@ public final class Blueprint {
     /** Bottom layer first. */
     public List<List<String>> layers = new ArrayList<>();
 
+    /**
+     * An internal blueprint (a Hearth's growth stage): never offered to players as an item or a
+     * recipe, only queued by the Hearth itself.
+     */
+    public boolean internal;
+
     /** Extra items the build costs on top of its blocks, as {@code modid:name[@meta]} to count. */
     public Map<String, Integer> extraCost = new LinkedHashMap<>();
 

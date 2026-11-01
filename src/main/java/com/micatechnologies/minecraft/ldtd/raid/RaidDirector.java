@@ -111,6 +111,7 @@ public final class RaidDirector {
             }
             TileEntityHearth hearth = (TileEntityHearth) te;
             hearth.regenFlame(rules.flame.regenPerMinute / 60.0D);
+            hearth.tickSprites();
             if (LdtdConfig.raidsEnabled && LdtdConfig.nightRaids && !isDay(world)
                 && hearth.lastRaidDay() != night && defenderNear(world, record)) {
                 start(world, hearth, false);

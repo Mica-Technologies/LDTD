@@ -138,3 +138,8 @@ ldtd.tower.priority=Now aiming at: %s
 ldtd.tower.priority.first=the one furthest along
 ldtd.tower.priority.strongest=the strongest
 ldtd.tower.priority.closest=the closest
+
+entity.ldtd.hearth_sprite.name=Hearth-sprite
+ldtd.blueprint.ordered=%s ordered. The Hearth-sprites will build it from the stockpile.
+ldtd.hearth.builders=Builders: %1$s jobs and %2$s repairs to go.
+ldtd.hearth.builders_waiting=Builders: %1$s jobs and %2$s repairs to go, waiting for %3$s in the stockpile.

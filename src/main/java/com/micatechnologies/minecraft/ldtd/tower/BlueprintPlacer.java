@@ -1,5 +1,6 @@
 package com.micatechnologies.minecraft.ldtd.tower;
 
+import com.micatechnologies.minecraft.ldtd.LdtdConfig;
 import com.micatechnologies.minecraft.ldtd.LdtdRegistry;
 import com.micatechnologies.minecraft.ldtd.data.LdtdData;
 import com.micatechnologies.minecraft.ldtd.hearth.HearthRegistry;
@@ -52,7 +53,7 @@ public final class BlueprintPlacer {
      */
     public static ITextComponent place(World world, EntityPlayer player, String id, BlockPos anchor, int rotation) {
         Blueprint bp = LdtdData.blueprints().get(id);
-        if (bp == null) {
+        if (bp == null || bp.internal) {
             return new TextComponentTranslation("ldtd.blueprint.unknown", id);
         }
         HearthRegistry registry = HearthRegistry.get(world);
@@ -78,6 +79,16 @@ public final class BlueprintPlacer {
                 && !world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(p)).isEmpty()) {
                 return new TextComponentTranslation("ldtd.blueprint.occupied", p.getX(), p.getY(), p.getZ());
             }
+        }
+
+        if (!player.capabilities.isCreativeMode && !LdtdConfig.instantBuild) {
+            // Survival: the Hearth's sprites build it block by block, paying as they go (Phase 6).
+            TileEntity te = world.getTileEntity(territory.pos);
+            if (!(te instanceof TileEntityHearth)) {
+                return new TextComponentTranslation("commands.ldtd.hearth.not_loaded");
+            }
+            ((TileEntityHearth) te).order(id, anchor, rotation);
+            return new TextComponentTranslation("ldtd.blueprint.ordered", new TextComponentTranslation(nameKey(id)));
         }
 
         if (!player.capabilities.isCreativeMode) {

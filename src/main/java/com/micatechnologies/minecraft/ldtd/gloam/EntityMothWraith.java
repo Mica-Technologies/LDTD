@@ -1,13 +1,11 @@
 package com.micatechnologies.minecraft.ldtd.gloam;
 
+import com.micatechnologies.minecraft.ldtd.entity.FlightMoveHelper;
 import com.micatechnologies.minecraft.ldtd.hearth.HearthRegistry.HearthRecord;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityMoveHelper;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 
@@ -26,7 +24,7 @@ public class EntityMothWraith extends EntityGloam {
         super(world);
         setSize(0.8F, 0.8F);
         setNoGravity(true);
-        moveHelper = new FlightControl(this);
+        moveHelper = new FlightMoveHelper(this, 0.05D);
     }
 
     @Override
@@ -51,40 +49,6 @@ public class EntityMothWraith extends EntityGloam {
     @Override
     protected void updateFallState(double y, boolean onGround, net.minecraft.block.state.IBlockState state,
                                    BlockPos pos) {
-    }
-
-    /** Flies straight at its move target, the way a flyer must: no navigator, no ground. */
-    private static final class FlightControl extends EntityMoveHelper {
-
-        FlightControl(EntityMothWraith mob) {
-            super(mob);
-        }
-
-        @Override
-        public void onUpdateMoveHelper() {
-            if (action != Action.MOVE_TO) {
-                return;
-            }
-            double dx = posX - entity.posX;
-            double dy = posY - entity.posY;
-            double dz = posZ - entity.posZ;
-            double dist = MathHelper.sqrt(dx * dx + dy * dy + dz * dz);
-            if (dist < 0.4D) {
-                action = Action.WAIT;
-                entity.motionX *= 0.5D;
-                entity.motionY *= 0.5D;
-                entity.motionZ *= 0.5D;
-                return;
-            }
-            // The movement attribute, so the light slowdown (D15) applies to flight too.
-            double accel = speed * entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getAttributeValue()
-                * 0.05D;
-            entity.motionX += dx / dist * accel;
-            entity.motionY += dy / dist * accel;
-            entity.motionZ += dz / dist * accel;
-            entity.rotationYaw = -((float) MathHelper.atan2(entity.motionX, entity.motionZ)) * (180.0F / (float) Math.PI);
-            entity.renderYawOffset = entity.rotationYaw;
-        }
     }
 
     /** Dives at its attack target and strikes on contact. */

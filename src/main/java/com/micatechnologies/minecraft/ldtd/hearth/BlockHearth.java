@@ -111,6 +111,11 @@ public class BlockHearth extends Block {
         player.sendStatusMessage(new TextComponentTranslation(hearth.isOwner(player) ? "ldtd.hearth.info_call"
                 : "ldtd.hearth.info", hearth.ownerName().isEmpty() ? "-" : hearth.ownerName(), hearth.level(),
             hearth.radius(), Math.round(hearth.flameFraction() * 100.0F), hearth.raidsSurvived()), true);
+        BuildQueue q = hearth.queue();
+        if (!q.isEmpty()) {
+            player.sendMessage(new TextComponentTranslation(q.waitingFor().isEmpty() ? "ldtd.hearth.builders"
+                : "ldtd.hearth.builders_waiting", q.jobsLeft(), q.repairsLeft(), q.waitingFor()));
+        }
     }
 
     private static boolean isFuel(ItemStack stack) {

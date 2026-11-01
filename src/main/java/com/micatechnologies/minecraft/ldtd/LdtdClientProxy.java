@@ -3,6 +3,8 @@ package com.micatechnologies.minecraft.ldtd;
 import com.micatechnologies.minecraft.ldtd.client.ClientHearths;
 import com.micatechnologies.minecraft.ldtd.client.TerritoryBorderRenderer;
 import com.micatechnologies.minecraft.ldtd.client.model.ModelDimcaster;
+import com.micatechnologies.minecraft.ldtd.client.model.ModelHearthSprite;
+import com.micatechnologies.minecraft.ldtd.hearth.EntityHearthSprite;
 import com.micatechnologies.minecraft.ldtd.client.model.ModelMothWraith;
 import com.micatechnologies.minecraft.ldtd.client.model.ModelShade;
 import com.micatechnologies.minecraft.ldtd.client.model.ModelSmother;
@@ -50,6 +52,16 @@ public class LdtdClientProxy extends LdtdCommonProxy {
             m -> new RenderBillboard<>(m, "cannon_shell", 0.45F));
         RenderingRegistry.registerEntityRenderingHandler(EntityTowerArrow.class, RenderTippedArrow::new);
         MinecraftForge.EVENT_BUS.register(new GhostPreviewRenderer());
+        RenderingRegistry.registerEntityRenderingHandler(EntityHearthSprite.class,
+            m -> new net.minecraft.client.renderer.entity.RenderLiving<EntityHearthSprite>(m, new ModelHearthSprite(), 0.15F) {
+                private final net.minecraft.util.ResourceLocation tex = new net.minecraft.util.ResourceLocation(
+                    LdtdConstants.MOD_NAMESPACE, "textures/entity/hearth_sprite.png");
+
+                @Override
+                protected net.minecraft.util.ResourceLocation getEntityTexture(EntityHearthSprite entity) {
+                    return tex;
+                }
+            });
     }
 
     @Override

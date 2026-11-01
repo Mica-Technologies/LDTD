@@ -85,8 +85,11 @@ public class ItemBlueprint extends Item {
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
         if (isInCreativeTab(tab)) {
-            for (String id : LdtdData.blueprints().keySet()) {
-                items.add(of(this, id));
+            for (java.util.Map.Entry<String, com.micatechnologies.minecraft.ldtd.sim.tower.Blueprint> e
+                : LdtdData.blueprints().entrySet()) {
+                if (!e.getValue().internal) {
+                    items.add(of(this, e.getKey()));
+                }
             }
         }
     }

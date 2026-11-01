@@ -60,6 +60,7 @@ public class EntitySmother extends EntityGloam {
             }
             swingArm(EnumHand.MAIN_HAND);
             getLookHelper().setLookPosition(lamp.getX() + 0.5D, lamp.getY() + 0.5D, lamp.getZ() + 0.5D, 30.0F, 30.0F);
+            com.micatechnologies.minecraft.ldtd.hearth.TileEntityHearth.recordSiegeLoss(world, lamp, state);
             world.destroyBlock(lamp, LdtdConfig.siegeDropsBlocks);
             ((WorldServer) world).spawnParticle(EnumParticleTypes.SMOKE_NORMAL, lamp.getX() + 0.5D,
                 lamp.getY() + 0.6D, lamp.getZ() + 0.5D, 10, 0.15D, 0.15D, 0.15D, 0.01D);

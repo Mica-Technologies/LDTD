@@ -3,12 +3,18 @@ package com.micatechnologies.minecraft.ldtd.hearth;
 import com.micatechnologies.minecraft.ldtd.Ldtd;
 import com.micatechnologies.minecraft.ldtd.data.LdtdData;
 import com.micatechnologies.minecraft.ldtd.hearth.HearthRegistry.HearthRecord;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nullable;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
@@ -50,6 +56,11 @@ public class TileEntityHearth extends TileEntity {
 
     /** Trusted players (id to last known name), mirrored into the registry record. */
     private final Map<UUID, String> trusted = new LinkedHashMap<>();
+
+    /** The sprites' work (Phase 6). Server only. */
+    private final BuildQueue queue = new BuildQueue();
+    /** This Hearth's living sprites. */
+    private final List<UUID> sprites = new ArrayList<>();
 
     /** Client only: the territory radius the server sent. */
     private int syncedRadius;
@@ -203,6 +214,7 @@ public class TileEntityHearth extends TileEntity {
         owner = player.getUniqueID();
         ownerName = player.getName();
         level = 1;
+        queueGrowth(0, 1);
         markDirtyAndSync();
     }
 
@@ -215,8 +227,90 @@ public class TileEntityHearth extends TileEntity {
     }
 
     public void setLevel(int newLevel) {
+        int old = level;
         level = Math.max(1, Math.min(newLevel, LdtdData.hearthLevels().maxLevel()));
+        queueGrowth(old, level);
         markDirtyAndSync();
+    }
+
+    // ----------------------------------------------------------------------------------------
+    // Builders (Phase 6)
+
+    public BuildQueue queue() {
+        return queue;
+    }
+
+    /** Queues the Hearth's growth stages above {@code from} up to {@code to} (design decision D20). */
+    private void queueGrowth(int from, int to) {
+        for (int stage = from + 1; stage <= to; stage++) {
+            String id = "hearth_stage_" + stage;
+            if (LdtdData.blueprints().containsKey(id)) {
+                queue.addJob(id, pos, 0);
+            }
+        }
+        markDirty();
+    }
+
+    /** Orders a blueprint built by the sprites. */
+    public void order(String blueprint, BlockPos anchor, int rotation) {
+        queue.addJob(blueprint, anchor, rotation);
+        markDirty();
+    }
+
+    /**
+     * Remembers a block the Gloam broke or snuffed in this Hearth's territory, so the sprites put it
+     * back. Called from the siege code. Does nothing outside a lit, loaded territory.
+     */
+    public static void recordSiegeLoss(World world, BlockPos pos, IBlockState state) {
+        HearthRecord r = HearthRegistry.get(world).territoryAt(pos.getX(), pos.getZ());
+        if (r == null || !world.isBlockLoaded(r.pos)) {
+            return;
+        }
+        TileEntity te = world.getTileEntity(r.pos);
+        if (te instanceof TileEntityHearth && state.getBlock() != Blocks.AIR) {
+            ((TileEntityHearth) te).queue.addRepair(pos, state);
+            te.markDirty();
+        }
+    }
+
+    /** Living sprites, by id. */
+    public List<UUID> sprites() {
+        return sprites;
+    }
+
+    /** How many sprites this Hearth may keep, from its level. */
+    public int maxSprites() {
+        return LdtdData.hearthLevels().get(level).maxSprites;
+    }
+
+    public void addSprite(UUID id) {
+        sprites.add(id);
+        markDirty();
+    }
+
+    /**
+     * Once a second, server side: forget sprites that are gone, and bring a new one out of the fire
+     * every ten seconds while the Hearth has fewer than its level allows.
+     */
+    public void tickSprites() {
+        if (world == null || world.isRemote || dormant) {
+            return;
+        }
+        for (UUID id : new ArrayList<>(sprites)) {
+            net.minecraft.entity.Entity e = ((net.minecraft.world.WorldServer) world).getEntityFromUuid(id);
+            if (e == null || !e.isEntityAlive()) {
+                removeSprite(id);
+            }
+        }
+        if (sprites.size() < maxSprites() && world.getTotalWorldTime() % 200 < 20) {
+            EntityHearthSprite.spawnAt(world, this);
+        }
+    }
+
+    public void removeSprite(UUID id) {
+        if (sprites.remove(id)) {
+            markDirty();
+        }
     }
 
     /** Re-sends this Hearth to clients, for example after {@code /ldtd reload} changed the radius. */
@@ -291,6 +385,14 @@ public class TileEntityHearth extends TileEntity {
         }
         nbt.setTag("trusted", trust);
         nbt.setTag("stockpile", stockpile.write());
+        nbt.setTag("queue", queue.write());
+        NBTTagList sp = new NBTTagList();
+        for (UUID id : sprites) {
+            NBTTagCompound t = new NBTTagCompound();
+            t.setUniqueId("id", id);
+            sp.appendTag(t);
+        }
+        nbt.setTag("sprites", sp);
         return nbt;
     }
 
@@ -311,6 +413,12 @@ public class TileEntityHearth extends TileEntity {
             trusted.put(t.getUniqueId("id"), t.getString("name"));
         }
         stockpile.read(nbt.getTagList("stockpile", Constants.NBT.TAG_COMPOUND));
+        queue.read(nbt.getCompoundTag("queue"));
+        sprites.clear();
+        NBTTagList sp = nbt.getTagList("sprites", Constants.NBT.TAG_COMPOUND);
+        for (int i = 0; i < sp.tagCount(); i++) {
+            sprites.add(sp.getCompoundTagAt(i).getUniqueId("id"));
+        }
     }
 
     // ----------------------------------------------------------------------------------------

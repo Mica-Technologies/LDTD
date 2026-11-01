@@ -96,6 +96,12 @@ public final class LdtdConfig {
     /** Operators ignore territory protection. */
     public static boolean protectionOpsBypass = true;
 
+    /**
+     * Whether blueprints build at once in survival, paid up front, instead of being built block by
+     * block by Hearth-sprites. Creative always builds at once.
+     */
+    public static boolean instantBuild = false;
+
     /** Whether {@code /randomspawn} ({@code /rs}) is available. */
     public static boolean randomSpawnEnabled = true;
 
@@ -179,6 +185,10 @@ public final class LdtdConfig {
             "Explosions (creepers, TNT, ...) break no blocks inside a territory. They still hurt entities.");
         protectionOpsBypass = c.getBoolean("opsBypass", CATEGORY_PROTECTION, protectionOpsBypass,
             "Operators ignore territory protection.");
+
+        instantBuild = c.getBoolean("instantBuild", CATEGORY_HEARTH, instantBuild,
+            "Whether blueprints build at once in survival (paid up front) instead of Hearth-sprites building"
+                + " them block by block. Creative always builds at once.");
 
         randomSpawnEnabled = c.getBoolean("enabled", CATEGORY_RANDOM_SPAWN, randomSpawnEnabled,
             "Whether /randomspawn (/rs) is available.");

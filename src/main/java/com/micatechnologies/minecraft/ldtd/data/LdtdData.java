@@ -117,7 +117,21 @@ public final class LdtdData {
             problems.add(report(TOWERS, e));
         }
         try {
-            blueprints = validateBlueprints(readUser(BLUEPRINTS, BlueprintsFile.class).blueprints);
+            LinkedHashMap<String, Blueprint> user = readUser(BLUEPRINTS, BlueprintsFile.class).blueprints;
+            if (user == null) {
+                user = new LinkedHashMap<>();
+            }
+            // A Hearth's growth stages must exist, so an older edited file that lacks them gets the
+            // built-in ones. Player blueprints are left alone: server owners may remove those.
+            for (Map.Entry<String, Blueprint> e : readDefault(BLUEPRINTS, BlueprintsFile.class).blueprints.entrySet()) {
+                if (e.getValue().internal && !user.containsKey(e.getKey())) {
+                    user.put(e.getKey(), e.getValue());
+                    String msg = BLUEPRINTS + ": growth stage '" + e.getKey() + "' is missing, so the built-in one is used";
+                    Ldtd.LOGGER.warn(msg);
+                    problems.add(msg);
+                }
+            }
+            blueprints = validateBlueprints(user);
         } catch (IOException | JsonParseException | IllegalArgumentException | IllegalStateException e) {
             problems.add(report(BLUEPRINTS, e));
         }

@@ -9,6 +9,7 @@ import com.micatechnologies.minecraft.ldtd.gloam.EntityShade;
 import com.micatechnologies.minecraft.ldtd.gloam.EntitySmother;
 import com.micatechnologies.minecraft.ldtd.gloam.GloamKind;
 import com.micatechnologies.minecraft.ldtd.hearth.BlockHearth;
+import com.micatechnologies.minecraft.ldtd.hearth.EntityHearthSprite;
 import com.micatechnologies.minecraft.ldtd.hearth.ItemBlockHearth;
 import com.micatechnologies.minecraft.ldtd.hearth.TileEntityHearth;
 import com.micatechnologies.minecraft.ldtd.tower.BlockTowerCore;
@@ -87,6 +88,12 @@ public final class LdtdRegistry {
             .id(new ResourceLocation(LdtdConstants.MOD_NAMESPACE, "cannon_shell"), id++)
             .name(LdtdConstants.MOD_NAMESPACE + ".cannon_shell")
             .tracker(64, 10, true)
+            .build());
+        event.getRegistry().register(EntityEntryBuilder.create()
+            .entity(EntityHearthSprite.class)
+            .id(new ResourceLocation(LdtdConstants.MOD_NAMESPACE, "hearth_sprite"), id++)
+            .name(LdtdConstants.MOD_NAMESPACE + ".hearth_sprite")
+            .tracker(64, 3, true)
             .build());
     }
 

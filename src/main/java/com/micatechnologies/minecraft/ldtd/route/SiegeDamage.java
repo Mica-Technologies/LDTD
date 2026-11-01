@@ -2,6 +2,7 @@ package com.micatechnologies.minecraft.ldtd.route;
 
 import com.micatechnologies.minecraft.ldtd.LdtdConfig;
 import com.micatechnologies.minecraft.ldtd.hearth.HearthRegistry;
+import com.micatechnologies.minecraft.ldtd.hearth.TileEntityHearth;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -79,6 +80,7 @@ public final class SiegeDamage {
         if (crack.damage >= hp) {
             world.sendBlockBreakProgress(crack.breakerId, key, -1);
             cracks.remove(key);
+            TileEntityHearth.recordSiegeLoss(world, key, state);
             world.destroyBlock(key, LdtdConfig.siegeDropsBlocks);
             return true;
         }
