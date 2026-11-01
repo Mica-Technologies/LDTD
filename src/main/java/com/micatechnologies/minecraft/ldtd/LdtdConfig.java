@@ -85,6 +85,12 @@ public final class LdtdConfig {
     /** Whether villages can get a Hearth Square and Watch Posts (Phase 9, D21/D22). */
     public static boolean villageBuildings = true;
 
+    /** Whether each player gets the Hearthkeeper's Guide the first time they join (Phase 10). */
+    public static boolean giveGuide = true;
+
+    /** Whether wounded Gloam show a health bar (client, Phase 10). */
+    public static boolean healthBars = true;
+
     /** Whether Dusk Spires generate in new chunks (Phase 9). */
     public static boolean spiresEnabled = true;
     /** One chunk in this many gets a spire (before spacing and distance rules). */
@@ -194,6 +200,11 @@ public final class LdtdConfig {
         territorySpacing = c.getInt("territorySpacing", CATEGORY_HEARTH, territorySpacing, 0, 256,
             "Extra gap, in blocks, required between the edges of two territories.");
 
+        giveGuide = c.getBoolean("giveGuide", CATEGORY_HEARTH, giveGuide,
+            "Give each player the Hearthkeeper's Guide (a book explaining LDTD) the first time they join."
+                + " /hearth guide gives another copy.");
+        healthBars = c.getBoolean("healthBars", CATEGORY_CLIENT, healthBars,
+            "Show a small health bar over wounded Gloam within 32 blocks.");
         villageBuildings = c.getBoolean("villageBuildings", CATEGORY_HEARTH, villageBuildings,
             "Whether new villages can have a Hearth Square (an unclaimed Hearth with room to grow) and Watch Posts"
                 + " (ready-built archer towers). Needs a restart.");

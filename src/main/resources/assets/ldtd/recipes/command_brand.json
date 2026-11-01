@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "D",
+    "S",
+    "S"
+  ],
+  "key": {
+    "D": { "item": "ldtd:duskglass" },
+    "S": { "item": "minecraft:stick" }
+  },
+  "result": { "item": "ldtd:command_brand" }
+}

@@ -55,6 +55,7 @@ public class LdtdClientProxy extends LdtdCommonProxy {
             m -> new RenderBillboard<>(m, "cannon_shell", 0.45F));
         RenderingRegistry.registerEntityRenderingHandler(EntityTowerArrow.class, RenderTippedArrow::new);
         MinecraftForge.EVENT_BUS.register(new GhostPreviewRenderer());
+        MinecraftForge.EVENT_BUS.register(new com.micatechnologies.minecraft.ldtd.client.ClientHud());
         RenderingRegistry.registerEntityRenderingHandler(com.micatechnologies.minecraft.ldtd.tower.EntityEmberGuard.class,
             m -> new net.minecraft.client.renderer.entity.RenderLiving<com.micatechnologies.minecraft.ldtd.tower.EntityEmberGuard>(
                 m, new ModelShade(), 0.5F) {

@@ -87,6 +87,7 @@ final class Raid {
 
     /** Tells nearby players what is coming, from where, and when (design decision D19). */
     void announce() {
+        cue(net.minecraft.init.SoundEvents.ENTITY_ELDER_GUARDIAN_CURSE, 0.5F, 0.6F);
         broadcast(new TextComponentTranslation("ldtd.raid.announce", directionNames(), night, composition(),
             LdtdData.raid().countdownSeconds));
         updateBar();
@@ -107,6 +108,7 @@ final class Raid {
         if (now >= startTick) {
             while (nextWave < waves.size() && now >= startTick + (long) nextWave * waveIntervalTicks) {
                 queue.addAll(waves.get(nextWave));
+                cue(net.minecraft.init.SoundEvents.EVOCATION_ILLAGER_PREPARE_SUMMON, 0.8F, 0.6F);
                 if (nextWave > 0) {
                     broadcast(new TextComponentTranslation("ldtd.raid.wave", nextWave + 1, waves.size()));
                 }
@@ -147,6 +149,7 @@ final class Raid {
                     paid = LdtdData.raid().payoutFor(night, called);
                     pay(hearth, paid);
                 }
+                cue(net.minecraft.init.SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, 0.6F, 1.0F);
                 broadcast(new TextComponentTranslation(outcome == Outcome.HELD ? "ldtd.raid.held" : "ldtd.raid.dawn",
                     night));
                 if (paid > 0) {
@@ -158,6 +161,7 @@ final class Raid {
                     loseStockpile(hearth);
                     hearth.fall();
                 }
+                cue(net.minecraft.init.SoundEvents.ENTITY_BLAZE_DEATH, 1.0F, 0.4F);
                 broadcast(new TextComponentTranslation("ldtd.raid.fell", owner()));
                 break;
             default:
@@ -345,6 +349,16 @@ final class Raid {
         }
     }
 
+    /** Plays a sound to every player the raid's messages reach, at their own ears. */
+    private void cue(net.minecraft.util.SoundEvent sound, float volume, float pitch) {
+        HearthRecord record = HearthRegistry.get(world).at(hearthPos);
+        double reach = (record == null ? 32 : record.radius()) + BAR_MARGIN;
+        for (EntityPlayerMP p : world.getPlayers(EntityPlayerMP.class, p -> p.getDistanceSq(hearthPos) <= reach * reach)) {
+            p.connection.sendPacket(new net.minecraft.network.play.server.SPacketSoundEffect(sound,
+                net.minecraft.util.SoundCategory.HOSTILE, p.posX, p.posY, p.posZ, volume, pitch));
+        }
+    }
+
     private void broadcast(ITextComponent message) {
         HearthRecord record = HearthRegistry.get(world).at(hearthPos);
         double reach = (record == null ? 32 : record.radius()) + BAR_MARGIN;
@@ -383,7 +397,10 @@ final class Raid {
                 continue;
             }
             if (!seen.isEmpty()) {
+                // The spaces live here, not in the lang value: lang files lose trailing whitespace.
+                out.appendSibling(new TextComponentString(" "));
                 out.appendSibling(new TextComponentTranslation("ldtd.raid.and"));
+                out.appendSibling(new TextComponentString(" "));
             }
             seen.add(key);
             out.appendSibling(new TextComponentTranslation(key));

@@ -37,6 +37,7 @@ public final class CommandHearth extends CommandTreeBase {
         addSubcommand(new Trust(true));
         addSubcommand(new Trust(false));
         addSubcommand(new ListTrusted());
+        addSubcommand(new GuideCopy());
     }
 
     @Override
@@ -140,6 +141,36 @@ public final class CommandHearth extends CommandTreeBase {
                                               @Nullable BlockPos targetPos) {
             return args.length == 1 ? getListOfStringsMatchingLastWord(args, server.getOnlinePlayerNames())
                 : Collections.emptyList();
+        }
+    }
+
+    /** {@code /hearth guide}: a fresh copy of the Hearthkeeper's Guide. */
+    private static final class GuideCopy extends CommandBase {
+
+        @Override
+        public String getName() {
+            return "guide";
+        }
+
+        @Override
+        public String getUsage(ICommandSender sender) {
+            return "commands.hearth.guide.usage";
+        }
+
+        @Override
+        public int getRequiredPermissionLevel() {
+            return 0;
+        }
+
+        @Override
+        public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+            return true;
+        }
+
+        @Override
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+            com.micatechnologies.minecraft.ldtd.guide.Guide.give(getCommandSenderAsPlayer(sender));
+            sender.sendMessage(new TextComponentTranslation("commands.hearth.guide.given"));
         }
     }
 

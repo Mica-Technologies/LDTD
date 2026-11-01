@@ -301,6 +301,10 @@ public class TileEntityHearth extends TileEntity {
             }
         }
         setLevel(level + 1);
+        world.playSound(null, pos, net.minecraft.init.SoundEvents.ENTITY_PLAYER_LEVELUP,
+            net.minecraft.util.SoundCategory.BLOCKS, 1.0F, 0.8F);
+        ((net.minecraft.world.WorldServer) world).spawnParticle(net.minecraft.util.EnumParticleTypes.FLAME,
+            pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 40, 0.4D, 0.6D, 0.4D, 0.05D);
         return new net.minecraft.util.text.TextComponentTranslation("ldtd.hearth.levelled", level, radius());
     }
 

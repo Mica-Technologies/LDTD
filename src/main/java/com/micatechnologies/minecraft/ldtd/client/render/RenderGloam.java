@@ -21,6 +21,11 @@ public class RenderGloam<T extends EntityGloam> extends RenderLiving<T> {
     private final float scale;
     private final float lean;
 
+    /** How much bigger than its hitbox the model is drawn. */
+    public float scale() {
+        return scale;
+    }
+
     public RenderGloam(RenderManager manager, ModelBase model, float shadow, float scale, String name) {
         this(manager, model, shadow, scale, 0.0F, name);
     }
